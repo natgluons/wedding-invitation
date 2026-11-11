@@ -367,7 +367,7 @@ section, footer { scroll-margin-top: 66px; }
 
 @media (max-height:660px) {
   .cover { padding-top: 26px; padding-bottom: 22px; }
-  .cover-top { margin-top: 0; }
+  .cover-copy { margin-top: 0; }
   .envelope-hit { margin: 22px auto 6px; }
   .cover-open-btn { padding: 12px 24px; }
   .hint { margin-top: 2px; }
