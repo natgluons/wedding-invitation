@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#F7F1E6" />
   <meta name="description" content="The wedding of Richard Putra and Kristy Natasha Yohanes, Sunday, 17 January 2027, Jakarta." />
   <title>Richard &amp; Natasha · A Wedding Invitation</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23792A32'/%3E%3Ctext x='50' y='72' font-size='58' text-anchor='middle' fill='%23EBCB9C' font-family='Georgia,serif'%3E%E5%9B%8D%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" type="image/svg+xml" href="assets/svg/favicon.svg" />
   <link rel="stylesheet" href="styles.css" />
   <script defer src="config.js"></script>
   <script defer src="main.js"></script>
@@ -14,37 +14,52 @@
 <body>
   <div class="site-shell">
     <section id="cover" class="cover" aria-label="Wedding invitation opening">
-      <div class="cover-top">
-        <div class="eyebrow">A WEDDING INVITATION</div>
-        <h1 class="cover-title">Richard <em>&amp;</em> Natasha</h1>
-        <p class="sub">Sunday · 17 January 2027 · Jakarta</p>
-        <p class="cover-guest" id="coverGuest" hidden></p>
-        <p class="cover-seats" id="coverSeats" hidden></p>
+      <div class="cover-inner">
+        <div class="cover-copy">
+          <div class="eyebrow">A WEDDING INVITATION</div>
+          <h1 class="cover-title">Richard <em>&amp;</em> Natasha</h1>
+          <p class="sub">Sunday · 17 January 2027 · Jakarta</p>
+          <p class="cover-guest" id="coverGuest" hidden></p>
+          <p class="cover-seats" id="coverSeats" hidden></p>
+        </div>
+        <div class="cover-visual">
+          <button class="envelope-hit" id="openLetter" type="button" aria-label="Open wedding invitation letter">
+            <span class="envelope" id="envelope" aria-hidden="true">
+              <span class="envelope-back"></span>
+              <span class="letter-peek"><span class="peek-name" id="letterFor">For You</span><span class="peek-divider"></span><small>A day to remember</small></span>
+              <span class="envelope-front"></span>
+              <span class="envelope-flap"></span>
+              <span class="red-string"></span>
+              <span class="wax-seal"></span>
+              <span class="red-tassel"></span>
+            </span>
+          </button>
+          <button class="primary cover-open-btn" id="openLetterButton" type="button">Open the letter <span aria-hidden="true">→</span></button>
+          <p class="hint">Tap the seal to reveal our invitation</p>
+          <button class="cover-skip" id="skipOpening" type="button">Skip the opening</button>
+        </div>
       </div>
-      <button class="envelope-hit" id="openLetter" type="button" aria-label="Open wedding invitation letter">
-        <span class="envelope" id="envelope" aria-hidden="true">
-          <span class="envelope-back"></span>
-          <span class="letter-peek"><span class="peek-name" id="letterFor">For You</span><span class="peek-divider"></span><small>A day to remember</small></span>
-          <span class="envelope-front"></span>
-          <span class="envelope-flap"></span>
-          <span class="red-string"></span>
-          <span class="wax-seal"></span>
-          <span class="red-tassel"></span>
-        </span>
-      </button>
-      <button class="primary cover-open-btn" id="openLetterButton" type="button">Open the letter <span aria-hidden="true">→</span></button>
-      <p class="hint">Tap the seal to reveal our invitation</p>
     </section>
 
-    <main id="invitation" class="invitation" hidden>
-      <header class="compact-head"><span>囍</span><div>A LETTER TO YOU</div><span aria-hidden="true">✦</span></header>
+    <main id="invitation" class="invitation" tabindex="-1" hidden>
+      <header class="compact-head">
+        <span class="head-seal seal-mark" aria-hidden="true"></span>
+        <span class="head-brand">A LETTER TO YOU</span>
+        <nav class="head-nav" aria-label="Invitation sections">
+          <a href="#details">Details</a>
+          <a href="#story">Story</a>
+          <a href="#rsvp">RSVP</a>
+          <a href="#gift">Gift</a>
+          <a href="#wishes">Wishes</a>
+        </nav>
+      </header>
 
       <section class="hero" aria-label="The wedding of Richard and Natasha">
         <div class="hero-image-wrap">
           <img class="hero-image" src="assets/photos/demo-hanfu-couple.jpg" alt="Placeholder couple portrait in traditional hanfu, replace with the couple's prewedding photograph" />
           <div class="hero-image-fade"></div>
         </div>
-        <div class="hero-copy">
+        <div class="hero-copy" data-reveal-group>
           <div class="eyebrow">THE WEDDING OF</div>
           <h2>Richard <em>&amp;</em><br />Natasha</h2>
           <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
@@ -55,18 +70,22 @@
       </section>
 
       <section class="paper-section" id="details">
-        <div class="section-intro">THE DAY WE SAY I DO</div>
-        <h2>Wedding Details</h2>
-        <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
-        <div class="detail-list">
+        <div class="section-head" data-reveal-group>
+          <div class="section-intro">THE DAY WE SAY I DO</div>
+          <h2>Wedding Details</h2>
+          <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
+        </div>
+        <div class="detail-list" data-reveal-group>
           <article class="detail-row"><div class="detail-icon">◷</div><div><b>Date &amp; Time</b><p>Sunday, 17 January 2027<br />18:00 WIB – finish</p></div></article>
           <article class="detail-row"><div class="detail-icon">⌖</div><div><b>Venue</b><p>Grand Mercure Magnolia Ballroom<br />Jakarta, Indonesia</p></div></article>
         </div>
-        <a class="secondary" href="https://www.google.com/maps/search/?api=1&amp;query=Grand+Mercure+Magnolia+Ballroom+Jakarta" target="_blank" rel="noopener noreferrer">View location <span aria-hidden="true">↗</span></a>
-        <p class="detail-note">Formal or traditional attire, please.</p>
+        <div class="details-actions">
+          <a class="secondary" href="https://www.google.com/maps/search/?api=1&amp;query=Grand+Mercure+Magnolia+Ballroom+Jakarta" target="_blank" rel="noopener noreferrer">View location <span aria-hidden="true">↗</span></a>
+          <p class="detail-note">Formal or traditional attire, please.</p>
+        </div>
       </section>
 
-      <section class="countdown-section" aria-label="Countdown to the wedding">
+      <section class="countdown-section" aria-label="Countdown to the wedding" data-reveal-group>
         <div class="section-intro">COUNTING DOWN TO FOREVER</div>
         <h2>We can’t wait</h2>
         <div class="countdown-grid" role="group" aria-label="Time remaining until the wedding">
@@ -79,52 +98,61 @@
       </section>
 
       <section class="story-section" id="story">
-        <div class="section-intro">A JOURNEY OF TWO</div>
-        <h2>Our Story</h2>
-        <div class="photo-frame">
-          <img src="assets/photos/demo-hanfu-couple.jpg" alt="Placeholder hanfu couple photo" />
-          <img class="frame-overlay" src="assets/svg/portrait-frame.svg" alt="" />
+        <div class="section-head" data-reveal-group>
+          <div class="section-intro">A JOURNEY OF TWO</div>
+          <h2>Our Story</h2>
         </div>
-        <p class="story-lead">Ours is a love written across cities and time zones, and now, finally, we are counting down to the day we say “I do.”</p>
+        <div class="story-body">
+          <div class="photo-frame" data-reveal>
+            <img src="assets/photos/demo-hanfu-couple.jpg" alt="Placeholder hanfu couple photo" />
+            <img class="frame-overlay" src="assets/svg/portrait-frame.svg" alt="" />
+          </div>
+          <div class="story-copy">
+            <p class="story-lead" data-reveal>Ours is a love written across cities and time zones, and now, finally, we are counting down to the day we say “I do.”</p>
 
-        <ol class="milestones">
-          <li>
-            <span class="milestone-date">APRIL 2021</span>
-            <h3>First met</h3>
-            <p>Two strangers, one ordinary day, and the quiet beginning of something extraordinary.</p>
-          </li>
-          <li>
-            <span class="milestone-date">1 JUNE 2023</span>
-            <h3>Our first date</h3>
-            <p>Mall Kelapa Gading. A simple meal that turned into hours of conversation neither of us wanted to end.</p>
-          </li>
-          <li>
-            <span class="milestone-date">2 JUNE 2025</span>
-            <h3>The engagement</h3>
-            <p>With full hearts, and happy tears, Natasha said yes.</p>
-          </li>
-          <li>
-            <span class="milestone-date">2025–2026</span>
-            <h3>Across the miles</h3>
-            <p>While Natasha studies abroad at Imperial College London, we have learned that love is measured in late-night calls, counted sleeps, and every mile closed.</p>
-          </li>
-          <li>
-            <span class="milestone-date">17 JANUARY 2027</span>
-            <h3>Together, forever</h3>
-            <p>The long-distance chapter closes, and our next one begins, with you there to celebrate it.</p>
-          </li>
-        </ol>
+            <ol class="milestones" data-reveal-group>
+              <li>
+                <span class="milestone-date">APRIL 2021</span>
+                <h3>First met</h3>
+                <p>Two strangers, one ordinary day, and the quiet beginning of something extraordinary.</p>
+              </li>
+              <li>
+                <span class="milestone-date">1 JUNE 2023</span>
+                <h3>Our first date</h3>
+                <p>Mall Kelapa Gading. A simple meal that turned into hours of conversation neither of us wanted to end.</p>
+              </li>
+              <li>
+                <span class="milestone-date">2 JUNE 2025</span>
+                <h3>The engagement</h3>
+                <p>With full hearts, and happy tears, Natasha said yes.</p>
+              </li>
+              <li>
+                <span class="milestone-date">2025–2026</span>
+                <h3>Across the miles</h3>
+                <p>While Natasha studies abroad at Imperial College London, we have learned that love is measured in late-night calls, counted sleeps, and every mile closed.</p>
+              </li>
+              <li>
+                <span class="milestone-date">17 JANUARY 2027</span>
+                <h3>Together, forever</h3>
+                <p>The long-distance chapter closes, and our next one begins, with you there to celebrate it.</p>
+              </li>
+            </ol>
+          </div>
+        </div>
 
         <img class="divider-img story-divider" src="assets/svg/cloud-divider.svg" alt="" />
         <div class="section-intro">THE NEXT CHAPTER BEGINS</div>
       </section>
 
       <section class="paper-section rsvp-section" id="rsvp">
-        <div class="section-intro">WE SAVED YOU A SEAT</div>
-        <h2>Will You Join Us?</h2>
-        <p class="rsvp-intro">Your presence would mean the world to us.<br /><span class="rsvp-deadline">Kindly respond by 17 December 2026.</span></p>
-        <p class="guest-seat-note" id="guestSeatNote" hidden></p>
-        <form id="rsvpForm">
+        <div class="rsvp-layout">
+          <div class="rsvp-copy" data-reveal-group>
+            <div class="section-intro">WE SAVED YOU A SEAT</div>
+            <h2>Will You Join Us?</h2>
+            <p class="rsvp-intro">Your presence would mean the world to us.<br /><span class="rsvp-deadline">Kindly respond by 17 December 2026.</span></p>
+            <p class="guest-seat-note" id="guestSeatNote" hidden></p>
+          </div>
+          <form id="rsvpForm" data-reveal>
           <input class="hp-field" type="text" id="rsvpWebsite" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
           <fieldset class="attendance"><legend>Attendance</legend>
             <label><input type="radio" name="attendance" value="attending" checked /> <span>✓ I will attend</span></label>
@@ -147,60 +175,71 @@
           <button class="primary form-submit" type="submit">Submit RSVP →</button>
           <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
         </form>
+        </div>
       </section>
 
       <section class="paper-section gift-section" id="gift">
-        <div class="section-intro">WITH GRATITUDE</div>
-        <h2>Wedding Gift</h2>
-        <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
-        <p class="gift-intro">Your presence is the greatest gift we could ask for. If you would like to bless us with something more, a contribution toward our first home would be received with heartfelt thanks.</p>
-
-        <div class="gift-card">
-          <span class="gift-tag">DOMESTIC TRANSFER</span>
-          <p class="gift-bank">Bank Central Asia (BCA)</p>
-          <p class="gift-number" id="domesticAccount">0000000000</p>
-          <p class="gift-owner">a/n Kristy Natasha Yohanes</p>
-          <button class="gift-copy" type="button" data-copy="domesticAccount">Copy account number</button>
+        <div class="section-head" data-reveal-group>
+          <div class="section-intro">WITH GRATITUDE</div>
+          <h2>Wedding Gift</h2>
+          <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
+          <p class="gift-intro">Your presence is the greatest gift we could ask for. If you would like to bless us with something more, a contribution toward our first home would be received with heartfelt thanks.</p>
         </div>
 
-        <div class="gift-card">
-          <span class="gift-tag">INTERNATIONAL TRANSFER</span>
-          <dl class="gift-details">
-            <div><dt>Bank</dt><dd>Bank Central Asia (BCA)</dd></div>
-            <div><dt>SWIFT / BIC</dt><dd id="swiftCode">CENAIDJA</dd></div>
-            <div><dt>Account number</dt><dd id="internationalAccount">0000000000</dd></div>
-            <div><dt>Account name</dt><dd>Kristy Natasha Yohanes</dd></div>
-            <div><dt>Bank address</dt><dd>Menara BCA, Jl. M.H. Thamrin No. 1, Jakarta 10310, Indonesia</dd></div>
-          </dl>
-          <p class="gift-note">Please use your full name as the transfer reference. For transfer assistance, please contact us directly.</p>
-          <div class="gift-actions">
-            <button class="gift-copy" type="button" data-copy="swiftCode">Copy SWIFT code</button>
-            <button class="gift-copy" type="button" data-copy="internationalAccount">Copy account number</button>
+        <div class="gift-grid" data-reveal-group>
+          <div class="gift-card">
+            <span class="gift-tag">DOMESTIC TRANSFER</span>
+            <p class="gift-bank">Bank Central Asia (BCA)</p>
+            <p class="gift-number" id="domesticAccount">0000000000</p>
+            <p class="gift-owner">a/n Kristy Natasha Yohanes</p>
+            <button class="gift-copy" type="button" data-copy="domesticAccount">Copy account number</button>
+          </div>
+
+          <div class="gift-card">
+            <span class="gift-tag">INTERNATIONAL TRANSFER</span>
+            <dl class="gift-details">
+              <div><dt>Bank</dt><dd>Bank Central Asia (BCA)</dd></div>
+              <div><dt>SWIFT / BIC</dt><dd id="swiftCode">CENAIDJA</dd></div>
+              <div><dt>Account number</dt><dd id="internationalAccount">0000000000</dd></div>
+              <div><dt>Account name</dt><dd>Kristy Natasha Yohanes</dd></div>
+              <div><dt>Bank address</dt><dd>Menara BCA, Jl. M.H. Thamrin No. 1, Jakarta 10310, Indonesia</dd></div>
+            </dl>
+            <p class="gift-note">Please use your full name as the transfer reference. For transfer assistance, please contact us directly.</p>
+            <div class="gift-actions">
+              <button class="gift-copy" type="button" data-copy="swiftCode">Copy SWIFT code</button>
+              <button class="gift-copy" type="button" data-copy="internationalAccount">Copy account number</button>
+            </div>
           </div>
         </div>
       </section>
 
       <section class="paper-section wishes-section" id="wishes">
-        <div class="section-intro">FROM THE HEART</div>
-        <h2>Words of Love</h2>
-        <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
-        <p class="wishes-intro">Leave a wish for the two of us. Every message becomes part of the story we keep.</p>
+        <div class="wishes-layout">
+          <div class="wishes-copy" data-reveal-group>
+            <div class="section-intro">FROM THE HEART</div>
+            <h2>Words of Love</h2>
+            <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
+            <p class="wishes-intro">Leave a wish for the two of us. Every message becomes part of the story we keep.</p>
 
-        <form id="wishForm" class="wish-form">
-          <label class="form-label" for="wishName">Your name</label>
-          <input class="field" type="text" id="wishName" name="wishName" placeholder="Your name" required maxlength="60" autocomplete="name" />
-          <label class="form-label" for="wishMessage">Your wish</label>
-          <textarea class="field" id="wishMessage" name="wishMessage" rows="3" maxlength="300" placeholder="A few words for Richard &amp; Natasha" required></textarea>
-          <button class="primary form-submit" type="submit">Send your wish →</button>
-          <div class="form-status" id="wishStatus" role="status" aria-live="polite"></div>
-        </form>
+            <form id="wishForm" class="wish-form">
+              <label class="form-label" for="wishName">Your name</label>
+              <input class="field" type="text" id="wishName" name="wishName" placeholder="Your name" required maxlength="60" autocomplete="name" />
+              <label class="form-label" for="wishMessage">Your wish</label>
+              <textarea class="field" id="wishMessage" name="wishMessage" rows="3" maxlength="300" placeholder="A few words for Richard &amp; Natasha" required></textarea>
+              <button class="primary form-submit" type="submit">Send your wish →</button>
+              <div class="form-status" id="wishStatus" role="status" aria-live="polite"></div>
+            </form>
+          </div>
 
-        <p class="wishes-empty" id="wishesEmpty">No wishes yet. Be the first to leave one.</p>
-        <ul class="wish-list" id="wishList" aria-live="polite"></ul>
+          <div class="wishes-feed" data-reveal>
+            <p class="wishes-empty" id="wishesEmpty">No wishes yet. Be the first to leave one.</p>
+            <ul class="wish-list" id="wishList" aria-live="polite"></ul>
+          </div>
+        </div>
       </section>
 
-      <footer class="closing">
-        <div class="closing-seal">囍</div>
+      <footer class="closing" data-reveal-group>
+        <div class="closing-seal seal-mark" aria-hidden="true"></div>
         <h2>Thank You</h2>
         <p>For being part of this beautiful chapter of our lives.</p>
         <div class="footer-names">Richard &amp; Natasha</div>

@@ -3,12 +3,17 @@
   const MAX_SEATS = 6;
   const STORAGE_KEY = 'richard-natasha-rsvp';
   const WISH_KEY = 'richard-natasha-wishes';
+  const seenWishes = new Set();
 
   const cover = document.getElementById('cover');
   const invitation = document.getElementById('invitation');
   const envelope = document.getElementById('envelope');
+  const skipButton = document.getElementById('skipOpening');
   const openButtons = [document.getElementById('openLetter'), document.getElementById('openLetterButton')];
   let hasOpened = false;
+  let openTimers = [];
+
+  const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const music = document.getElementById('bgMusic');
   const musicToggle = document.getElementById('musicToggle');
@@ -17,21 +22,55 @@
   let musicAvailable = Boolean(music);
   let musicFade = 0;
 
-  function openInvitation() {
+  function clearOpenTimers() {
+    openTimers.forEach(window.clearTimeout);
+    openTimers = [];
+  }
+
+  // The cover fades away while the invitation fades in beneath it, so the
+  // guest never sees an empty screen between the letter and the content.
+  function completeOpen() {
+    clearOpenTimers();
+    cover.hidden = true;
+    cover.classList.remove('is-departing');
+    invitation.hidden = false;
+    if (musicAvailable) musicToggle.hidden = false;
+    window.scrollTo({top: 0, behavior: 'instant'});
+    if (typeof invitation.focus === 'function') invitation.focus({preventScroll: true});
+  }
+
+  function openInvitation(options = {}) {
     if (hasOpened) return;
     hasOpened = true;
     startMusic();
-    envelope.classList.add('is-opening');
     for (const button of openButtons) button.disabled = true;
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    window.setTimeout(() => {
-      cover.hidden = true;
+
+    if (options.instant || prefersReducedMotion()) {
+      completeOpen();
+      return;
+    }
+
+    envelope.classList.add('is-opening');
+    openTimers.push(window.setTimeout(() => {
       invitation.hidden = false;
-      if (musicAvailable) musicToggle.hidden = false;
-      window.scrollTo({top: 0, behavior: 'instant'});
-    }, prefersReduced ? 50 : 1450);
+      cover.classList.add('is-departing');
+    }, 1250));
+    openTimers.push(window.setTimeout(completeOpen, 2050));
   }
-  for (const button of openButtons) button.addEventListener('click', openInvitation);
+
+  function skipOpening() {
+    if (!hasOpened) {
+      openInvitation({instant: true});
+      return;
+    }
+    if (!cover.hidden) completeOpen();
+  }
+
+  for (const button of openButtons) button.addEventListener('click', () => openInvitation());
+  if (skipButton) skipButton.addEventListener('click', skipOpening);
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') skipOpening();
+  });
 
   function updateMusicButton(playing) {
     if (!musicToggle) return;
@@ -87,6 +126,35 @@
       musicAvailable = false;
       if (musicToggle) musicToggle.hidden = true;
     });
+  }
+
+  // ---------------------------------------------------------------------
+  // One-time reveals while reading
+  // Content stays visible without JavaScript; only `.motion-ready` hides
+  // items until they are observed, and each item reveals once.
+  // ---------------------------------------------------------------------
+  const revealGroups = document.querySelectorAll('[data-reveal-group]');
+  for (const group of revealGroups) {
+    [...group.children].forEach((child, index) => {
+      child.setAttribute('data-reveal', '');
+      child.style.setProperty('--reveal-delay', `${Math.min(index * 80, 360)}ms`);
+    });
+  }
+
+  const revealTargets = [...document.querySelectorAll('[data-reveal]')];
+
+  if (!prefersReducedMotion() && 'IntersectionObserver' in window) {
+    document.documentElement.classList.add('motion-ready');
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    }, {threshold: 0.16, rootMargin: '0px 0px -8% 0px'});
+    for (const target of revealTargets) observer.observe(target);
+  } else {
+    for (const target of revealTargets) target.classList.add('is-visible');
   }
 
   const params = new URLSearchParams(window.location.search);
@@ -460,6 +528,12 @@
     for (const wish of visible) {
       const item = document.createElement('li');
       item.className = 'wish-item';
+
+      const wishKey = `${String(wish.name).trim()}|${String(wish.message).trim()}`.toLowerCase();
+      if (!seenWishes.has(wishKey) && !prefersReducedMotion()) {
+        item.classList.add('wish-item--enter');
+      }
+      seenWishes.add(wishKey);
 
       const text = document.createElement('p');
       text.className = 'wish-text';
