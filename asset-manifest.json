@@ -1,0 +1,146 @@
+{
+  "assets": [
+    {
+      "path": "assets/svg/bg-cover.svg",
+      "role": "Mobile cover and closing background",
+      "width": 1080,
+      "height": 1920,
+      "transparent": false
+    },
+    {
+      "path": "assets/svg/bg-letter.svg",
+      "role": "Formal invitation and event details backdrop",
+      "width": 1080,
+      "height": 1920,
+      "transparent": false
+    },
+    {
+      "path": "assets/svg/bg-rsvp.svg",
+      "role": "RSVP backdrop",
+      "width": 1080,
+      "height": 1920,
+      "transparent": false
+    },
+    {
+      "path": "assets/svg/blossom-branch-left.svg",
+      "role": "Transparent branch top-left",
+      "width": 550,
+      "height": 510,
+      "transparent": true
+    },
+    {
+      "path": "assets/svg/blossom-branch-right.svg",
+      "role": "Transparent branch top-right",
+      "width": 550,
+      "height": 510,
+      "transparent": true
+    },
+    {
+      "path": "assets/svg/cloud-divider.svg",
+      "role": "Decorative section separator",
+      "width": 1000,
+      "height": 100,
+      "transparent": true
+    },
+    {
+      "path": "assets/svg/corner-ornament.svg",
+      "role": "Decorative corner",
+      "width": 95,
+      "height": 95,
+      "transparent": true
+    },
+    {
+      "path": "assets/svg/envelope-back.svg",
+      "role": "Envelope base; stays behind letter",
+      "width": 900,
+      "height": 620,
+      "transparent": false
+    },
+    {
+      "path": "assets/svg/envelope-flap.svg",
+      "role": "Rotating top flap",
+      "width": 900,
+      "height": 360,
+      "transparent": false
+    },
+    {
+      "path": "assets/svg/envelope-front.svg",
+      "role": "Foreground pocket and folds",
+      "width": 900,
+      "height": 620,
+      "transparent": false
+    },
+    {
+      "path": "assets/svg/letter-paper.svg",
+      "role": "Letter sheet behind pocket",
+      "width": 700,
+      "height": 950,
+      "transparent": false
+    },
+    {
+      "path": "assets/svg/paper-texture.svg",
+      "role": "Neutral textured parchment",
+      "width": 1080,
+      "height": 1920,
+      "transparent": false
+    },
+    {
+      "path": "assets/svg/pavilion-landscape.svg",
+      "role": "Transparent mountains and pavilion",
+      "width": 1080,
+      "height": 380,
+      "transparent": true
+    },
+    {
+      "path": "assets/svg/petal-01.svg",
+      "role": "Animation petal",
+      "width": 120,
+      "height": 130,
+      "transparent": true
+    },
+    {
+      "path": "assets/svg/petal-02.svg",
+      "role": "Animation petal",
+      "width": 120,
+      "height": 130,
+      "transparent": true
+    },
+    {
+      "path": "assets/svg/petal-03.svg",
+      "role": "Animation petal",
+      "width": 120,
+      "height": 130,
+      "transparent": true
+    },
+    {
+      "path": "assets/svg/petal-04.svg",
+      "role": "Animation petal",
+      "width": 120,
+      "height": 130,
+      "transparent": true
+    },
+    {
+      "path": "assets/svg/portrait-frame.svg",
+      "role": "Photo frame overlay",
+      "width": 800,
+      "height": 1050,
+      "transparent": true
+    },
+    {
+      "path": "assets/svg/red-tassel.svg",
+      "role": "Seal tassel ornament",
+      "width": 240,
+      "height": 330,
+      "transparent": true
+    },
+    {
+      "path": "assets/svg/wax-seal.svg",
+      "role": "Wax seal; fade during unseal",
+      "width": 240,
+      "height": 240,
+      "transparent": true
+    }
+  ],
+  "example": "index.html",
+  "photoPlaceholder": "assets/photos/demo-hanfu-couple.jpg"
+}

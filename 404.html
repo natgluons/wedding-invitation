@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Richard &amp; Natasha · A Wedding Invitation</title>
+  <script>
+    // GitHub Pages serves this file for unknown paths such as /alice.
+    // Turn the last path segment into a personalised invitation link.
+    (function () {
+      var path = window.location.pathname.replace(/\/+$/, '');
+      var segment = path.slice(path.lastIndexOf('/') + 1);
+      var directory = path.slice(0, path.lastIndexOf('/') + 1);
+
+      if (!segment || segment.indexOf('.') !== -1) {
+        window.location.replace(directory + 'index.html');
+        return;
+      }
+
+      window.location.replace(
+        directory + 'index.html?name=' + encodeURIComponent(decodeURIComponent(segment))
+      );
+    })();
+  </script>
+  <noscript><meta http-equiv="refresh" content="0; url=index.html" /></noscript>
+</head>
+<body></body>
+</html>

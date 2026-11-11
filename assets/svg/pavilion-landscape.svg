@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="380" viewBox="0 0 1080 380"><defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFF9EE"/><stop offset="0.47" stop-color="#F3E7D5"/><stop offset="1" stop-color="#E9D8C0"/></linearGradient>
+    <linearGradient id="flap" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#FFF9EF"/><stop offset="1" stop-color="#D8BFA1"/></linearGradient>
+    <linearGradient id="wax" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#C76962"/><stop offset=".38" stop-color="#8B202A"/><stop offset=".8" stop-color="#6D1A24"/><stop offset="1" stop-color="#AC4F4B"/></linearGradient>
+    <linearGradient id="mist" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#9CA99E" stop-opacity=".05"/><stop offset="1" stop-color="#778881" stop-opacity=".5"/></linearGradient>
+    <radialGradient id="petal"><stop stop-color="#F9D5C7"/><stop offset=".8" stop-color="#EBA79D"/><stop offset="1" stop-color="#C96F70" stop-opacity=".8"/></radialGradient>
+    <radialGradient id="sealGlow"><stop stop-color="#E3B77B" stop-opacity=".25"/><stop offset="1" stop-color="#E3B77B" stop-opacity="0"/></radialGradient>
+    </defs><g opacity="1">
+      <path d="M0 270 L65 220 L105 240 L178 142 L238 212 L288 164 L340 244 L430 170 L500 242 L576 200 L668 246 L740 139 L795 214 L847 161 L942 245 L1015 185 L1080 234 L1080 380 L0 380Z" fill="#A5ADA2" opacity=".24"/>
+      <path d="M0 323 L104 277 L188 306 L254 253 L304 277 L391 196 L473 278 L555 239 L642 291 L712 258 L777 300 L862 232 L937 277 L1080 255 L1080 380 L0 380Z" fill="url(#mist)" opacity=".72"/>
+      <path d="M0 348 Q130 305 260 342 T520 338 T780 342 T1080 323 L1080 380 L0 380Z" fill="#B4B5A7" opacity=".18"/>
+      <g transform="translate(822 194)" stroke="#7C786D" stroke-width="4" stroke-linejoin="round" opacity=".74">
+        <path d="M0 61 Q56 50 99 13 Q148 54 195 60 Q145 69 99 43 Q53 69 0 61Z" fill="#76776B"/>
+        <path d="M28 60 L28 154 M168 60 L168 154 M99 45 L99 153" stroke-width="7"/>
+        <path d="M15 154 L180 154 M42 104 L154 104 M42 129 L154 129" stroke-width="5"/>
+        <path d="M0 157 L195 157" stroke-width="10"/>
+      </g>
+    </g></svg>

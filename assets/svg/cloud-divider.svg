@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="100" viewBox="0 0 1000 100"><defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFF9EE"/><stop offset="0.47" stop-color="#F3E7D5"/><stop offset="1" stop-color="#E9D8C0"/></linearGradient>
+    <linearGradient id="flap" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#FFF9EF"/><stop offset="1" stop-color="#D8BFA1"/></linearGradient>
+    <linearGradient id="wax" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#C76962"/><stop offset=".38" stop-color="#8B202A"/><stop offset=".8" stop-color="#6D1A24"/><stop offset="1" stop-color="#AC4F4B"/></linearGradient>
+    <linearGradient id="mist" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#9CA99E" stop-opacity=".05"/><stop offset="1" stop-color="#778881" stop-opacity=".5"/></linearGradient>
+    <radialGradient id="petal"><stop stop-color="#F9D5C7"/><stop offset=".8" stop-color="#EBA79D"/><stop offset="1" stop-color="#C96F70" stop-opacity=".8"/></radialGradient>
+    <radialGradient id="sealGlow"><stop stop-color="#E3B77B" stop-opacity=".25"/><stop offset="1" stop-color="#E3B77B" stop-opacity="0"/></radialGradient>
+    </defs><path d="M10 50 H350 M650 50 H990" stroke="#B59668" stroke-width="3"/>
+<path d="M500 22 C465 15 450 46 470 58 C486 67 500 54 488 43 C479 38 472 49 479 53 M500 22 C535 15 550 46 530 58 C514 67 500 54 512 43 C521 38 528 49 521 53 M456 48 C434 26 418 49 433 62 C445 69 460 61 456 48 M544 48 C566 26 582 49 567 62 C555 69 540 61 544 48" fill="none" stroke="#B59668" stroke-width="3"/>
+<circle cx="500" cy="50" r="7" fill="#B59668"/></svg>
