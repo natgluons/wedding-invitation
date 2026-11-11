@@ -1,0 +1,14 @@
+{
+  "name": "Hanfu Letter Invitation",
+  "colors": {
+    "cream": "#F7F1E6", "ivory": "#FFF8EF", "paper": "#EEE0CB", "rose": "#C98684",
+    "burgundy": "#792A32", "red": "#9D4146", "gold": "#C4A16A", "ink": "#3C2B2A"
+  },
+  "typography": {
+    "display": "Georgia, 'Times New Roman', serif", "body": "Georgia, 'Times New Roman', serif",
+    "chineseFallback": "'Noto Serif CJK SC', 'Songti SC', 'SimSun', serif"
+  },
+  "layout": {"mobileMaxWidthPx": 460, "sectionPaddingPx": 32, "coverAssetAspect": "1080:1920"},
+  "motion": {"sealFadeMs": 500, "flapFoldMs": 700, "letterLiftMs": 900, "revealAfterMs": 1450},
+  "notes": ["The envelope uses multiple compositable layers", "Respect prefers-reduced-motion", "Text is always editable HTML"]
+}

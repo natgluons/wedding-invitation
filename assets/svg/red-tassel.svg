@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="330" viewBox="0 0 240 330"><defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFF9EE"/><stop offset="0.47" stop-color="#F3E7D5"/><stop offset="1" stop-color="#E9D8C0"/></linearGradient>
+    <linearGradient id="flap" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#FFF9EF"/><stop offset="1" stop-color="#D8BFA1"/></linearGradient>
+    <linearGradient id="wax" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#C76962"/><stop offset=".38" stop-color="#8B202A"/><stop offset=".8" stop-color="#6D1A24"/><stop offset="1" stop-color="#AC4F4B"/></linearGradient>
+    <linearGradient id="mist" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#9CA99E" stop-opacity=".05"/><stop offset="1" stop-color="#778881" stop-opacity=".5"/></linearGradient>
+    <radialGradient id="petal"><stop stop-color="#F9D5C7"/><stop offset=".8" stop-color="#EBA79D"/><stop offset="1" stop-color="#C96F70" stop-opacity=".8"/></radialGradient>
+    <radialGradient id="sealGlow"><stop stop-color="#E3B77B" stop-opacity=".25"/><stop offset="1" stop-color="#E3B77B" stop-opacity="0"/></radialGradient>
+    </defs><path d="M120 8 C92 45 78 51 81 77 C88 114 144 101 147 71 C148 46 128 35 120 8Z" fill="none" stroke="#842B32" stroke-width="9"/>
+<path d="M120 8 C132 47 170 57 160 83 C144 120 96 103 94 72 C93 56 111 32 120 8Z" fill="none" stroke="#A73D43" stroke-width="8"/>
+<path d="M120 107 L120 190 M92 153 L148 153" stroke="#922B36" stroke-width="16" stroke-linecap="round"/>
+<path d="M96 185 L144 185 L154 305 L86 305Z" fill="#9D3B3F"/>
+<path d="M94 201 L82 316" stroke="#C75C5B" stroke-width="2.7"/><path d="M100 201 L89 316" stroke="#7C262E" stroke-width="2.7"/><path d="M106 201 L96 316" stroke="#C75C5B" stroke-width="2.7"/><path d="M112 201 L103 316" stroke="#7C262E" stroke-width="2.7"/><path d="M118 201 L110 316" stroke="#C75C5B" stroke-width="2.7"/><path d="M124 201 L117 316" stroke="#7C262E" stroke-width="2.7"/><path d="M130 201 L124 316" stroke="#C75C5B" stroke-width="2.7"/><path d="M136 201 L131 316" stroke="#7C262E" stroke-width="2.7"/><path d="M142 201 L138 316" stroke="#C75C5B" stroke-width="2.7"/></svg>

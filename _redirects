@@ -1,0 +1,3 @@
+# Pretty guest links: /alice serves index.html while keeping the URL.
+# Netlify applies this after checking for a real file.
+/*  /index.html  200

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="620" viewBox="0 0 900 620"><defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFF9EE"/><stop offset="0.47" stop-color="#F3E7D5"/><stop offset="1" stop-color="#E9D8C0"/></linearGradient>
+    <linearGradient id="flap" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#FFF9EF"/><stop offset="1" stop-color="#D8BFA1"/></linearGradient>
+    <linearGradient id="wax" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#C76962"/><stop offset=".38" stop-color="#8B202A"/><stop offset=".8" stop-color="#6D1A24"/><stop offset="1" stop-color="#AC4F4B"/></linearGradient>
+    <linearGradient id="mist" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#9CA99E" stop-opacity=".05"/><stop offset="1" stop-color="#778881" stop-opacity=".5"/></linearGradient>
+    <radialGradient id="petal"><stop stop-color="#F9D5C7"/><stop offset=".8" stop-color="#EBA79D"/><stop offset="1" stop-color="#C96F70" stop-opacity=".8"/></radialGradient>
+    <radialGradient id="sealGlow"><stop stop-color="#E3B77B" stop-opacity=".25"/><stop offset="1" stop-color="#E3B77B" stop-opacity="0"/></radialGradient>
+    </defs><rect x="32" y="54" width="836" height="525" rx="18" fill="#D3BDA5" stroke="#B49876" stroke-width="5"/>
+<path d="M41 63 L450 357 L859 63 Z" fill="#742C33" opacity=".95"/>
+<path d="M48 65 L450 350 L850 65" fill="none" stroke="#C5A16A" stroke-width="4"/>
+<rect x="50" y="74" width="800" height="486" rx="4" stroke="#E8D5BF" stroke-width="1" fill="none" opacity=".5"/></svg>
