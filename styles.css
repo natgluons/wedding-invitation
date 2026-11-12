@@ -457,16 +457,19 @@ section, footer { scroll-margin-top: 66px; }
 .detail-icon { width: 32px; height: 38px; }
 .detail-icon svg { width: 30px; height: 32px; stroke-width: 1.35; }
 .gallery-section { position: relative; padding: 64px 24px; text-align: center; background: #f3e6d5; }
-.photo-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 920px; margin: 32px auto 0; }
-.photo-gallery figure { margin: 0; padding: 5px; background: #fff9ee; box-shadow: 0 8px 24px #51362b12; border: 1px solid #c4a16a50; }
-.photo-gallery img { display: block; width: 100%; height: 100%; aspect-ratio: 3/4; object-fit: cover; }
-.photo-gallery .gallery-wide { grid-column: 1/-1; }
-.photo-gallery .gallery-wide img { aspect-ratio: 4/3; object-position: center 35%; }
+.photo-gallery { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; align-items: start; max-width: 920px; margin: 32px auto 0; }
+.photo-gallery figure { margin: 0; padding: 6px; background: #fff9ee; box-shadow: 0 8px 24px #51362b12; border: 1px solid #c4a16a50; }
+.photo-gallery img { display: block; width: 100%; height: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: center 32%; }
+.photo-gallery .gallery-wide { grid-column: 1/10; grid-row: 1; }
+.photo-gallery .gallery-second { grid-column: 8/-1; grid-row: 1; margin-top: clamp(64px, 24vw, 140px); z-index: 1; transform: rotate(3deg); }
+.photo-gallery .gallery-offset { grid-column: 2/10; grid-row: 2; margin-top: 12px; transform: rotate(-2deg); }
+.photo-gallery .gallery-offset img { aspect-ratio: 4/3; object-position: center 42%; }
 @media (min-width: 960px) {
   .milestones { --timeline-indent: 28px; }
-  .photo-gallery { grid-template-columns: 1.2fr 1fr 1fr; align-items: center; gap: 20px; }
-  .photo-gallery .gallery-wide { grid-column: auto; }
-  .photo-gallery .gallery-wide img { aspect-ratio: 3/4; }
+  .photo-gallery { gap: 20px; max-width: 940px; }
+  .photo-gallery .gallery-wide { grid-column: 1/7; grid-row: 1; }
+  .photo-gallery .gallery-second { grid-column: 8/-1; grid-row: 1; margin-top: 60px; }
+  .photo-gallery .gallery-offset { grid-column: 2/10; grid-row: 2; margin-top: 40px; }
 }
 @media (max-width: 959px) {
   #details { background: url('assets/svg/blossom-branch-left.svg') left 16px/85px auto no-repeat, var(--cream); }
@@ -491,17 +494,10 @@ section, footer { scroll-margin-top: 66px; }
 .portrait-caption .section-intro { color: #e1bd83; font-size: 9px; }
 .portrait-caption h2 { color: #fff7ec; font-size: clamp(34px, 6vw, 54px); line-height: 1.2; margin: 20px 0; }
 .portrait-caption .divider-img { margin-bottom: 0; }
-.photo-gallery { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; align-items: start; }
-.photo-gallery .gallery-wide { grid-column: 1 / 10; grid-row: 1; }
-.photo-gallery .gallery-wide img { aspect-ratio: 3/4; }
-.photo-gallery figure:nth-child(2) { grid-column: 8 / -1; grid-row: 1; margin-top: 96%; z-index: 1; transform: rotate(3deg); }
-.photo-gallery .gallery-offset { grid-column: 2 / 10; grid-row: 2; margin-top: 12px; transform: rotate(-2deg); }
-.photo-gallery .gallery-offset img { aspect-ratio: 4/3; }
-.photo-gallery figure { padding: 6px; }
 .closing.closing-photo { position: relative; isolation: isolate; display: flex; align-items: flex-end; justify-content: center; min-height: 720px; min-height: 90svh; padding: 64px 30px; overflow: hidden; background: #382321; }
 .closing-portrait { position: absolute; z-index: -2; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 55% 28%; }
 .closing-photo::before { content: ""; position: absolute; z-index: -1; inset: 0; background: linear-gradient(180deg, #28191608 10%, #28191666 40%, #281916ef 85%); }
-.closing-copy { width: 100%; max-width: 580px; }
+.closing-copy { width: 100%; max-width: 580px; margin-inline: auto; }
 .closing-photo h2 { color: #fff7ec; font-size: clamp(48px, 8vw, 72px); margin: 24px 0 20px; }
 .closing-photo p { color: #fff1df; }
 .closing-photo .footer-names { color: #e1bd83; margin-top: 32px; }
@@ -510,10 +506,6 @@ section, footer { scroll-margin-top: 66px; }
 @media (min-width: 960px) {
   .portrait-interlude { height: 760px; }
   .portrait-interlude > img { object-position: center 40%; }
-  .photo-gallery { max-width: 940px; }
-  .photo-gallery .gallery-wide { grid-column: 1/7; }
-  .photo-gallery figure:nth-child(2) { grid-column: 8/-1; margin-top: 60px; }
-  .photo-gallery .gallery-offset { grid-column: 5/11; margin-top: -100px; }
   .closing.closing-photo { min-height: 800px; }
   .closing-portrait { object-position: center 35%; }
 }

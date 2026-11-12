@@ -109,7 +109,7 @@ The **Words of Love** section above the closing screen lets guests leave a wish.
 - `assets/svg/`: source assets in editable, resolution-independent SVG (22 files)
 - `assets/png/`: exported PNG variants for common decorative layers (15 files)
 - `assets/photos/placeholder-1.jpeg`: front/top portrait placeholder (replace with the couple's photo)
-- `assets/photos/placeholder-2.jpeg`: Our Story portrait placeholder (replace with the couple's photo)
+- `assets/photos/placeholder-2..6.jpeg`: Our Story portrait, three gallery placeholders, and the closing portrait (replace with the couple's photos)
 - `assets/bgsong/a-heartbeats-turn.mp3`: background music, starts when the letter is opened
 - `references/design-reference.png`: earlier generated visual design reference; **not intended as a directly usable interface**
 - `design-tokens.json`: colors, spacing, motion and typography values
@@ -154,7 +154,7 @@ The header links to the existing sections. No additional pages or sections were 
 
 ## Replace with the real photos
 
-Replace `assets/photos/placeholder-1.jpeg` (hero/front portrait) and `assets/photos/placeholder-2.jpeg` (Our Story portrait) with your own photos, preserving the paths or editing the HTML. Keep names, date, address, and RSVP text as HTML, not rasterized images.
+Replace `assets/photos/placeholder-1.jpeg` (hero/front portrait), `assets/photos/placeholder-2.jpeg` (Our Story portrait), `assets/photos/placeholder-3..5.jpeg` (three-photo gallery) and `assets/photos/placeholder-6.jpeg` (closing portrait) with your own photos, preserving the paths or editing the HTML. The portrait interlude uses `demo-hanfu-couple.jpg`, and every photo appears only once across the page. Keep names, date, address, and RSVP text as HTML, not rasterized images.
 
 ## Core interaction sequence
 
