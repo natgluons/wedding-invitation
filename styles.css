@@ -546,3 +546,8 @@ section, footer { scroll-margin-top: 66px; }
 .cover { z-index:45; }
 .envelope-hit, .cover-open-btn { touch-action:manipulation; }
 .envelope-hit .envelope, .envelope-hit .envelope * { pointer-events:none; }
+
+.gift-tabs button { display:flex; align-items:center; justify-content:center; gap:8px; }
+.gift-tab-icon { width:18px; height:18px; flex:none; }
+.gift-tab-flag { height:12px; border-radius:2px; box-shadow:0 0 0 1px #00000018; }
+.gift-tab-globe { fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
