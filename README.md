@@ -11,7 +11,9 @@ For best results, from the repo root run: `python -m http.server 8000` and open 
 ## Current invitation
 
 - **Couple:** Richard Putra, S.Kom. & Kristy Natasha Yohanes, S.Si., M.Sc. (shown as **Richard & Natasha**)
-- **Date:** Sunday, 17 January 2027, 18:00 WIB – finish
+- **Date:** Sunday, 17 January 2027
+  - **Holy Matrimony:** 11:00 WIB
+  - **Reception:** 18:00 WIB – finish
 - **Venue:** Grand Mercure Magnolia Ballroom, Jakarta
 - **RSVP deadline:** 17 December 2026
 - **Story:** first met April 2021; first date 1 June 2023 at Mall Kelapa Gading (MKG); engaged 2 June 2025; long-distance while Natasha studies abroad at Imperial College London; wedding day 17 January 2027.
@@ -78,7 +80,7 @@ window.WEDDING_CONFIG = {
 };
 ```
 
-The sheet records: submitted time (Asia/Jakarta), name, attendance, guest count, message, the name from the personalised link, and the page URL. A guest who submits again updates their existing row instead of creating a duplicate.
+The sheet records: submitted time (Asia/Jakarta), name, attendance, events (Holy Matrimony + Reception, Holy Matrimony only, or Reception only), guest count, message, the name from the personalised link, and the page URL. A guest who submits again updates their existing row instead of creating a duplicate.
 
 If the request fails, the form offers a WhatsApp fallback when `contactWhatsApp` is set. If `rsvpEndpoint` is blank the form stays in preview mode and tells you so.
 

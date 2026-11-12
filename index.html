@@ -76,8 +76,22 @@
           <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
         </div>
         <div class="detail-list" data-reveal-group>
-          <article class="detail-row"><div class="detail-icon">◷</div><div><b>Date &amp; Time</b><p>Sunday, 17 January 2027<br />18:00 WIB – finish</p></div></article>
-          <article class="detail-row"><div class="detail-icon">⌖</div><div><b>Venue</b><p>Grand Mercure Magnolia Ballroom<br />Jakarta, Indonesia</p></div></article>
+          <article class="detail-row">
+            <div class="detail-icon">◷</div>
+            <div>
+              <b>Holy Matrimony</b>
+              <p>Sunday, 17 January 2027<br />11:00 WIB</p>
+              <p class="detail-venue">Grand Mercure Magnolia Ballroom<br />Jakarta, Indonesia</p>
+            </div>
+          </article>
+          <article class="detail-row">
+            <div class="detail-icon">⌖</div>
+            <div>
+              <b>Reception</b>
+              <p>Sunday, 17 January 2027<br />18:00 WIB – finish</p>
+              <p class="detail-venue">Grand Mercure Magnolia Ballroom<br />Jakarta, Indonesia</p>
+            </div>
+          </article>
         </div>
         <div class="details-actions">
           <a class="secondary" href="https://www.google.com/maps/search/?api=1&amp;query=Grand+Mercure+Magnolia+Ballroom+Jakarta" target="_blank" rel="noopener noreferrer">View location <span aria-hidden="true">↗</span></a>
@@ -157,6 +171,11 @@
           <fieldset class="attendance"><legend>Attendance</legend>
             <label><input type="radio" name="attendance" value="attending" checked /> <span>✓ I will attend</span></label>
             <label><input type="radio" name="attendance" value="not-attending" /> <span>× I can't attend</span></label>
+          </fieldset>
+          <fieldset class="events-choice"><legend>Which events will you join?</legend>
+            <label><input type="radio" name="events" value="both" checked /> <span>Holy Matrimony + Reception</span></label>
+            <label><input type="radio" name="events" value="holy-matrimony" /> <span>Holy Matrimony only</span></label>
+            <label><input type="radio" name="events" value="reception" /> <span>Reception only</span></label>
           </fieldset>
           <label class="form-label" for="guestName">Your name</label>
           <input class="field" type="text" id="guestName" name="name" placeholder="Full name" required maxlength="100" autocomplete="name" />

@@ -223,6 +223,10 @@
       const input = form.querySelector(`input[name="attendance"][value="${saved.attendance}"]`);
       if (input) input.checked = true;
     }
+    if (saved.events) {
+      const input = form.querySelector(`input[name="events"][value="${saved.events}"]`);
+      if (input) input.checked = true;
+    }
     const when = new Date(saved.savedAt || Date.now()).toLocaleDateString('en-GB', {
       day: 'numeric', month: 'long', year: 'numeric'
     });
@@ -409,10 +413,12 @@
   // RSVP
   // ---------------------------------------------------------------------
   const attendanceInputs = form.querySelectorAll('input[name="attendance"]');
+  const eventInputs = form.querySelectorAll('input[name="events"]');
 
   function syncAttendance() {
     const attending = form.querySelector('input[name="attendance"]:checked').value === 'attending';
     guestCountSelect.disabled = !attending;
+    for (const input of eventInputs) input.disabled = !attending;
   }
   for (const input of attendanceInputs) input.addEventListener('change', syncAttendance);
   syncAttendance();
@@ -420,10 +426,16 @@
   function buildWhatsAppLink(payload) {
     const number = String(config.contactWhatsApp || '').replace(/\D/g, '');
     if (!number) return null;
+    const eventLabels = {
+      both: 'Holy Matrimony + Reception',
+      'holy-matrimony': 'Holy Matrimony only',
+      reception: 'Reception only'
+    };
     const lines = [
       'RSVP for Richard & Natasha',
       `Name: ${payload.name}`,
       `Attendance: ${payload.attendance === 'attending' ? 'Attending' : 'Not attending'}`,
+      payload.attendance === 'attending' ? `Events: ${eventLabels[payload.events] || eventLabels.both}` : null,
       payload.attendance === 'attending' ? `Guests: ${payload.guests}` : null,
       payload.message ? `Note: ${payload.message}` : null
     ].filter(Boolean);
@@ -445,6 +457,7 @@
       type: 'rsvp',
       name: guestNameInput.value.trim().slice(0, 100),
       attendance: attending ? 'attending' : 'not-attending',
+      events: attending ? form.querySelector('input[name="events"]:checked').value : '',
       guests: attending ? clampSeats(Number(guestCountSelect.value) || 1) : 0,
       message: guestMessageInput.value.trim().slice(0, 500),
       invitedAs: invitedName,
