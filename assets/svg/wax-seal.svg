@@ -10,4 +10,4 @@
 <circle cx="120" cy="120" r="91" fill="none" stroke="#E6B478" stroke-width="5" opacity=".7"/>
 <circle cx="120" cy="120" r="82" fill="none" stroke="#F1C486" stroke-width="2" opacity=".55"/>
 <path d="M50 80 C70 41 95 34 139 38" fill="none" stroke="#F8CFB2" opacity=".2" stroke-width="10" stroke-linecap="round"/>
-<text x="120" y="122" text-anchor="middle" dominant-baseline="central" font-family="'Songti SC','STSong','Noto Serif CJK SC','Noto Serif',Georgia,serif" font-size="112" font-weight="500" fill="#EBCB9C">囍</text></svg>
+<g fill="none" stroke="#EBCB9C" stroke-width="8" stroke-linejoin="miter"><path d="M80 59v30M49 70h62M57 88h46M49 132h62"/><path d="M59 100h42v20h-42zM55 146h50v32h-50z"/><path d="M160 59v30M129 70h62M137 88h46M129 132h62"/><path d="M139 100h42v20h-42zM135 146h50v32h-50z"/></g></svg>

@@ -28,7 +28,7 @@ Add a guest name to the URL to personalise the cover and pre-fill the RSVP:
 - `/alice?plus=0` → 1 seat and **Dear Alice,**
 - `/alice?guests=3` → 3 seats and **Dear Alice & Guests,**
 - `?name=John` or `?to=John` also work, with the same `plus` / `guests` options.
-- `?lang=id` or `?lang=en` switches the whole invitation language (also `/id` and `/en`). The ID version shows domestic bank transfer details, while EN shows the international transfer details.
+- `?lang=id` or `?lang=en` switches the whole invitation language (also `/id` and `/en`). Domestic and International transfer tabs are independent of the language, with Domestic selected by default.
 
 Path links (`/alice`) keep the URL clean. They need a host that serves `index.html` for unknown paths: `_redirects` covers Netlify, and `404.html` makes GitHub Pages forward `/alice` to `index.html?name=alice`. On GitHub Pages the address changes after the forward, though the invitation still greets Alice.
 

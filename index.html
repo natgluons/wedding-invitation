@@ -7,11 +7,21 @@
   <meta name="description" content="The wedding of Richard Putra and Kristy Natasha Yohanes, Sunday, 17 January 2027, Jakarta." />
   <title>Richard &amp; Natasha · A Wedding Invitation</title>
   <link rel="icon" type="image/svg+xml" href="assets/svg/favicon.svg" />
-  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .asset-loader { display:none; }
+    html.assets-loading .asset-loader { position:fixed; inset:0; z-index:1000; display:grid; place-items:center; background:#f7f1e6; }
+    .asset-spinner { width:38px; height:38px; border:2px solid #c4a16a40; border-top-color:#792a32; border-radius:50%; animation:asset-spin .9s linear infinite; }
+    @keyframes asset-spin { to { transform:rotate(360deg); } }
+    @media(prefers-reduced-motion:reduce) { .asset-spinner { animation-duration:2s; } }
+  </style>
+  <script>document.documentElement.classList.add('assets-loading'); window.assetLoadTimeout = setTimeout(function () { document.documentElement.classList.remove('assets-loading'); }, 10000);</script>
+  <link rel="preload" as="image" href="assets/photos/placeholder-1-1536.webp" imagesrcset="assets/photos/placeholder-1-768.webp 768w, assets/photos/placeholder-1-1536.webp 1536w" imagesizes="(min-width: 960px) 1240px, 100vw" />
+  <link rel="stylesheet" href="styles.css?v=20261112-parallax-3" />
   <script defer src="config.js"></script>
-  <script defer src="main.js"></script>
+  <script defer src="main.js?v=20261112-parallax-3"></script>
 </head>
 <body>
+  <div class="asset-loader" role="status" aria-label="Loading invitation"><span class="asset-spinner" aria-hidden="true"></span></div>
   <div class="site-shell">
     <section id="cover" class="cover" aria-label="Wedding invitation opening" data-i18n-aria="cover.aria">
       <div class="cover-inner">
@@ -29,14 +39,11 @@
               <span class="letter-peek"><span class="peek-name" id="letterFor" data-i18n="cover.letterForYou">For You</span><span class="peek-divider"></span><small data-i18n="cover.peekSmall">A day to remember</small></span>
               <span class="envelope-front"></span>
               <span class="envelope-flap"></span>
-              <span class="red-string"></span>
               <span class="wax-seal"></span>
               <span class="red-tassel"></span>
             </span>
           </button>
-          <button class="primary cover-open-btn" id="openLetterButton" type="button" data-i18n-html="cover.open">Open the letter <span aria-hidden="true">→</span></button>
-          <p class="hint" data-i18n="cover.hint">Tap the seal to reveal our invitation</p>
-          <button class="cover-skip" id="skipOpening" type="button" data-i18n="cover.skip">Skip the opening</button>
+          <button class="primary cover-open-btn" id="openLetterButton" type="button" data-i18n="cover.open">Open the letter</button>
         </div>
       </div>
     </section>
@@ -61,12 +68,12 @@
 
       <section class="hero" aria-label="The wedding of Richard and Natasha" data-i18n-aria="hero.aria">
         <div class="hero-image-wrap">
-          <img class="hero-image" src="assets/photos/placeholder-1.jpeg" alt="Placeholder couple portrait in traditional hanfu, replace with the couple's prewedding photograph" data-i18n-alt="hero.alt" />
+          <img class="hero-image" fetchpriority="high" decoding="async" src="assets/photos/placeholder-1-1536.webp" srcset="assets/photos/placeholder-1-768.webp 768w, assets/photos/placeholder-1-1536.webp 1536w" sizes="(min-width: 960px) 1240px, 100vw" alt="Placeholder couple portrait in traditional hanfu, replace with the couple's prewedding photograph" data-i18n-alt="hero.alt" />
           <div class="hero-image-fade"></div>
         </div>
         <div class="hero-copy" data-reveal-group>
           <div class="eyebrow" data-i18n="hero.eyebrow">THE WEDDING OF</div>
-          <h2>Richard <em>&amp;</em><br />Natasha</h2>
+          <h2 class="hero-names"><span>Richard</span><em>&amp;</em><span>Natasha</span></h2>
           <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
           <p data-i18n-html="hero.intro">With joyful hearts and our families,<br />we invite you to celebrate our wedding.</p>
           <p class="hero-fullnames">Kristy Natasha Yohanes, S.Si., M.Sc.<br />&amp; Richard Putra, S.Kom.</p>
@@ -82,7 +89,7 @@
         </div>
         <div class="detail-list" data-reveal-group>
           <article class="detail-row">
-            <div class="detail-icon" aria-hidden="true">◷</div>
+            <div class="detail-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path d="M5 28V14l11-8 11 8v14H5Z M12 28v-8a4 4 0 0 1 8 0v8 M16 2v9 M12 5h8"/><path d="M9 15h2m10 0h2"/></svg></div>
             <div>
               <b data-i18n="details.holy">Holy Matrimony</b>
               <p><span data-i18n="details.date">Sunday, 17 January 2027</span><br /><span data-i18n="details.holyTime">11:00 WIB – finish</span></p>
@@ -91,7 +98,7 @@
           </article>
           <article class="detail-row">
             <div class="detail-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" focusable="false"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>
+              <svg viewBox="0 0 32 32" focusable="false"><path d="m7 4 7 3-3 9a4 4 0 0 1-7-3L7 4Zm18 0-7 3 3 9a4 4 0 0 0 7-3l-3-9ZM7 18l-3 9m-3-1 6 2m18-10 3 9m-3 1 6-2M16 2v3m-2 14 2 2 2-2"/><path d="m5 10 7 3m8 0 7-3"/></svg>
             </div>
             <div>
               <b data-i18n="details.reception">Reception</b>
@@ -101,8 +108,7 @@
           </article>
         </div>
         <div class="details-actions">
-          <a class="secondary" href="https://www.google.com/maps/search/?api=1&amp;query=Grand+Mercure+Kemayoran+Magnolia+Ballroom+Jakarta" target="_blank" rel="noopener noreferrer" data-i18n-html="details.viewLocation">View location <span aria-hidden="true">↗</span></a>
-          <p class="detail-note" data-i18n="details.note">Formal or traditional attire, please.</p>
+          <a class="secondary location-button" href="https://www.google.com/maps/search/?api=1&amp;query=Grand+Mercure+Kemayoran+Magnolia+Ballroom+Jakarta" target="_blank" rel="noopener noreferrer" ><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2.5"/></svg><span data-i18n="details.viewLocation">View location</span></a>
         </div>
       </section>
 
@@ -118,6 +124,15 @@
         <p class="countdown-note" data-i18n="countdown.note">Sunday, 17 January 2027 · 18:00 WIB</p>
       </section>
 
+      <section class="portrait-interlude" aria-label="A moment together" data-i18n-aria="portrait.aria">
+        <img src="assets/photos/demo-hanfu-couple-1536.webp" alt="Placeholder portrait of a couple in traditional wedding attire" loading="lazy" decoding="async" />
+        <div class="portrait-caption" data-reveal-group>
+          <div class="section-intro" data-i18n="portrait.intro">THROUGH EVERY SEASON</div>
+          <h2 data-i18n-html="portrait.title">You, me,<br />and all that’s to come.</h2>
+          <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
+        </div>
+      </section>
+
       <section class="story-section" id="story">
         <div class="section-head" data-reveal-group>
           <div class="section-intro" data-i18n="story.intro">A JOURNEY OF TWO</div>
@@ -125,13 +140,13 @@
         </div>
         <div class="story-body">
           <div class="photo-frame" data-reveal>
-            <img src="assets/photos/placeholder-2.jpeg" alt="Placeholder hanfu couple photo" data-i18n-alt="story.photoAlt" />
+            <img src="assets/photos/placeholder-2-1536.webp" srcset="assets/photos/placeholder-2-768.webp 768w, assets/photos/placeholder-2-1536.webp 1536w" sizes="(min-width: 960px) 1240px, 100vw" alt="Placeholder hanfu couple photo" data-i18n-alt="story.photoAlt" />
             <img class="frame-overlay" src="assets/svg/portrait-frame.svg" alt="" />
           </div>
           <div class="story-copy">
             <p class="story-lead" data-reveal data-i18n="story.lead">Ours is a love written across cities and time zones, and now, finally, we are counting down to the day we say “I do.”</p>
 
-            <ol class="milestones" data-reveal-group>
+            <ol class="milestones" data-reveal>
               <li>
                 <span class="milestone-date" data-i18n="story.m1date">APRIL 2021</span>
                 <h3 data-i18n="story.m1title">How We Met</h3>
@@ -163,6 +178,19 @@
 
         <img class="divider-img story-divider" src="assets/svg/cloud-divider.svg" alt="" />
         <div class="section-intro" data-i18n="story.next">THE NEXT CHAPTER BEGINS</div>
+      </section>
+
+      <section class="gallery-section" aria-labelledby="gallery-title">
+        <div class="section-head" data-reveal-group>
+          <div class="section-intro" data-i18n="gallery.intro">LITTLE MOMENTS, A LIFETIME OF LOVE</div>
+          <h2 id="gallery-title" data-i18n="gallery.title">Together, Always</h2>
+          <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
+        </div>
+        <div class="photo-gallery" data-reveal>
+          <figure class="gallery-wide"><img src="assets/photos/placeholder-2-1536.webp" srcset="assets/photos/placeholder-2-768.webp 768w, assets/photos/placeholder-2-1536.webp 1536w" sizes="(min-width: 960px) 1240px, 100vw" alt="Placeholder couple portrait in traditional wedding attire" loading="lazy" decoding="async" /></figure>
+          <figure><img src="assets/photos/gallery-celebration-1536.webp" srcset="assets/photos/gallery-celebration-768.webp 768w, assets/photos/gallery-celebration-1536.webp 1000w" sizes="(min-width: 960px) 1240px, 100vw" alt="Placeholder wedding celebration" loading="lazy" decoding="async" /></figure>
+          <figure class="gallery-offset"><img src="assets/photos/gallery-together-1536.webp" srcset="assets/photos/gallery-together-768.webp 768w, assets/photos/gallery-together-1536.webp 1000w" sizes="(min-width: 960px) 1240px, 100vw" alt="Placeholder couple sharing a wedding moment" loading="lazy" decoding="async" /></figure>
+        </div>
       </section>
 
       <section class="paper-section rsvp-section" id="rsvp">
@@ -210,8 +238,12 @@
           <p class="gift-intro" data-i18n="gift.body">Your presence is the greatest gift we could ask for. If you would like to bless us with something more, a contribution toward our first home would be received with heartfelt thanks.</p>
         </div>
 
+        <div class="gift-tabs" role="tablist" aria-label="Transfer options">
+          <button type="button" role="tab" id="domesticTab" aria-controls="domesticPanel" aria-selected="true" data-i18n="gift.domesticTab">Domestic</button>
+          <button type="button" role="tab" id="internationalTab" aria-controls="internationalPanel" aria-selected="false" tabindex="-1" data-i18n="gift.internationalTab">International</button>
+        </div>
         <div class="gift-grid" data-reveal-group>
-          <div class="gift-card gift-card--domestic">
+          <div class="gift-card gift-card--domestic" id="domesticPanel" role="tabpanel" aria-labelledby="domesticTab">
             <span class="gift-tag" data-i18n="gift.domestic">DOMESTIC TRANSFER</span>
             <p class="gift-bank">Bank Central Asia (BCA)</p>
             <p class="gift-number" id="domesticAccount">0000000000</p>
@@ -219,7 +251,7 @@
             <button class="gift-copy" type="button" data-copy="domesticAccount" data-i18n="gift.copyAccount">Copy account number</button>
           </div>
 
-          <div class="gift-card gift-card--international">
+          <div class="gift-card gift-card--international" id="internationalPanel" role="tabpanel" aria-labelledby="internationalTab" hidden>
             <span class="gift-tag" data-i18n="gift.international">INTERNATIONAL TRANSFER</span>
             <dl class="gift-details">
               <div><dt data-i18n="gift.bank">Bank</dt><dd>Bank Central Asia (BCA)</dd></div>
@@ -262,13 +294,16 @@
         </div>
       </section>
 
-      <footer class="closing" data-reveal-group>
+      <footer class="closing closing-photo">
+        <img class="closing-portrait" src="assets/photos/placeholder-1-1536.webp" srcset="assets/photos/placeholder-1-768.webp 768w, assets/photos/placeholder-1-1536.webp 1536w" sizes="(min-width: 960px) 1240px, 100vw" alt="" loading="lazy" decoding="async" />
+        <div class="closing-copy" data-reveal-group>
         <div class="closing-seal seal-mark" aria-hidden="true"></div>
         <h2 data-i18n="footer.title">Thank You</h2>
         <p data-i18n="footer.text">For being part of this beautiful chapter of our lives.</p>
         <div class="footer-names">Richard &amp; Natasha</div>
         <p class="footer-date">17 · 01 · 2027 · JAKARTA</p>
         <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
+        </div>
       </footer>
     </main>
   </div>
@@ -277,7 +312,7 @@
       <span aria-hidden="true">/</span>
       <button type="button" data-lang="id" aria-pressed="false">ID</button>
     </div>
-  <audio id="bgMusic" src="assets/bgsong/a-heartbeats-turn.mp3" loop preload="auto"></audio>
+  <audio id="bgMusic" src="assets/bgsong/a-heartbeats-turn.mp3" loop preload="none"></audio>
   <button class="music-toggle" id="musicToggle" type="button" aria-label="Pause background music" aria-pressed="true" hidden>
     <span aria-hidden="true">♪</span>
   </button>

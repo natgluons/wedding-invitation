@@ -25,7 +25,7 @@
       "cover.openAria": "Open wedding invitation letter",
       "cover.letterForYou": "For You",
       "cover.peekSmall": "A day to remember",
-      "cover.open": 'Open the letter <span aria-hidden="true">→</span>',
+      "cover.open": 'Open the letter',
       "cover.hint": "Tap the seal to reveal our invitation",
       "cover.skip": "Skip the opening",
       "hero.aria": "The wedding of Richard and Natasha",
@@ -41,8 +41,7 @@
       "details.holyTime": "11:00 WIB – finish",
       "details.receptionTime": "18:00 WIB – finish",
       "details.venue": "Grand Mercure Kemayoran<br />Magnolia Ballroom, Jakarta, Indonesia",
-      "details.viewLocation": 'View location <span aria-hidden="true">↗</span>',
-      "details.note": "Formal or traditional attire, please.",
+      "details.viewLocation": 'View location',
       "countdown.aria": "Countdown to the wedding",
       "countdown.intro": "COUNTING DOWN TO FOREVER",
       "countdown.title": "We can’t wait",
@@ -72,6 +71,11 @@
       "story.m5title": "A New Chapter",
       "story.m5text": "After everything we've shared and all the miles we've crossed, we're finally getting married. We can't wait to celebrate this special day with the family and friends we love.",
       "story.next": "THE NEXT CHAPTER BEGINS",
+      "portrait.aria": "A moment together",
+      "portrait.intro": "THROUGH EVERY SEASON",
+      "portrait.title": "You, me,<br />and all that’s to come.",
+      "gallery.intro": "LITTLE MOMENTS, A LIFETIME OF LOVE",
+      "gallery.title": "Together, Always",
       "rsvp.intro": "WE SAVED YOU A SEAT",
       "rsvp.title": "Will You Join Us?",
       "rsvp.body": 'Your presence would mean the world to us.<br /><span class="rsvp-deadline">Kindly respond by 3 January 2027.</span>',
@@ -96,6 +100,8 @@
       "gift.intro": "WITH GRATITUDE",
       "gift.title": "Wedding Gift",
       "gift.body": "Your presence is the greatest gift we could ask for. If you would like to bless us with something more, a contribution toward our first home would be received with heartfelt thanks.",
+      "gift.domesticTab": "Domestic",
+      "gift.internationalTab": "International",
       "gift.domestic": "DOMESTIC TRANSFER",
       "gift.international": "INTERNATIONAL TRANSFER",
       "gift.bank": "Bank",
@@ -165,7 +171,7 @@
       "cover.openAria": "Buka surat undangan pernikahan",
       "cover.letterForYou": "Untukmu",
       "cover.peekSmall": "Hari yang tak terlupakan",
-      "cover.open": 'Buka surat <span aria-hidden="true">→</span>',
+      "cover.open": 'Buka surat',
       "cover.hint": "Ketuk segel untuk membuka undangan kami",
       "cover.skip": "Lewati pembuka",
       "hero.aria": "Pernikahan Richard dan Natasha",
@@ -181,8 +187,7 @@
       "details.holyTime": "11:00 WIB – selesai",
       "details.receptionTime": "18:00 WIB – selesai",
       "details.venue": "Grand Mercure Kemayoran<br />Magnolia Ballroom, Jakarta, Indonesia",
-      "details.viewLocation": 'Lihat lokasi <span aria-hidden="true">↗</span>',
-      "details.note": "Mohon kenakan pakaian formal atau tradisional.",
+      "details.viewLocation": 'Lihat lokasi',
       "countdown.aria": "Hitung mundur menuju pernikahan",
       "countdown.intro": "MENGHITUNG HARI MENUJU SELAMANYA",
       "countdown.title": "Kami tidak sabar",
@@ -212,6 +217,11 @@
       "story.m5title": "Awal Babak Baru",
       "story.m5text": "Setelah melewati berbagai cerita dan perjalanan bersama, akhirnya kami akan menikah. Kami ingin berbagi kebahagiaan ini dengan keluarga dan teman-teman yang kami sayangi.",
       "story.next": "BAB BARU DIMULAI",
+      "portrait.aria": "Momen bersama",
+      "portrait.intro": "DI SETIAP MUSIM KEHIDUPAN",
+      "portrait.title": "Aku, kamu,<br />dan semua yang menanti.",
+      "gallery.intro": "MOMEN KECIL, CINTA SEPANJANG MASA",
+      "gallery.title": "Selalu Bersama",
       "rsvp.intro": "KAMI MENYIAPKAN TEMPAT UNTUK ANDA",
       "rsvp.title": "Maukah Anda Bergabung?",
       "rsvp.body": 'Kehadiran Anda sangat berarti bagi kami.<br /><span class="rsvp-deadline">Mohon konfirmasi sebelum 3 Januari 2027.</span>',
@@ -236,6 +246,8 @@
       "gift.intro": "DENGAN RASA SYUKUR",
       "gift.title": "Hadiah Pernikahan",
       "gift.body": "Kehadiran Anda adalah hadiah terbaik yang kami harapkan. Jika Anda ingin memberi lebih, kontribusi untuk rumah pertama kami akan kami terima dengan penuh rasa syukur.",
+      "gift.domesticTab": "Domestik",
+      "gift.internationalTab": "Internasional",
       "gift.domestic": "TRANSFER DOMESTIK",
       "gift.international": "TRANSFER INTERNASIONAL",
       "gift.bank": "Bank",
@@ -378,6 +390,61 @@
   let openTimers = [];
 
   const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Only gate entry on opening assets; later photos remain lazy loaded.
+  const openingAssets = [
+    'assets/svg/bg-cover.svg',
+    'assets/svg/envelope-back.svg', 'assets/svg/envelope-front.svg',
+    'assets/svg/envelope-flap.svg', 'assets/svg/wax-seal.svg'
+  ];
+  Promise.allSettled([
+    document.fonts.ready,
+    document.querySelector('.hero-image').decode().catch(() => {}),
+    ...openingAssets.map((src) => new Promise((resolve) => {
+      const image = new Image();
+      image.onload = image.onerror = resolve;
+      image.src = src;
+    }))
+  ]).then(() => {
+    clearTimeout(window.assetLoadTimeout);
+    document.documentElement.classList.remove('assets-loading');
+  });
+
+  // Animate only visible photographs, once per scroll frame.
+  const parallaxScenes = [
+    ['.hero', '.hero-image'],
+    ['.portrait-interlude', '.portrait-interlude > img'],
+    ['.closing-photo', '.closing-portrait']
+  ].map(([scene, image]) => ({scene: document.querySelector(scene), image: document.querySelector(image)}))
+    .filter(({scene, image}) => scene && image);
+  const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let parallaxFrame = 0;
+  function updateParallax() {
+    parallaxFrame = 0;
+    parallaxScenes.forEach(({scene, image}) => {
+      if (motionPreference.matches) {
+        image.style.removeProperty('transform');
+        image.style.removeProperty('--parallax-travel');
+        return;
+      }
+      const rect = scene.getBoundingClientRect();
+      if (!rect.height || rect.bottom < 0 || rect.top > window.innerHeight) return;
+      const progress = Math.max(-1, Math.min(1,
+        (window.innerHeight / 2 - rect.top - rect.height / 2) / ((window.innerHeight + rect.height) / 2)));
+      const travel = Math.min(300, rect.height * 0.36);
+      image.style.setProperty('--parallax-travel', `${travel}px`);
+      image.style.transform = `translate3d(0, ${progress * travel}px, 0)`;
+    });
+  }
+  function requestParallax() {
+    if (!parallaxFrame) parallaxFrame = requestAnimationFrame(updateParallax);
+  }
+  window.addEventListener('scroll', requestParallax, {passive:true});
+  window.addEventListener('resize', requestParallax);
+  motionPreference.addEventListener('change', requestParallax);
+  new MutationObserver(requestParallax).observe(invitation, {attributes:true, attributeFilter:['hidden']});
+  requestParallax();
+
 
   const music = document.getElementById('bgMusic');
   const musicToggle = document.getElementById('musicToggle');
@@ -694,6 +761,31 @@
 
   updateCountdown();
   window.setInterval(updateCountdown, 1000);
+
+  // Transfer choice is independent of the display language.
+  const giftTabs = Array.from(document.querySelectorAll('.gift-tabs [role="tab"]'));
+  function selectGiftTab(selected) {
+    giftTabs.forEach((tab) => {
+      const active = tab === selected;
+      tab.setAttribute('aria-selected', String(active));
+      tab.tabIndex = active ? 0 : -1;
+      document.getElementById(tab.getAttribute('aria-controls')).hidden = !active;
+    });
+  }
+  giftTabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => selectGiftTab(tab));
+    tab.addEventListener('keydown', (event) => {
+      let next;
+      if (event.key === 'ArrowRight') next = (index + 1) % giftTabs.length;
+      if (event.key === 'ArrowLeft') next = (index - 1 + giftTabs.length) % giftTabs.length;
+      if (event.key === 'Home') next = 0;
+      if (event.key === 'End') next = giftTabs.length - 1;
+      if (next === undefined) return;
+      event.preventDefault();
+      selectGiftTab(giftTabs[next]);
+      giftTabs[next].focus();
+    });
+  });
 
   // Copy buttons for bank details.
   function fallbackCopy(text) {
