@@ -433,7 +433,9 @@
       if (!rect.height || rect.bottom < 0 || rect.top > window.innerHeight) return;
       const progress = Math.max(-1, Math.min(1,
         (window.innerHeight / 2 - rect.top - rect.height / 2) / ((window.innerHeight + rect.height) / 2)));
-      const travel = Math.min(300, rect.height * 0.36);
+      // Keep the travel very small so the top of each photograph (and the
+      // faces) stays inside the frame at every scroll position.
+      const travel = Math.min(32, rect.height * 0.045);
       image.style.setProperty('--parallax-travel', `${travel}px`);
       image.style.transform = `translate3d(0, ${progress * travel}px, 0)`;
     });
