@@ -1,3 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240" role="img" aria-label="Double happiness">
-  <text x="120" y="126" text-anchor="middle" dominant-baseline="central" font-family="'Songti SC','STSong','Noto Serif CJK SC','Noto Serif',Georgia,serif" font-size="210" font-weight="500" fill="#792A32">囍</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Double happiness">
+  <!-- Adapted from Conrad Cheung / Sarang, public domain. Source: https://commons.wikimedia.org/wiki/File:Double_happiness.svg -->
+  <g stroke="#792A32"><circle cx="50" cy="50" r="46" fill="none" stroke-width="4"/><path transform="translate(16.52 16.7) scale(.36)" fill="none" stroke-width="16" d="m51,0V43m84,0V0M17,25h68m16,0h68m13,26H4m21,25h51v25H25zm0,76h51v25H25zm85 0h51v25h-51zm0-76h51v25H110zm25,33v42m-84,0V109M1,126.5H185z"/></g>
 </svg>

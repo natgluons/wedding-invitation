@@ -433,7 +433,10 @@
       if (!rect.height || rect.bottom < 0 || rect.top > window.innerHeight) return;
       const progress = Math.max(-1, Math.min(1,
         (window.innerHeight / 2 - rect.top - rect.height / 2) / ((window.innerHeight + rect.height) / 2)));
-      const travel = Math.min(300, rect.height * 0.36);
+      const desktopClosing = scene.matches('.closing-photo') && window.innerWidth >= 960;
+      const travel = desktopClosing
+        ? Math.min(80, rect.height * 0.1)
+        : Math.min(300, rect.height * 0.36);
       image.style.setProperty('--parallax-travel', `${travel}px`);
       image.style.transform = `translate3d(0, ${progress * travel}px, 0)`;
     });

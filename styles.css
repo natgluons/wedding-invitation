@@ -52,7 +52,7 @@ button { cursor: pointer; }
 @keyframes exhibit { from {opacity:0; transform:translateY(26px)} to {opacity:1; transform:none} }
 .compact-head { position:sticky; top:0; z-index:30; display:none; align-items:center; gap:8px; min-height:53px; padding:0 14px; padding-top: env(safe-area-inset-top, 0px); background:#f8f1e5f2; border-bottom:1px solid #e4d6c1; -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); }
 .head-seal { width:24px; height:24px; flex:none; }
-.seal-mark { display:inline-block; background-color:var(--burgundy); -webkit-mask:url('assets/svg/double-happiness.svg') center/contain no-repeat; mask:url('assets/svg/double-happiness.svg') center/contain no-repeat; }
+.seal-mark { display:inline-block; background-color:var(--burgundy); -webkit-mask:url('assets/svg/double-happiness.svg?v=vector-2') center/contain no-repeat; mask:url('assets/svg/double-happiness.svg?v=vector-2') center/contain no-repeat; }
 .closing-seal { display:flex; justify-content:center; }
 .closing-seal.seal-mark { width:46px; height:46px; margin:0 auto; }
 .head-brand { display:none; flex:1; font-size:9px; letter-spacing:.18em; color:var(--burgundy); opacity:.72; white-space:nowrap; }
@@ -543,3 +543,84 @@ section, footer { scroll-margin-top: 66px; }
 .gift-tab-icon { width:18px; height:18px; flex:none; }
 .gift-tab-flag { height:12px; border-radius:2px; box-shadow:0 0 0 1px #00000018; }
 .gift-tab-globe { fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+
+/* One circular motif connects the navigation and closing seal. */
+.head-seal.seal-mark { width:32px; height:32px; }
+.seal-mark {
+  -webkit-mask-image:url('assets/svg/double-happiness.svg?v=emblem-5');
+  mask-image:url('assets/svg/double-happiness.svg?v=emblem-5');
+}
+.closing-photo .closing-seal {
+  position:relative;
+  display:block;
+  width:104px;
+  height:104px;
+  margin:0 auto 18px;
+  border:0;
+  border-radius:50%;
+  background:#58202a;
+  -webkit-mask:none;
+  mask:none;
+  box-shadow:0 5px 24px #160c0b40;
+}
+.closing-photo .closing-seal::after {
+  content:"";
+  position:absolute;
+  inset:4px;
+  background:#e1bd83;
+  -webkit-mask:url('assets/svg/double-happiness.svg?v=emblem-5') center/contain no-repeat;
+  mask:url('assets/svg/double-happiness.svg?v=emblem-5') center/contain no-repeat;
+}
+.closing-photo::before { background:linear-gradient(180deg, #28191608 10%, #28191666 35%, #281916f5 70%); }
+@media (min-width:960px) {
+  .closing-photo .closing-seal { width:132px; height:132px; margin-bottom:24px; }
+}
+
+/* Desktop closing: portrait and a framed dedication share the width. */
+@media (min-width:960px) {
+  .closing.closing-photo {
+    display:grid;
+    grid-template-columns:1.05fr 1fr;
+    align-items:center;
+    min-height:0;
+    padding:76px 64px;
+    gap:40px;
+  }
+  .closing-photo::before {
+    background:linear-gradient(90deg, #28191608 15%, #28191644 38%, #281916e8 60%, #281916fa 100%);
+  }
+  .closing-photo::after {
+    content:"";
+    position:absolute;
+    inset:24px;
+    border:1px solid #d9b47b55;
+    pointer-events:none;
+    z-index:-1;
+  }
+  .closing-portrait { width:78%; object-position:65% 0; }
+  .closing-photo .closing-copy {
+    position:relative;
+    grid-column:2;
+    max-width:500px;
+    margin:0;
+    padding:36px 16px 28px;
+    border-block:1px solid #d9b47b66;
+  }
+  .closing-copy::after {
+    content:"";
+    position:absolute;
+    width:145px;
+    height:155px;
+    top:-66px;
+    right:-44px;
+    background:url('assets/svg/blossom-branch-right.svg') center/contain no-repeat;
+    opacity:.7;
+    pointer-events:none;
+  }
+  .closing-photo .closing-seal { width:112px; height:112px; margin-bottom:24px; }
+  .closing-photo h2 { font-size:clamp(64px,6vw,84px); line-height:1.05; margin:24px 0; }
+  .closing-photo p { max-width:32ch; margin-inline:auto; font-size:15px; line-height:1.8; }
+  .closing-photo .footer-names { margin-top:28px; font-size:32px; }
+  .closing-photo .footer-date { font-size:10px; letter-spacing:.18em; }
+  .closing-copy .divider-img { margin-bottom:0; }
+}
