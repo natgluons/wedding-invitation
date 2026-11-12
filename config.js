@@ -5,7 +5,7 @@
 window.WEDDING_CONFIG = {
   // Google Apps Script Web App URL (see README → "RSVP backend").
   // Leave blank to keep the form in preview mode: nothing is sent or saved.
-  rsvpEndpoint: '',
+  rsvpEndpoint: 'https://script.google.com/macros/s/AKfycbyqwO8aTk6kJJXZQpbFDJoFfIY3adJMOUPVsQq0yl-_Uy2cCsk0hhW-sT_vFX8uugL9/exec',
 
   // Public address of the published invitation, used as the default base when
   // generating guest links with `node tools/generate-links.js`.

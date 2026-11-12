@@ -1,7 +1,12 @@
 (() => {
   const config = window.WEDDING_CONFIG || {};
+  let invitationReady = !String(config.rsvpEndpoint || '').trim();
+  let invitationChecking = !invitationReady;
+  let invitationStatusKey = '';
+  let invitationRetry = false;
   const MAX_SEATS = 4;
-  const STORAGE_KEY = 'richard-natasha-rsvp';
+  const inviteCode = new URLSearchParams(window.location.search).get('code') || '';
+  const STORAGE_KEY = 'richard-natasha-rsvp:' + (inviteCode || 'preview');
   const WISH_KEY = 'richard-natasha-wishes';
   const LANG_KEY = 'richard-natasha-lang';
   const seenWishes = new Set();
@@ -26,7 +31,7 @@
       "cover.letterForYou": "For You",
       "cover.peekSmall": "A day to remember",
       "cover.open": 'Open the letter',
-      "cover.hint": "Tap the seal to reveal our invitation",
+      "cover.hint": "Tap the seal to open your invitation.",
       "cover.skip": "Skip the opening",
       "hero.aria": "The wedding of Richard and Natasha",
       "hero.alt": "Placeholder couple portrait in traditional hanfu, replace with the couple's prewedding photograph",
@@ -83,6 +88,11 @@
       "rsvp.attendYes": "✓ I will attend",
       "rsvp.attendNo": "× I can't attend",
       "rsvp.events": "Which events will you join?",
+      "rsvp.eventsPlaceholder": "Select events",
+      "dynamic.inviteLoading": "Checking your invitation…",
+      "dynamic.inviteInvalid": "Please use your personal invitation link to RSVP. If it no longer works, contact us.",
+      "dynamic.inviteUnavailable": "We couldn’t check your invitation. Please reload to try again.",
+      "dynamic.inviteRejected": "Your RSVP was not saved. Please check your invitation and party size, then try again.",
       "rsvp.both": "Holy Matrimony + Reception",
       "rsvp.holyOnly": "Holy Matrimony only",
       "rsvp.receptionOnly": "Reception only",
@@ -94,7 +104,7 @@
       "rsvp.count2": "2 people",
       "rsvp.count3": "3 people",
       "rsvp.count4": "4 people",
-      "rsvp.countHint": "If you are bringing a plus one, please add their name in the note below.",
+      "rsvp.countHint": "Please include the names of anyone joining you in the note below.",
       "rsvp.note": "A note for us (optional)",
       "rsvp.notePlaceholder": "Your wishes, guest names, or dietary notes",
       "rsvp.submit": "Submit RSVP",
@@ -173,7 +183,7 @@
       "cover.letterForYou": "Untukmu",
       "cover.peekSmall": "Hari yang tak terlupakan",
       "cover.open": 'Buka surat',
-      "cover.hint": "Ketuk segel untuk membuka undangan kami",
+      "cover.hint": "Ketuk segelnya untuk membuka undangan.",
       "cover.skip": "Lewati pembuka",
       "hero.aria": "Pernikahan Richard dan Natasha",
       "hero.alt": "Foto pasangan dalam pakaian hanfu, ganti dengan foto prewedding pasangan",
@@ -191,7 +201,7 @@
       "details.viewLocation": 'Lihat lokasi',
       "countdown.aria": "Hitung mundur menuju pernikahan",
       "countdown.intro": "MENGHITUNG HARI MENUJU SELAMANYA",
-      "countdown.title": "Kami tidak sabar",
+      "countdown.title": "Kami sangat menantikan hari bahagia ini",
       "countdown.groupAria": "Sisa waktu menuju pernikahan",
       "countdown.days": "Hari",
       "countdown.hours": "Jam",
@@ -201,35 +211,40 @@
       "story.intro": "PERJALANAN KAMI BERDUA",
       "story.title": "Kisah Kami",
       "story.photoAlt": "Foto pasangan hanfu",
-      "story.lead": "Kisah cinta kami terbentang melintasi kota dan zona waktu, dan kini kami menghitung hari menuju saat kami mengucapkan janji suci.",
+      "story.lead": "Kisah kami terjalin di antara kota dan zona waktu. Kini, kami menghitung hari menuju janji suci.",
       "story.m1date": "APRIL 2021",
       "story.m1title": "Pertama Bertemu",
-      "story.m1text": "Kami bertemu untuk pertama kalinya, tanpa menyangka bahwa pertemuan sederhana itu akan menjadi awal dari kisah kami.",
+      "story.m1text": "Saat itu kami belum tahu, pertemuan sederhana tersebut akan menjadi awal dari kisah kami.",
       "story.m2date": "1 JUNI 2023",
       "story.m2title": "Kencan Pertama",
-      "story.m2text": "Kencan pertama kami di Mall Kelapa Gading. Awalnya hanya makan bersama, tapi ternyata kami menghabiskan waktu berjam-jam mengobrol.",
+      "story.m2text": "Kencan pertama kami di Mall Kelapa Gading. Rencana makan bersama berubah menjadi obrolan panjang berjam-jam.",
       "story.m3date": "2 JUNI 2025",
       "story.m3title": "Pertunangan",
       "story.m3text": "Dengan penuh haru dan bahagia, Natasha menjawab, “Ya.”",
       "story.m4date": "2025–2026",
       "story.m4title": "Menjalani Hubungan Jarak Jauh",
-      "story.m4text": "Natasha melanjutkan studinya di Imperial College London. Meski terpisah ribuan kilometer, kami tetap saling menemani lewat telepon, cerita sehari-hari, dan menghitung hari sampai bisa bertemu lagi.",
+      "story.m4text": "Natasha melanjutkan studi di Imperial College London. Meski terpisah ribuan kilometer, kami tetap dekat lewat telepon dan cerita sehari-hari, sambil menanti waktu untuk bertemu lagi.",
       "story.m5date": "17 JANUARI 2027",
       "story.m5title": "Awal Babak Baru",
-      "story.m5text": "Setelah melewati berbagai cerita dan perjalanan bersama, akhirnya kami akan menikah. Kami ingin berbagi kebahagiaan ini dengan keluarga dan teman-teman yang kami sayangi.",
+      "story.m5text": "Setelah melalui begitu banyak cerita bersama, kini kami akan menikah. Kami ingin merayakan kebahagiaan ini bersama keluarga dan sahabat terkasih.",
       "story.next": "BAB BARU DIMULAI",
       "portrait.aria": "Momen bersama",
       "portrait.intro": "DI SETIAP MUSIM KEHIDUPAN",
-      "portrait.title": "Aku, kamu,<br />dan semua yang menanti.",
+      "portrait.title": "Aku, kamu,<br />dan segala yang akan datang.",
       "gallery.intro": "MOMEN KECIL, CINTA SEPANJANG MASA",
       "gallery.title": "Selalu Bersama",
       "rsvp.intro": "KAMI MENYIAPKAN TEMPAT UNTUK ANDA",
       "rsvp.title": "Maukah Anda Bergabung?",
-      "rsvp.body": 'Kehadiran Anda sangat berarti bagi kami.<br /><span class="rsvp-deadline">Mohon konfirmasi sebelum 3 Januari 2027.</span>',
+      "rsvp.body": 'Kehadiran Anda sangat berarti bagi kami.<br /><span class="rsvp-deadline">Mohon konfirmasi kehadiran sebelum 3 Januari 2027.</span>',
       "rsvp.attendance": "Kehadiran",
       "rsvp.attendYes": "✓ Saya akan hadir",
       "rsvp.attendNo": "× Saya tidak bisa hadir",
-      "rsvp.events": "Acara mana yang akan Anda hadiri?",
+      "rsvp.events": "Acara yang akan Anda hadiri",
+      "rsvp.eventsPlaceholder": "Pilih acara",
+      "dynamic.inviteLoading": "Memeriksa undangan Anda…",
+      "dynamic.inviteInvalid": "Silakan gunakan tautan undangan pribadi Anda untuk RSVP. Hubungi kami jika tautan tidak berfungsi.",
+      "dynamic.inviteUnavailable": "Undangan belum dapat diperiksa. Muat ulang halaman untuk mencoba lagi.",
+      "dynamic.inviteRejected": "RSVP belum tersimpan. Periksa undangan dan jumlah tamu Anda, lalu coba lagi.",
       "rsvp.both": "Pemberkatan + Resepsi",
       "rsvp.holyOnly": "Hanya Pemberkatan",
       "rsvp.receptionOnly": "Hanya Resepsi",
@@ -241,56 +256,56 @@
       "rsvp.count2": "2 orang",
       "rsvp.count3": "3 orang",
       "rsvp.count4": "4 orang",
-      "rsvp.countHint": "Jika Anda membawa pasangan, mohon tambahkan nama mereka di catatan di bawah.",
+      "rsvp.countHint": "Tuliskan nama tamu lain yang ikut di kolom catatan di bawah.",
       "rsvp.note": "Catatan untuk kami (opsional)",
-      "rsvp.notePlaceholder": "Ucapan, nama tamu, atau catatan makanan",
+      "rsvp.notePlaceholder": "Ucapan, nama tamu, atau pantangan makanan",
       "rsvp.submit": "Kirim RSVP",
       "gift.intro": "DENGAN RASA SYUKUR",
       "gift.title": "Hadiah Pernikahan",
-      "gift.body": "Kehadiran Anda adalah hadiah terbaik yang kami harapkan. Jika Anda ingin memberi lebih, kontribusi untuk rumah pertama kami akan kami terima dengan penuh rasa syukur.",
-      "gift.domesticTab": "Domestik",
-      "gift.internationalTab": "Internasional",
-      "gift.domestic": "TRANSFER DOMESTIK",
-      "gift.international": "TRANSFER INTERNASIONAL",
+      "gift.body": "Kehadiran Anda adalah hadiah terindah bagi kami. Jika ingin memberikan hadiah, dukungan Anda untuk mewujudkan rumah pertama kami akan sangat berarti.",
+      "gift.domesticTab": "Dalam Negeri",
+      "gift.internationalTab": "Luar Negeri",
+      "gift.domestic": "TRANSFER DALAM NEGERI",
+      "gift.international": "TRANSFER LUAR NEGERI",
       "gift.bank": "Bank",
       "gift.swift": "SWIFT / BIC",
       "gift.accountNumber": "Nomor rekening",
       "gift.accountName": "Nama rekening",
       "gift.bankAddress": "Alamat bank",
-      "gift.note": "Mohon gunakan nama lengkap Anda sebagai berita transfer. Untuk bantuan transfer, silakan hubungi kami langsung.",
+      "gift.note": "Cantumkan nama lengkap Anda pada keterangan transfer. Jika ada pertanyaan, silakan hubungi kami.",
       "gift.copyAccount": "Salin nomor rekening",
       "gift.copySwift": "Salin kode SWIFT",
       "wishes.intro": "DARI HATI",
-      "wishes.title": "Ucapan Kasih",
-      "wishes.body": "Tinggalkan ucapan untuk kami berdua. Setiap pesan menjadi bagian dari kisah yang kami simpan.",
+      "wishes.title": "Ucapan untuk Kami",
+      "wishes.body": "Tuliskan doa dan harapan untuk kami. Setiap pesan akan menjadi kenangan yang berharga.",
       "wishes.name": "Nama Anda",
       "wishes.namePlaceholder": "Nama Anda",
       "wishes.wish": "Ucapan Anda",
-      "wishes.wishPlaceholder": "Beberapa kata untuk Richard & Natasha",
+      "wishes.wishPlaceholder": "Tuliskan pesan untuk Richard & Natasha",
       "wishes.submit": "Kirim ucapan →",
-      "wishes.empty": "Belum ada ucapan. Jadilah yang pertama.",
+      "wishes.empty": "Belum ada ucapan. Anda bisa menjadi yang pertama.",
       "footer.title": "Terima Kasih",
-      "footer.text": "Karena telah menjadi bagian dari bab indah dalam hidup kami.",
-      "dynamic.savedStatus": "Anda telah merespons pada {date}. Kirim ulang jika ingin memperbarui jawaban.",
+      "footer.text": "Terima kasih telah menjadi bagian dari kisah indah kami.",
+      "dynamic.savedStatus": "Jawaban Anda tersimpan pada {date}. Kirim ulang formulir jika ingin mengubahnya.",
       "dynamic.copied": "Tersalin!",
       "dynamic.copyFailed": "Gagal menyalin",
-      "dynamic.sendingRsvp": "Mengirim RSVP Anda…",
-      "dynamic.rsvpSuccess": "Terima kasih, RSVP Anda telah kami terima. Kami tidak sabar merayakan bersama Anda!",
+      "dynamic.sendingRsvp": "Mengirim konfirmasi kehadiran…",
+      "dynamic.rsvpSuccess": "Terima kasih, konfirmasi kehadiran Anda sudah kami terima. Kami sangat menantikan hari istimewa ini bersama Anda!",
       "dynamic.rsvpPreview": "Mode pratinjau: RSVP tidak dikirim atau disimpan. Tambahkan URL Google Apps Script Anda di config.js untuk mulai menerima respons.",
       "dynamic.rsvpError": "Kami tidak dapat mengirim RSVP Anda secara otomatis. Silakan coba lagi.",
       "dynamic.whatsapp": "Hubungi kami lewat WhatsApp →",
-      "dynamic.sendingWish": "Mengirim ucapan Anda…",
-      "dynamic.wishSuccess": "Terima kasih, ucapan Anda telah ditambahkan ke surat kami.",
+      "dynamic.sendingWish": "Mengirim ucapan…",
+      "dynamic.wishSuccess": "Terima kasih, ucapan Anda sudah kami terima.",
       "dynamic.wishSaved": "Hanya tersimpan di perangkat ini. Tambahkan URL Google Apps Script Anda di config.js agar ucapan setiap tamu terkumpul.",
       "dynamic.wishError": "Kami tidak dapat mengirim ucapan Anda. Silakan coba lagi sebentar lagi.",
       "dynamic.honeypot": "Terima kasih. RSVP Anda telah kami terima.",
-      "dynamic.guestGreeting": "Kepada {name}{label},",
-      "dynamic.guestGreetingLabel": " & Tamu",
-      "dynamic.guestGreetingLabelPlural": " & Para Tamu",
-      "dynamic.seatsReserved": "Kami telah menyediakan {n} tempat atas nama Anda",
-      "dynamic.seatsReservedPlural": "Kami telah menyediakan {n} tempat atas nama Anda",
-      "dynamic.seatsInvitation": "Undangan Anda mencakup {n} tempat.",
-      "dynamic.seatsInvitationPlural": "Undangan Anda mencakup {n} tempat.",
+      "dynamic.guestGreeting": "Untuk {name}{label},",
+      "dynamic.guestGreetingLabel": " & tamu",
+      "dynamic.guestGreetingLabelPlural": " & para tamu",
+      "dynamic.seatsReserved": "Kami telah menyiapkan {n} tempat untuk Anda",
+      "dynamic.seatsReservedPlural": "Kami telah menyiapkan {n} tempat untuk Anda",
+      "dynamic.seatsInvitation": "Undangan ini berlaku untuk {n} orang.",
+      "dynamic.seatsInvitationPlural": "Undangan ini berlaku untuk {n} orang.",
       "dynamic.letterFor": "Untuk {name}",
       "dynamic.musicPause": "Jeda musik latar",
       "dynamic.musicPlay": "Putar musik latar",
@@ -365,6 +380,7 @@
     }
 
     renderGuestCopy();
+    renderInvitationGate();
     renderSavedStatus();
     if (latestWishes.length) renderWishes(latestWishes);
     if (music) updateMusicButton(!music.paused);
@@ -387,19 +403,21 @@
   const invitation = document.getElementById('invitation');
   const envelope = document.getElementById('envelope');
   const skipButton = document.getElementById('skipOpening');
-  const openButtons = [document.getElementById('openLetter'), document.getElementById('openLetterButton')];
+  const openButtons = [document.getElementById('openLetter')];
   let hasOpened = false;
+  let openingAnimationDone = false;
+  let openingDepartureStarted = false;
   let openTimers = [];
 
   const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Only gate entry on opening assets; later photos remain lazy loaded.
+  // Opening assets and guest verification load together; later photos stay lazy.
   const openingAssets = [
     'assets/svg/bg-cover.svg',
     'assets/svg/envelope-back.svg', 'assets/svg/envelope-front.svg',
     'assets/svg/envelope-flap.svg', 'assets/svg/wax-seal.svg'
   ];
-  Promise.allSettled([
+  const openingAssetsReady = Promise.race([Promise.allSettled([
     document.fonts.ready,
     document.querySelector('.hero-image').decode().catch(() => {}),
     ...openingAssets.map((src) => new Promise((resolve) => {
@@ -407,49 +425,105 @@
       image.onload = image.onerror = resolve;
       image.src = src;
     }))
-  ]).then(() => {
-    clearTimeout(window.assetLoadTimeout);
-    document.documentElement.classList.remove('assets-loading');
-  });
+  ]), new Promise(resolve => setTimeout(resolve, 10000))]);
 
-  // Animate only visible photographs, once per scroll frame.
-  const parallaxScenes = [
+  // Measure document geometry only when layout changes. Scrolling only
+  // reads scrollY and updates transforms on visible photo layers.
+  const photoScenes = [
     ['.hero', '.hero-image'],
     ['.portrait-interlude', '.portrait-interlude > img'],
     ['.closing-photo', '.closing-portrait']
-  ].map(([scene, image]) => ({scene: document.querySelector(scene), image: document.querySelector(image)}))
-    .filter(({scene, image}) => scene && image);
-  const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
-  let parallaxFrame = 0;
-  function updateParallax() {
-    parallaxFrame = 0;
-    parallaxScenes.forEach(({scene, image}) => {
-      if (motionPreference.matches) {
-        image.style.removeProperty('transform');
-        image.style.removeProperty('--parallax-travel');
-        return;
+  ].map(([scene, image]) => ({scene: document.querySelector(scene), image: document.querySelector(image), lastOffset: null}));
+  const storyPainting = {scene: document.querySelector('#story'), image: document.querySelector('.painting-story'), lastOffset: null};
+  const photoMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  let photoFrame = 0;
+  let photoMeasurementsDirty = true;
+  function documentTop(element) {
+    let top = 0;
+    for (let parent = element; parent; parent = parent.offsetParent) top += parent.offsetTop;
+    return top;
+  }
+  let lastPhotoTick = 0;
+  function updatePhotoWipes(now) {
+    photoFrame = 0;
+    const elapsed = lastPhotoTick ? Math.min(32, Math.max(1, now - lastPhotoTick)) : 16;
+    lastPhotoTick = now;
+    const blend = 1 - Math.exp(-elapsed / 55);
+    let settling = false;
+    if (photoMeasurementsDirty) {
+      for (const photo of photoScenes) {
+        const frame = photo.image.parentElement;
+        photo.top = documentTop(frame);
+        photo.frameHeight = frame.clientHeight;
+        photo.height = photo.image.clientHeight;
       }
-      const rect = scene.getBoundingClientRect();
-      if (!rect.height || rect.bottom < 0 || rect.top > window.innerHeight) return;
-      const progress = Math.max(-1, Math.min(1,
-        (window.innerHeight / 2 - rect.top - rect.height / 2) / ((window.innerHeight + rect.height) / 2)));
-      const desktopClosing = scene.matches('.closing-photo') && window.innerWidth >= 960;
-      const travel = desktopClosing
-        ? Math.min(80, rect.height * 0.1)
-        : Math.min(300, rect.height * 0.36);
-      image.style.setProperty('--parallax-travel', `${travel}px`);
-      image.style.transform = `translate3d(0, ${progress * travel}px, 0)`;
-    });
+      storyPainting.top = documentTop(storyPainting.scene);
+      storyPainting.height = storyPainting.scene.clientHeight;
+      photoMeasurementsDirty = false;
+    }
+    const scrollTop = scrollY;
+    const viewport = innerHeight;
+    for (const photo of photoScenes) {
+      const top = photo.top - scrollTop;
+      const bottom = top + photo.frameHeight;
+      if (!photo.height || bottom <= 0 || top >= viewport) continue;
+      const minimum = Math.min(viewport, bottom) - photo.height - top;
+      const maximum = Math.max(0, top) - top;
+      const desired = photoMotion.matches ? 0 : top < 0 ? -top * .85
+        : photo.scene.matches('.hero') ? 0 : -top * .85;
+      const target = photoMotion.matches ? 0 : Math.max(minimum, Math.min(maximum, desired));
+      let offset = photoMotion.matches || photo.lastOffset === null
+        ? target : photo.lastOffset + (target - photo.lastOffset) * blend;
+      // Ease through small touch changes, but never uncover the image edge.
+      if (!photoMotion.matches) offset = Math.max(minimum, Math.min(maximum, offset));
+      if (Math.abs(target - offset) < .15) offset = target;
+      else settling = true;
+      if (photo.lastOffset !== null && Math.abs(offset - photo.lastOffset) < .01) continue;
+      photo.image.style.transform = `translate3d(0, ${offset}px, 0)`;
+      photo.lastOffset = offset;
+    }
+    if (innerWidth >= 960 || photoMotion.matches) {
+      storyPainting.image.style.removeProperty('transform');
+      storyPainting.lastOffset = null;
+    } else {
+      const top = storyPainting.top - scrollTop;
+      if (top < viewport && top + storyPainting.height > 0) {
+        const progress = Math.max(-1, Math.min(1,
+          (viewport / 2 - top - storyPainting.height / 2) / ((viewport + storyPainting.height) / 2)));
+        const target = progress * 70;
+        let offset = storyPainting.lastOffset === null ? target
+          : storyPainting.lastOffset + (target - storyPainting.lastOffset) * blend;
+        if (Math.abs(target - offset) < .15) offset = target;
+        else settling = true;
+        if (storyPainting.lastOffset === null || Math.abs(offset - storyPainting.lastOffset) >= .01) {
+          storyPainting.image.style.transform = `translate3d(0, ${offset}px, 0)`;
+          storyPainting.lastOffset = offset;
+        }
+      }
+    }
+    if (settling) requestPhotoWipes();
+    else lastPhotoTick = 0;
   }
-  function requestParallax() {
-    if (!parallaxFrame) parallaxFrame = requestAnimationFrame(updateParallax);
+  function requestPhotoWipes() {
+    if (!photoFrame) photoFrame = requestAnimationFrame(updatePhotoWipes);
   }
-  window.addEventListener('scroll', requestParallax, {passive:true});
-  window.addEventListener('resize', requestParallax);
-  motionPreference.addEventListener('change', requestParallax);
-  new MutationObserver(requestParallax).observe(invitation, {attributes:true, attributeFilter:['hidden']});
-  requestParallax();
-
+  function measurePhotoWipes() {
+    photoMeasurementsDirty = true;
+    requestPhotoWipes();
+  }
+  window.addEventListener('scroll', requestPhotoWipes, {passive:true});
+  window.addEventListener('resize', measurePhotoWipes);
+  photoMotion.addEventListener('change', requestPhotoWipes);
+  const photoLayoutObserver = new ResizeObserver(measurePhotoWipes);
+  document.querySelectorAll('main > section, footer').forEach(section => photoLayoutObserver.observe(section));
+  photoScenes.forEach(({image}) => image.addEventListener('load', measurePhotoWipes));
+  document.fonts.ready.then(measurePhotoWipes);
+  const visiblePhotos = new IntersectionObserver(entries => {
+    entries.forEach(entry => entry.target.classList.toggle('photo-in-view', entry.isIntersecting));
+  }, {rootMargin:'100px'});
+  photoScenes.forEach(({scene}) => visiblePhotos.observe(scene));
+  visiblePhotos.observe(storyPainting.scene);
+  requestPhotoWipes();
 
   const music = document.getElementById('bgMusic');
   const musicToggle = document.getElementById('musicToggle');
@@ -457,6 +531,8 @@
   let musicOn = true;
   let musicAvailable = Boolean(music);
   let musicFade = 0;
+  let musicStarting = false;
+  let resumeMusicOnFocus = false;
 
   function clearOpenTimers() {
     openTimers.forEach(window.clearTimeout);
@@ -466,6 +542,7 @@
   // The cover fades away while the invitation fades in beneath it, so the
   // guest never sees an empty screen between the letter and the content.
   function completeOpen() {
+    if (!invitationReady) return;
     clearOpenTimers();
     cover.hidden = true;
     cover.classList.remove('is-departing');
@@ -475,31 +552,40 @@
     if (typeof invitation.focus === 'function') invitation.focus({preventScroll: true});
   }
 
-  function openInvitation(options = {}) {
-    if (hasOpened) return;
-    hasOpened = true;
+  function finishOpening() {
+    if (!hasOpened || !openingAnimationDone || openingDepartureStarted) return;
+    renderInvitationGate();
+    if (!invitationReady || invitationChecking) return;
+    openingDepartureStarted = true;
     startMusic();
-    for (const button of openButtons) button.disabled = true;
+    if (prefersReducedMotion()) { completeOpen(); return; }
+    invitation.hidden = false;
+    cover.classList.add('is-departing');
+    openTimers.push(window.setTimeout(completeOpen, 800));
+  }
 
+  function openInvitation(options = {}) {
+    if (hasOpened || (!invitationReady && !invitationChecking)) return;
+    hasOpened = true;
+    for (const button of openButtons) button.disabled = true;
     if (options.instant || prefersReducedMotion()) {
-      completeOpen();
+      openingAnimationDone = true;
+      finishOpening();
       return;
     }
-
     envelope.classList.add('is-opening');
     openTimers.push(window.setTimeout(() => {
-      invitation.hidden = false;
-      cover.classList.add('is-departing');
-    }, 1250));
-    openTimers.push(window.setTimeout(completeOpen, 2050));
+      openingAnimationDone = true;
+      finishOpening();
+    }, 1600));
   }
 
   function skipOpening() {
-    if (!hasOpened) {
-      openInvitation({instant: true});
-      return;
+    if (!hasOpened) openInvitation({instant: true});
+    else {
+      openingAnimationDone = true;
+      finishOpening();
     }
-    if (!cover.hidden) completeOpen();
   }
 
   for (const button of openButtons) button.addEventListener('click', () => openInvitation());
@@ -530,14 +616,26 @@
 
   // Browsers only allow sound after a tap, so this runs from the open button.
   function startMusic() {
-    if (!music || !musicOn) return;
+    if (!music || !musicOn || document.hidden || !document.hasFocus()) return;
+    musicStarting = true;
     music.volume = 0;
     const playback = music.play();
     if (playback && typeof playback.then === 'function') {
       playback
-        .then(() => { fadeMusic(MUSIC_VOLUME); updateMusicButton(true); })
-        .catch(() => updateMusicButton(false));
+        .then(() => {
+          musicStarting = false;
+          if (document.hidden || !document.hasFocus() || !musicOn) {
+            resumeMusicOnFocus = musicOn;
+            music.pause();
+            updateMusicButton(false);
+            return;
+          }
+          fadeMusic(MUSIC_VOLUME);
+          updateMusicButton(true);
+        })
+        .catch(() => { musicStarting = false; updateMusicButton(false); });
     } else {
+      musicStarting = false;
       fadeMusic(MUSIC_VOLUME);
       updateMusicButton(true);
     }
@@ -550,12 +648,36 @@
         startMusic();
       } else {
         musicOn = false;
+        resumeMusicOnFocus = false;
         window.clearInterval(musicFade);
         music.pause();
         updateMusicButton(false);
       }
     });
   }
+
+  function suspendMusic() {
+    if (!music) return;
+    resumeMusicOnFocus = resumeMusicOnFocus || (musicOn && (!music.paused || musicStarting));
+    window.clearInterval(musicFade);
+    music.pause();
+    updateMusicButton(false);
+  }
+
+  function restoreMusic() {
+    if (document.hidden || !document.hasFocus() || !resumeMusicOnFocus || !musicOn || !musicAvailable) return;
+    resumeMusicOnFocus = false;
+    startMusic();
+  }
+
+  window.addEventListener('blur', suspendMusic);
+  window.addEventListener('focus', restoreMusic);
+  window.addEventListener('pagehide', suspendMusic);
+  window.addEventListener('pageshow', restoreMusic);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) suspendMusic();
+    else restoreMusic();
+  });
 
   if (music) {
     music.addEventListener('error', () => {
@@ -692,9 +814,10 @@
     ? cleanName.replace(/[-_]+/g, ' ').replace(/\b[a-z]/g, (letter) => letter.toUpperCase())
     : cleanName;
   const requestedSeats = Number.parseInt(params.get('guests') || '', 10);
+  let verifiedGuest = null;
   let personalization = {invitedName: '', seats: 0};
 
-  if (invitedName) {
+  if (invitedName && !backendEndpoint()) {
     const plusOne = params.get('plus') !== '0';
     const seats = Number.isFinite(requestedSeats)
       ? clampSeats(requestedSeats)
@@ -709,6 +832,7 @@
   guestCountSelect.value = '';
 
   function renderGuestCopy() {
+    document.getElementById('guestNameDisplay').textContent = guestNameInput.value || '—';
     if (!personalization.invitedName) {
       coverGuest.hidden = true;
       coverSeats.hidden = true;
@@ -734,11 +858,7 @@
       {n: seats}
     );
     letterFor.textContent = format(t('dynamic.letterFor'), {name: personalization.invitedName});
-    guestSeatNote.hidden = false;
-    guestSeatNote.textContent = format(
-      t(seats === 1 ? 'dynamic.seatsInvitation' : 'dynamic.seatsInvitationPlural'),
-      {n: seats}
-    );
+    guestSeatNote.hidden = true;
   }
 
   // Countdown to the ceremony: Sunday, 17 January 2027, 18:00 WIB (UTC+7).
@@ -835,38 +955,137 @@
   // Backend helpers
   // ---------------------------------------------------------------------
 
-  // Posts as text/plain so browsers skip the CORS preflight that Apps Script
-  // cannot answer, then retries opaquely for endpoints without CORS headers.
+  let querySequence = 0;
+  async function backendQuery(parameters) {
+    const url = new URL(backendEndpoint());
+    Object.entries(parameters).forEach(([key, value]) => url.searchParams.set(key, value));
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 20000);
+    const jsonRequest = fetch(url.href, {signal: controller.signal, cache: 'no-store'})
+      .then(response => {
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        return response.json();
+      });
+    let cancelScript = () => {};
+    const scriptRequest = new Promise((resolve, reject) => {
+      const callback = 'wedding_' + Date.now() + '_' + (++querySequence);
+      const script = document.createElement('script');
+      const timer = setTimeout(() => { cleanup(); reject(new Error('Invitation lookup timed out')); }, 20000);
+      const cleanup = () => {
+        clearTimeout(timer);
+        script.remove();
+        // A redirected JSONP response may still execute after the JSON fetch wins.
+        window[callback] = () => {};
+        setTimeout(() => { delete window[callback]; }, 60000);
+      };
+      cancelScript = cleanup;
+      window[callback] = result => { cleanup(); resolve(result); };
+      script.onerror = () => { cleanup(); reject(new Error('Invitation script request blocked')); };
+      const scriptUrl = new URL(url);
+      scriptUrl.searchParams.set('callback', callback);
+      script.src = scriptUrl.href;
+      document.body.appendChild(script);
+    });
+    try {
+      return await Promise.any([jsonRequest, scriptRequest]);
+    } finally {
+      clearTimeout(timeout);
+      controller.abort();
+      cancelScript();
+    }
+  }
+
+  function renderInvitationGate() {
+    const status = document.getElementById('invitationStatus');
+    status.textContent = invitationStatusKey ? t(invitationStatusKey) : '';
+    status.hidden = !invitationStatusKey || (invitationChecking && !openingAnimationDone);
+    status.classList.toggle('is-error', Boolean(invitationStatusKey && invitationStatusKey !== 'dynamic.inviteLoading'));
+    for (const button of openButtons) button.disabled = (!invitationReady && !invitationChecking) || hasOpened;
+    const retry = document.getElementById('retryInvitation');
+    retry.hidden = !invitationRetry;
+    retry.textContent = currentLang === 'id' ? 'Coba lagi' : 'Try again';
+  }
+
+  function setInvitationGate(key, retry = false) {
+    invitationStatusKey = key;
+    invitationRetry = retry;
+    renderInvitationGate();
+  }
+
+  document.getElementById('retryInvitation').addEventListener('click', loadInvitation);
+
+  async function loadInvitation() {
+    if (!backendEndpoint()) { renderInvitationGate(); return; }
+    invitationReady = false;
+    invitationChecking = true;
+    setInvitationGate('dynamic.inviteLoading');
+    submitButton.disabled = true;
+    guestCountSelect.disabled = true;
+    setStatus(formStatus, t('dynamic.inviteLoading'), 'pending');
+    if (!/^[a-zA-Z0-9]{8,64}$/.test(inviteCode)) {
+      invitationChecking = false;
+      setStatus(formStatus, t('dynamic.inviteInvalid'), 'error');
+      setInvitationGate('dynamic.inviteInvalid');
+      return;
+    }
+    try {
+      const result = await backendQuery({action: 'guest', code: inviteCode});
+      if (!result.ok || !result.guest || !Number.isInteger(result.guest.maxGuests) || result.guest.maxGuests < 1 || result.guest.maxGuests > 100) {
+        invitationChecking = false;
+        setStatus(formStatus, t('dynamic.inviteInvalid'), 'error');
+        setInvitationGate('dynamic.inviteInvalid'); return;
+      }
+      verifiedGuest = result.guest;
+      invitationReady = true;
+      invitationChecking = false;
+      setInvitationGate('');
+      personalization = {invitedName: verifiedGuest.name, seats: verifiedGuest.maxGuests};
+      guestNameInput.value = verifiedGuest.name;
+      guestNameInput.readOnly = true;
+      if (!wishNameInput.value) wishNameInput.value = verifiedGuest.name;
+      guestCountSelect.replaceChildren(guestCountSelect.options[0]);
+      for (let count = 1; count <= verifiedGuest.maxGuests; count++) {
+        guestCountSelect.add(new Option(String(count), String(count)));
+      }
+      guestCountSelect.value = '';
+      renderGuestCopy();
+      submitButton.disabled = false;
+      syncAttendance();
+      setStatus(formStatus, '', '');
+      finishOpening();
+    } catch {
+      invitationChecking = false;
+      setStatus(formStatus, t('dynamic.inviteUnavailable'), 'error');
+      setInvitationGate('dynamic.inviteUnavailable', true);
+    }
+  }
+
   async function postToBackend(payload) {
     const endpoint = backendEndpoint();
     if (!endpoint) return {ok: false, reason: 'unconfigured'};
-
     const body = JSON.stringify(payload);
     try {
       const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {'Content-Type': 'text/plain;charset=utf-8'},
-        body
+        method: 'POST', headers: {'Content-Type': 'text/plain;charset=utf-8'}, body
       });
       if (response.ok) {
-        let result = null;
-        try { result = await response.json(); } catch {}
-        if (!result || result.ok !== false) return {ok: true};
+        const result = await response.json();
+        if (typeof result.ok === 'boolean') return result;
       }
     } catch {}
-
+    // An unreadable response is never treated as a successful RSVP.
+    // Retrying the same request ID is idempotent on the server.
+    if (payload.type !== 'rsvp') return {ok: false, reason: 'network'};
     try {
-      await fetch(endpoint, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {'Content-Type': 'text/plain;charset=utf-8'},
-        body,
-        keepalive: true
-      });
-      return {ok: true, opaque: true};
-    } catch {
-      return {ok: false, reason: 'network'};
-    }
+      await fetch(endpoint, {method: 'POST', mode: 'no-cors',
+        headers: {'Content-Type': 'text/plain;charset=utf-8'}, body});
+      for (let attempt = 0; attempt < 5; attempt++) {
+        const receipt = await backendQuery({action: 'receipt', code: inviteCode, requestId: payload.requestId});
+        if (!receipt.pending) return receipt;
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    } catch {}
+    return {ok: false, reason: 'network'};
   }
 
   // Apps Script cannot set CORS headers reliably, so wishes are read with
@@ -914,10 +1133,11 @@
   // ---------------------------------------------------------------------
   const attendanceInputs = form.querySelectorAll('input[name="attendance"]');
   const eventSelect = form.elements.events;
+  eventSelect.value = '';
 
   function syncAttendance() {
     const attending = form.querySelector('input[name="attendance"]:checked').value === 'attending';
-    guestCountSelect.disabled = !attending;
+    guestCountSelect.disabled = !attending || Boolean(backendEndpoint() && !verifiedGuest);
     eventSelect.disabled = !attending;
   }
   for (const input of attendanceInputs) input.addEventListener('change', syncAttendance);
@@ -944,7 +1164,13 @@
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
+    if (backendEndpoint() && !verifiedGuest) {
+      setStatus(formStatus, t('dynamic.inviteInvalid'), 'error'); return;
+    }
     if (!form.reportValidity()) return;
+    if (verifiedGuest && Number(guestCountSelect.value) > verifiedGuest.maxGuests) {
+      setStatus(formStatus, t('dynamic.inviteRejected'), 'error'); return;
+    }
 
     // Honeypot: real guests never fill this field out.
     if (honeypot && honeypot.value.trim() !== '') {
@@ -955,14 +1181,16 @@
     const attending = form.querySelector('input[name="attendance"]:checked').value === 'attending';
     const payload = {
       type: 'rsvp',
+      code: inviteCode,
+      requestId: crypto.randomUUID(),
       name: guestNameInput.value.trim().slice(0, 100),
       attendance: attending ? 'attending' : 'not-attending',
       events: attending ? eventSelect.value : '',
       guests: attending ? Number(guestCountSelect.value) : 0,
       message: guestMessageInput.value.trim().slice(0, 500),
-      invitedAs: invitedName,
+      invitedAs: verifiedGuest ? verifiedGuest.name : invitedName,
       submittedAt: new Date().toISOString(),
-      page: window.location.href
+      page: window.location.origin + window.location.pathname
     };
 
     submitButton.disabled = true;
@@ -986,7 +1214,7 @@
       return;
     }
 
-    setStatus(formStatus, t('dynamic.rsvpError'), 'error');
+    setStatus(formStatus, t(result.error ? 'dynamic.inviteRejected' : 'dynamic.rsvpError'), 'error');
     const whatsapp = buildWhatsAppLink(payload);
     if (whatsapp) {
       const link = document.createElement('a');
@@ -1066,10 +1294,11 @@
   }
 
   async function loadWishes() {
-    const local = readLocalWishes();
-    if (local.length) renderWishes(local);
-    const remote = await fetchWishes();
-    renderWishes([...local, ...remote]);
+    if (backendEndpoint()) {
+      renderWishes(await fetchWishes());
+    } else {
+      renderWishes(readLocalWishes());
+    }
   }
 
   wishForm.addEventListener('submit', async (event) => {
@@ -1081,7 +1310,7 @@
       name: wishNameInput.value.trim().slice(0, 60),
       message: wishMessageInput.value.trim().slice(0, 300),
       submittedAt: new Date().toISOString(),
-      page: window.location.href
+      page: window.location.origin + window.location.pathname
     };
     if (!wish.name || !wish.message) return;
 
@@ -1095,8 +1324,7 @@
     wishSubmit.textContent = t('wishes.submit');
 
     if (result.ok) {
-      const local = saveLocalWish(wish);
-      renderWishes([...local, ...(await fetchWishes())]);
+      renderWishes(await fetchWishes());
       wishMessageInput.value = '';
       setStatus(wishStatus, t('dynamic.wishSuccess'), 'success');
       return;
@@ -1114,5 +1342,10 @@
   });
 
   applyLanguage(currentLang);
+  loadInvitation();
+  openingAssetsReady.then(() => {
+    clearTimeout(window.assetLoadTimeout);
+    document.documentElement.classList.remove('assets-loading');
+  });
   loadWishes();
 })();

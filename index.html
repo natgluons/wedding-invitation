@@ -14,12 +14,12 @@
     @keyframes asset-spin { to { transform:rotate(360deg); } }
     @media(prefers-reduced-motion:reduce) { .asset-spinner { animation-duration:2s; } }
   </style>
-  <script>document.documentElement.classList.add('assets-loading'); window.assetLoadTimeout = setTimeout(function () { document.documentElement.classList.remove('assets-loading'); }, 10000);</script>
+  <script>document.documentElement.classList.add('assets-loading'); window.assetLoadTimeout = setTimeout(function () { document.documentElement.classList.remove('assets-loading'); }, 25000);</script>
   <link rel="preload" as="image" href="assets/photos/placeholder-1-1536.webp" imagesrcset="assets/photos/placeholder-1-768.webp 768w, assets/photos/placeholder-1-1536.webp 1536w" imagesizes="(min-width: 960px) 1240px, 100vw" />
-  <link rel="stylesheet" href="styles.css?v=20261112-envelope-clip-17" />
-  <link rel="stylesheet" href="desktop.css?v=20261112-wave-pattern-20" media="(min-width: 960px)" />
-  <script defer src="config.js"></script>
-  <script defer src="main.js?v=20261112-event-select-16"></script>
+  <link rel="stylesheet" href="styles.css?v=20261112-letter-paper-width-57" />
+  <link rel="stylesheet" href="desktop.css?v=20261112-count-optical-54" media="(min-width: 960px)" />
+  <script defer src="config.js?v=20261112-live-backend-40"></script>
+  <script defer src="main.js?v=20261112-id-copy-56"></script>
 </head>
 <body>
   <div class="asset-loader" role="status" aria-label="Loading invitation"><span class="asset-spinner" aria-hidden="true"></span></div>
@@ -34,7 +34,7 @@
           <p class="cover-seats" id="coverSeats" hidden></p>
         </div>
         <div class="cover-visual">
-          <button class="envelope-hit" id="openLetter" type="button" aria-label="Open wedding invitation letter" data-i18n-aria="cover.openAria">
+          <button class="envelope-hit" id="openLetter" type="button" disabled aria-label="Open wedding invitation letter" data-i18n-aria="cover.openAria">
             <span class="envelope" id="envelope" aria-hidden="true">
               <span class="envelope-back"></span>
               <span class="letter-peek"><span class="peek-name" id="letterFor" data-i18n="cover.letterForYou">For You</span><span class="peek-divider"></span><small data-i18n="cover.peekSmall">A day to remember</small></span>
@@ -44,7 +44,9 @@
               <span class="red-tassel"></span>
             </span>
           </button>
-          <button class="primary cover-open-btn" id="openLetterButton" type="button" data-i18n="cover.open">Open the letter</button>
+          <p id="invitationStatus" class="invitation-status" role="status" aria-live="polite"></p>
+          <button id="retryInvitation" class="invitation-retry" type="button" hidden>Try again</button>
+          <p class="cover-open-hint" data-i18n="cover.hint">Tap the seal to open your invitation.</p>
         </div>
       </div>
     </section>
@@ -83,6 +85,7 @@
       </section>
 
       <section class="paper-section" id="details">
+        <span class="painting-backdrop painting-landscape" aria-hidden="true"></span>
         <div class="section-head" data-reveal-group>
           <div class="section-intro" data-i18n="details.intro">THE DAY WE SAY I DO</div>
           <h2 data-i18n="details.title">Wedding Details</h2>
@@ -135,6 +138,7 @@
       </section>
 
       <section class="story-section" id="story">
+        <span class="painting-backdrop painting-story" aria-hidden="true"></span>
         <div class="section-head" data-reveal-group>
           <div class="section-intro" data-i18n="story.intro">A JOURNEY OF TWO</div>
           <h2 data-i18n="story.title">Our Story</h2>
@@ -195,6 +199,8 @@
       </section>
 
       <section class="paper-section rsvp-section" id="rsvp">
+        <span class="painting-backdrop painting-plum" aria-hidden="true"></span>
+        <span class="painting-backdrop painting-rsvp-side" aria-hidden="true"></span>
         <div class="rsvp-layout">
           <div class="rsvp-copy" data-reveal-group>
             <div class="section-intro" data-i18n="rsvp.intro">WE SAVED YOU A SEAT</div>
@@ -210,12 +216,14 @@
           </fieldset>
           <label class="form-label" for="guestEvents" data-i18n="rsvp.events">Which events will you join?</label>
           <select class="field" id="guestEvents" name="events" required>
+            <option value="" disabled selected data-i18n="rsvp.eventsPlaceholder">Select events</option>
             <option value="both" data-i18n="rsvp.both">Holy Matrimony + Reception</option>
             <option value="holy-matrimony" data-i18n="rsvp.holyOnly">Holy Matrimony only</option>
             <option value="reception" data-i18n="rsvp.receptionOnly">Reception only</option>
           </select>
-          <label class="form-label" for="guestName" data-i18n="rsvp.name">Your name</label>
-          <input class="field" type="text" id="guestName" name="name" placeholder="Full name" required maxlength="100" autocomplete="name" data-i18n-placeholder="rsvp.namePlaceholder" />
+          <span class="form-label" id="guestNameLabel" data-i18n="rsvp.name">Your name</span>
+          <p class="guest-name-display" id="guestNameDisplay" aria-labelledby="guestNameLabel">—</p>
+          <input type="hidden" id="guestName" name="name" />
           <label class="form-label" for="guestCount" data-i18n="rsvp.count">How many people are coming?</label>
           <select class="field" id="guestCount" name="guests" required>
             <option value="" disabled selected data-i18n="rsvp.countPlaceholder">Select number of people</option>
@@ -224,7 +232,7 @@
             <option value="3" data-i18n="rsvp.count3">3 people</option>
             <option value="4" data-i18n="rsvp.count4">4 people</option>
           </select>
-          <p class="field-hint" data-i18n="rsvp.countHint">If you are bringing a plus one, please add their name in the note below.</p>
+          <p class="field-hint" data-i18n="rsvp.countHint">Please include the names of anyone joining you in the note below.</p>
           <label class="form-label" for="guestMessage" data-i18n="rsvp.note">A note for us (optional)</label>
           <textarea class="field" id="guestMessage" name="message" rows="3" maxlength="500" placeholder="Your wishes, guest names, or dietary notes" data-i18n-placeholder="rsvp.notePlaceholder"></textarea>
           <button class="primary form-submit" type="submit" data-i18n="rsvp.submit">Submit RSVP</button>
@@ -234,6 +242,7 @@
       </section>
 
       <section class="paper-section gift-section" id="gift">
+        <span class="painting-backdrop painting-peonies" aria-hidden="true"></span>
         <div class="section-head" data-reveal-group>
           <div class="section-intro" data-i18n="gift.intro">WITH GRATITUDE</div>
           <h2 data-i18n="gift.title">Wedding Gift</h2>
@@ -273,6 +282,7 @@
       </section>
 
       <section class="paper-section wishes-section" id="wishes">
+        <span class="painting-backdrop painting-wishes" aria-hidden="true"></span>
         <div class="wishes-layout">
           <div class="wishes-copy" data-reveal-group>
             <div class="section-intro" data-i18n="wishes.intro">FROM THE HEART</div>

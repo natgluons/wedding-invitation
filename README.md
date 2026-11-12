@@ -85,7 +85,7 @@ The sheet records: submitted time (Asia/Jakarta), name, attendance, events (Holy
 
 If the request fails, the form offers a WhatsApp fallback when `contactWhatsApp` is set. If `rsvpEndpoint` is blank the form stays in preview mode and tells you so.
 
-Because Apps Script does not answer CORS preflight requests, `main.js` sends the body as `text/plain` (a "simple" request) and retries with `mode: 'no-cors'` if needed. The sheet is the source of truth; do not expect the browser to read a JSON response in every case.
+RSVP submission reads the backend result. If CORS prevents reading the POST response, it checks a JSONP receipt using the same request ID; an opaque response alone never means success.
 
 ## Guestbook (Words of Love)
 
@@ -180,3 +180,24 @@ The opening crossfades into the invitation instead of unmounting the cover abrup
 ## Licensing / usage note
 
 The newly generated decorative SVG/PNG assets and prototype source are supplied for your wedding invitation implementation. A sample AI image is included only to show placement and should be replaced before publication. No font files are bundled.
+
+
+## Manual invitation whitelist
+
+Paste the latest `rsvp-backend/Code.gs`, save, run `setup()` once, then update the existing web app deployment to a new version. Setup removes the old guest edit trigger, migrates Active flags to Revoke, removes the old Link suffix column, and repairs existing link formulas. Existing valid codes are preserved.
+
+Guests columns: **Name | Max guests | Revoke | Code | Invitation link**.
+
+- Enter one party per row. Max guests includes the named guest (integer 1–100).
+- Revoke blank or FALSE allows RSVP; TRUE blocks it.
+- Generate a code in D2 with `=BASE(RANDBETWEEN(0,60466175),36,5)&BASE(RANDBETWEEN(0,60466175),36,5)`. Fill down, then immediately copy the codes and **Paste special → Values only** in the same cells before sharing links, so recalculation cannot change them. Codes must be unique; duplicate codes are rejected. Codes may use 8–64 alphanumeric characters; this formula produces ten base-36 characters. Existing hexadecimal codes still work.
+- E2: `=IF(OR(D2="",Settings!$B$2=""),"",REGEXREPLACE(Settings!$B$2,"[?#].*$","")&"?code="&D2)`. Fill down.
+- Set the domain in **Settings!B2**; full links update immediately.
+
+The site looks up the code in this private sheet, fills the name, and limits the count dropdown. The server independently verifies the code, revocation, party size, and event. Resubmissions update by invitation code; different parties with identical names remain separate. Keep the sheet private. A link lets its holder respond for that party.
+
+The Wishes tab has **Hide** in column D. Blank or FALSE displays the wish; TRUE excludes it from the public feed. Reload the page after changing moderation flags. With a backend configured, the browser displays only the server's moderated wish list, not older browser-local copies.
+
+Run `node tests/guest-whitelist.cjs` to check whitelist validation and wish visibility.
+
+Guest lookup uses header names, so you may insert custom columns or reorder Guests columns. Keep the required header names unchanged: Name, Max guests, Revoke, Code, Invitation link. Deploy the updated backend before inserting columns. Existing Google Sheets link formulas adjust their cell references when columns are inserted.

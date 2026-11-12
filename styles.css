@@ -525,9 +525,9 @@ section, footer { scroll-margin-top: 66px; }
 .hero-image, .portrait-interlude > img, .closing-portrait {
   position:absolute;
   left:0;
-  top:calc(0px - var(--parallax-travel, 0px));
+  top:0;
   bottom:auto;
-  height:calc(100% + var(--parallax-travel, 0px) + var(--parallax-travel, 0px));
+  height:100%;
 }
 .closing.closing-photo { min-height:100svh; }
 @media (prefers-reduced-motion:reduce) {
@@ -625,7 +625,7 @@ section, footer { scroll-margin-top: 66px; }
   .closing-copy .divider-img { margin-bottom:0; }
 }
 
-.envelope-flap::after { content:""; position:absolute; left:2%; top:5%; width:31%; height:48%; background:url('assets/blossoms/branch-left.webp') left top/contain no-repeat; clip-path:polygon(5.4% 0,100% 0,100% 100%,85% 100%); pointer-events:none; }
+.envelope-flap::after { content:""; position:absolute; left:2%; top:5%; width:31%; height:48%; background:url('assets/blossoms/branch-left.webp') left top/contain no-repeat; clip-path:inset(0 0 0 5.4%); pointer-events:none; }
 .closing-blossom { display:none; }
 @media(max-width:959px) {
   #details { background-image:url('assets/blossoms/corner-top-right.webp'); background-position:right -10px top -18px; background-size:95px auto; }
@@ -633,3 +633,131 @@ section, footer { scroll-margin-top: 66px; }
   .gallery-section::before { top:auto; right:auto; bottom:0; left:0; width:74px; height:74px; background-image:url('assets/blossoms/corner-bottom-left.webp'); background-position:left bottom; }
   .gift-section { background-image:url('assets/blossoms/branch-right.webp'),linear-gradient(var(--cream),#f3e6d5 96px); background-position:right -6px top -12px,0 0; }
 }
+
+/* Mobile: textured paper and decorative grounds between the photo sections. */
+@media(max-width:959px) {
+  #details { background-image:url('assets/blossoms/corner-top-right.webp'),url('assets/svg/silk-grain.svg'); background-position:right -10px top -18px,0 0; background-size:95px auto,auto; background-repeat:no-repeat,repeat; background-color:#f7f1e6; }
+  .story-section { background:url('assets/blossoms/side-left.webp') left -14px top -20px/100px auto no-repeat,url('assets/svg/silk-grain.svg') repeat,#f3e6d5; }
+  .gallery-section { background:#45232c url('assets/svg/cloud-pattern.svg') repeat; border-block:1px solid #b9956680; }
+  .gallery-section h2 { color:#fff4e4; }
+  .gallery-section .section-intro { color:#d9b47b; }
+  .photo-gallery figure { border:5px solid #fff4e4; box-shadow:0 10px 24px #190f1940; }
+  .rsvp-section { background:#f7f1e6 url('assets/svg/silk-grain.svg') repeat; }
+  .gift-section { background:url('assets/blossoms/branch-right.webp') right -6px top -12px/80px auto no-repeat,url('assets/svg/silk-grain.svg') repeat,#f3e6d5; }
+  .gift-card { background:#45232c url('assets/svg/wave-pattern.svg') repeat; color:#fff4e4; border:1px solid #b99566; padding:26px 22px; box-shadow:0 8px 20px #51362b18; }
+  .gift-card .gift-bank, .gift-card .gift-number { color:#fff4e4; }
+  .gift-card .gift-tag, .gift-card .gift-owner, .gift-card .gift-note, .gift-card .gift-details dd { color:#ecd8bd; }
+  .gift-card .gift-details dt { color:#d9b47b; }
+  .gift-card .gift-copy { background:#edd6b1; color:#612b33; border-color:#d9b47b; }
+  .wishes-section { background:#fbf5ea url('assets/svg/silk-grain.svg') repeat; }
+  .wishes-feed { border-top:1px solid #b9956655; }
+}
+
+.guest-name-display { margin:6px 0 22px; color:var(--ink); font-size:20px; line-height:1.5; text-align:left; }
+.invitation-status { max-width:34ch; margin:12px auto; font-size:14px; line-height:1.6; color:var(--ink); text-align:center; }
+.invitation-status.is-error { color:var(--burgundy); }
+.invitation-retry { border:1px solid var(--gold); border-radius:24px; padding:10px 22px; background:var(--cream); color:var(--burgundy); }
+.cover-open-btn:disabled { opacity:.45; cursor:default; }
+.envelope-hit:disabled { cursor:default; }
+
+@media(max-width:959px) {
+  .rsvp-section::before, .rsvp-section::after {
+    content:""; display:block; position:absolute; inset:auto; bottom:26px;
+    width:30px; height:30px; border:0;
+    background:url('assets/svg/corner-ornament.svg') center/contain no-repeat;
+    pointer-events:none;
+  }
+  .rsvp-section::before { left:16px; transform:scaleY(-1); }
+  .rsvp-section::after { right:16px; transform:scale(-1); }
+}
+
+@media(max-width:959px) {
+  #details .section-head::before, #details .section-head::after { display:none; }
+  #details::before, #details::after {
+    content:""; display:block; position:absolute; inset:auto; left:16px; right:16px;
+    width:auto; height:30px; border:0; pointer-events:none;
+    background:url('assets/svg/corner-ornament.svg') left center/30px 30px no-repeat;
+  }
+  #details::before { top:26px; }
+  #details::after { bottom:26px; transform:scaleY(-1); }
+  #details .section-head { position:static; }
+  #details .section-head::before, #details .section-head::after {
+    content:""; display:block; position:absolute; inset:auto; right:16px;
+    width:30px; height:30px; border:0;
+    background:url('assets/svg/corner-ornament.svg') center/contain no-repeat;
+    pointer-events:none;
+  }
+  #details .section-head::before { top:26px; left:auto; transform:scaleX(-1); }
+  #details .section-head::after { bottom:26px; top:auto; transform:scale(-1); }
+}
+
+/* Museum paintings blend into the paper, with no image edges behind controls. */
+.painting-backdrop { display:block; position:absolute; pointer-events:none; mix-blend-mode:multiply; background-repeat:no-repeat; background-size:cover; z-index:0; }
+.painting-landscape { background-image:url('assets/ink-wash/mountains.webp'); }
+.painting-plum { background-image:url('assets/ink-wash/plum.webp'); }
+.painting-peonies { background-image:url('assets/ink-wash/peonies.webp'); }
+#details > :not(.painting-backdrop), .rsvp-section > :not(.painting-backdrop), .gift-section > :not(.painting-backdrop) { position:relative; z-index:1; }
+@media(max-width:959px) {
+  #details, .rsvp-section, .gift-section { overflow:hidden; }
+  #details { background-image:url('assets/svg/silk-grain.svg'); background-size:auto; background-repeat:repeat; }
+  .painting-landscape { inset:auto -90px 0; height:420px; opacity:.32; background-position:center bottom; mask-image:linear-gradient(transparent,#000 40%); }
+  .painting-plum { top:0; left:-110px; right:-60px; height:340px; opacity:.28; background-position:center top; mask-image:linear-gradient(#000 30%,transparent); }
+  .gift-section { background-image:url('assets/svg/silk-grain.svg'); background-size:auto; background-repeat:repeat; }
+  .painting-peonies { top:0; right:-65px; width:270px; height:390px; opacity:.26; mask-image:linear-gradient(90deg,transparent,#000 40%); }
+  #details .section-head { position:static; }
+}
+@media(max-width:959px) {
+  .painting-peonies { mask-image:linear-gradient(90deg,transparent,#000 40%),linear-gradient(#000 65%,transparent); mask-composite:intersect; }
+}
+
+/* Alpha artwork has no paper rectangle or fan silhouette. */
+.painting-backdrop { mix-blend-mode:multiply; }
+@media(max-width:959px) {
+  .painting-landscape { left:-90px; right:-90px; height:440px; opacity:.6; background-size:cover; mask-image:none; }
+  .painting-plum { left:-32px; right:0; top:0; height:290px; opacity:.3; background-size:100% auto; background-position:left top; mask-image:none; }
+  .painting-peonies { width:280px; right:-45px; height:430px; opacity:.35; background-position:right bottom; background-size:contain; mask-image:linear-gradient(#000 75%,transparent); }
+}
+@media(max-width:959px) {
+  .painting-plum { width:230px; right:auto; height:155px; left:-25px; opacity:.32; }
+}
+@media(max-width:959px) {
+  .painting-rsvp-side { display:none; }
+}
+
+.painting-story, .painting-wishes { display:none; }
+@media(max-width:959px) {
+  .story-section, .wishes-section, .rsvp-section { position:relative; isolation:isolate; overflow:hidden; }
+  .story-section { background:#f3e6d5 url('assets/svg/silk-grain.svg') repeat; }
+  .story-section > :not(.painting-backdrop), .wishes-section > :not(.painting-backdrop) { position:relative; z-index:1; }
+  .painting-story { display:block; top:0; right:-70px; bottom:0; width:320px; opacity:.42; background:url('assets/ink-wash/blossom-side.webp') right center/auto 100% no-repeat; }
+  .rsvp-section .painting-plum { top:0; left:-30px; width:260px; height:230px; opacity:.5; background:url('assets/ink-wash/blossom-corner.webp') left top/contain no-repeat; }
+  .rsvp-section .painting-rsvp-side { display:block; inset:auto -120px -30px; width:auto; height:430px; opacity:.6; background:url('assets/ink-wash/panorama.webp') center bottom/auto 100% no-repeat; }
+  .rsvp-section .field { background-color:#fff9f0e8; }
+  .painting-wishes { display:block; inset:auto -60px -30px auto; width:440px; height:500px; opacity:.52; background:url('assets/ink-wash/garden.webp') right bottom/contain no-repeat; }
+  .wishes-section .field { background-color:#fff9f0e8; }
+  .wish-item { background:#fffaf3ed; }
+}
+
+/* Prepare only the currently visible photographs for compositor movement. */
+.photo-in-view .hero-image, .photo-in-view.portrait-interlude > img, .photo-in-view .closing-portrait { will-change:transform; }
+@media(max-width:959px) {
+  .lang-switch--floating, .music-toggle, .compact-head { -webkit-backdrop-filter:none; backdrop-filter:none; }
+  .lang-switch--floating, .music-toggle { background:#fff9f0; }
+  .painting-backdrop { mix-blend-mode:normal; }
+}
+
+body { text-wrap:pretty; }
+@media(max-width:959px) {
+  .painting-story { top:-80px; bottom:-80px; }
+  .photo-in-view .painting-story { will-change:transform; }
+}
+
+.cover-open-hint { width:min(100%,540px); text-align:center; margin:0; color:#775b49; font-size:14px; font-style:italic; line-height:1.6; }
+
+/* The invitation card nearly fills its envelope and rises before verification gates entry. */
+.letter-peek { left:4%; top:10%; width:92%; height:82%; }
+.letter-peek .peek-name { font-size:clamp(16px,3.6vw,24px); }
+.letter-peek small { font-size:clamp(8px,1.6vw,11px); }
+.letter-peek { transition:transform 900ms cubic-bezier(.18,.65,.15,1),height 900ms cubic-bezier(.18,.65,.15,1); }
+.envelope.is-opening .letter-peek { height:118%; transform:translateY(-54%); transition-delay:640ms; }
+.envelope > .letter-peek { background-size:100% auto; background-position:center top; }
