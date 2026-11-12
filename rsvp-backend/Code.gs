@@ -20,6 +20,11 @@ const SHEET_ID = 'PASTE_YOUR_GOOGLE_SHEET_ID_HERE';
 const RSVP_SHEET = 'RSVP';
 const WISHES_SHEET = 'Wishes';
 const RSVP_HEADERS = ['Submitted at', 'Name', 'Attendance', 'Guests', 'Message', 'Invited as', 'Page', 'Events'];
+const EVENT_LABELS = {
+  'both': 'Holy Matrimony + Reception',
+  'holy-matrimony': 'Holy Matrimony only',
+  'reception': 'Reception only'
+};
 const WISHES_HEADERS = ['Submitted at', 'Name', 'Message'];
 
 function setup() {
@@ -84,7 +89,7 @@ function saveRsvp_(data) {
     clean_(data.message, 500),
     clean_(data.invitedAs, 60),
     clean_(data.page, 300),
-    clean_(data.events, 30)
+    clean_(EVENT_LABELS[data.events] || data.events, 60)
   ];
 
   // A guest submitting twice updates their existing row instead of duplicating it.

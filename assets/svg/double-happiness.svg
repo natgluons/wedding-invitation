@@ -1,22 +1,3 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240" role="img" aria-label="Double happiness">
-  <g fill="#792A32" transform="translate(120 120) scale(1.02) translate(-106 -50)">
-    <g>
-      <rect x="10" y="0" width="80" height="7" rx="2"/>
-      <rect x="46" y="0" width="8" height="19" rx="2"/>
-      <rect x="2" y="14" width="96" height="7" rx="2"/>
-      <path fill-rule="evenodd" d="M26 30 H74 V62 H26 Z M34 38 V54 H66 V38 Z"/>
-      <path d="M18 78 L38 69 L41 76 L21 85 Z"/>
-      <path d="M82 78 L62 69 L59 76 L79 85 Z"/>
-      <rect x="2" y="90" width="96" height="8" rx="2"/>
-    </g>
-    <g transform="translate(112 0)">
-      <rect x="10" y="0" width="80" height="7" rx="2"/>
-      <rect x="46" y="0" width="8" height="19" rx="2"/>
-      <rect x="2" y="14" width="96" height="7" rx="2"/>
-      <path fill-rule="evenodd" d="M26 30 H74 V62 H26 Z M34 38 V54 H66 V38 Z"/>
-      <path d="M18 78 L38 69 L41 76 L21 85 Z"/>
-      <path d="M82 78 L62 69 L59 76 L79 85 Z"/>
-      <rect x="2" y="90" width="96" height="8" rx="2"/>
-    </g>
-  </g>
+  <text x="120" y="126" text-anchor="middle" dominant-baseline="central" font-family="'Songti SC','STSong','Noto Serif CJK SC','Noto Serif',Georgia,serif" font-size="210" font-weight="500" fill="#792A32">囍</text>
 </svg>

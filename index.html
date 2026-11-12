@@ -13,20 +13,20 @@
 </head>
 <body>
   <div class="site-shell">
-    <section id="cover" class="cover" aria-label="Wedding invitation opening">
+    <section id="cover" class="cover" aria-label="Wedding invitation opening" data-i18n-aria="cover.aria">
       <div class="cover-inner">
         <div class="cover-copy">
-          <div class="eyebrow">A WEDDING INVITATION</div>
+          <div class="eyebrow" data-i18n="cover.eyebrow">A WEDDING INVITATION</div>
           <h1 class="cover-title">Richard <em>&amp;</em> Natasha</h1>
-          <p class="sub">Sunday · 17 January 2027 · Jakarta</p>
+          <p class="sub" data-i18n="cover.sub">Sunday · 17 January 2027 · Jakarta</p>
           <p class="cover-guest" id="coverGuest" hidden></p>
           <p class="cover-seats" id="coverSeats" hidden></p>
         </div>
         <div class="cover-visual">
-          <button class="envelope-hit" id="openLetter" type="button" aria-label="Open wedding invitation letter">
+          <button class="envelope-hit" id="openLetter" type="button" aria-label="Open wedding invitation letter" data-i18n-aria="cover.openAria">
             <span class="envelope" id="envelope" aria-hidden="true">
               <span class="envelope-back"></span>
-              <span class="letter-peek"><span class="peek-name" id="letterFor">For You</span><span class="peek-divider"></span><small>A day to remember</small></span>
+              <span class="letter-peek"><span class="peek-name" id="letterFor" data-i18n="cover.letterForYou">For You</span><span class="peek-divider"></span><small data-i18n="cover.peekSmall">A day to remember</small></span>
               <span class="envelope-front"></span>
               <span class="envelope-flap"></span>
               <span class="red-string"></span>
@@ -34,9 +34,9 @@
               <span class="red-tassel"></span>
             </span>
           </button>
-          <button class="primary cover-open-btn" id="openLetterButton" type="button">Open the letter <span aria-hidden="true">→</span></button>
-          <p class="hint">Tap the seal to reveal our invitation</p>
-          <button class="cover-skip" id="skipOpening" type="button">Skip the opening</button>
+          <button class="primary cover-open-btn" id="openLetterButton" type="button" data-i18n-html="cover.open">Open the letter <span aria-hidden="true">→</span></button>
+          <p class="hint" data-i18n="cover.hint">Tap the seal to reveal our invitation</p>
+          <button class="cover-skip" id="skipOpening" type="button" data-i18n="cover.skip">Skip the opening</button>
         </div>
       </div>
     </section>
@@ -44,154 +44,159 @@
     <main id="invitation" class="invitation" tabindex="-1" hidden>
       <header class="compact-head">
         <span class="head-seal seal-mark" aria-hidden="true"></span>
-        <span class="head-brand">A LETTER TO YOU</span>
-        <nav class="head-nav" aria-label="Invitation sections">
-          <a href="#details">Details</a>
-          <a href="#story">Story</a>
-          <a href="#rsvp">RSVP</a>
-          <a href="#gift">Gift</a>
-          <a href="#wishes">Wishes</a>
+        <span class="head-brand" data-i18n="head.brand">A LETTER TO YOU</span>
+        <nav class="head-nav" aria-label="Invitation sections" data-i18n-aria="head.navAria">
+          <a href="#details" data-i18n="nav.details">Details</a>
+          <a href="#story" data-i18n="nav.story">Story</a>
+          <a href="#rsvp" data-i18n="nav.rsvp">RSVP</a>
+          <a href="#gift" data-i18n="nav.gift">Gift</a>
+          <a href="#wishes" data-i18n="nav.wishes">Wishes</a>
         </nav>
+        <div class="lang-switch" role="group" aria-label="Language">
+          <button type="button" data-lang="en" aria-pressed="true">EN</button>
+          <span aria-hidden="true">/</span>
+          <button type="button" data-lang="id" aria-pressed="false">ID</button>
+        </div>
       </header>
 
-      <section class="hero" aria-label="The wedding of Richard and Natasha">
+      <section class="hero" aria-label="The wedding of Richard and Natasha" data-i18n-aria="hero.aria">
         <div class="hero-image-wrap">
-          <img class="hero-image" src="assets/photos/demo-hanfu-couple.jpg" alt="Placeholder couple portrait in traditional hanfu, replace with the couple's prewedding photograph" />
+          <img class="hero-image" src="assets/photos/placeholder-1.jpeg" alt="Placeholder couple portrait in traditional hanfu, replace with the couple's prewedding photograph" data-i18n-alt="hero.alt" />
           <div class="hero-image-fade"></div>
         </div>
         <div class="hero-copy" data-reveal-group>
-          <div class="eyebrow">THE WEDDING OF</div>
+          <div class="eyebrow" data-i18n="hero.eyebrow">THE WEDDING OF</div>
           <h2>Richard <em>&amp;</em><br />Natasha</h2>
           <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
-          <p>With joyful hearts and our families,<br />we invite you to celebrate our wedding.</p>
+          <p data-i18n-html="hero.intro">With joyful hearts and our families,<br />we invite you to celebrate our wedding.</p>
           <p class="hero-fullnames">Kristy Natasha Yohanes, S.Si., M.Sc.<br />&amp; Richard Putra, S.Kom.</p>
-          <p class="hero-date">SUNDAY · 17 JANUARY 2027 · JAKARTA</p>
+          <p class="hero-date" data-i18n="hero.date">SUNDAY · 17 JANUARY 2027 · JAKARTA</p>
         </div>
       </section>
 
       <section class="paper-section" id="details">
         <div class="section-head" data-reveal-group>
-          <div class="section-intro">THE DAY WE SAY I DO</div>
-          <h2>Wedding Details</h2>
+          <div class="section-intro" data-i18n="details.intro">THE DAY WE SAY I DO</div>
+          <h2 data-i18n="details.title">Wedding Details</h2>
           <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
         </div>
         <div class="detail-list" data-reveal-group>
           <article class="detail-row">
-            <div class="detail-icon">◷</div>
+            <div class="detail-icon" aria-hidden="true">◷</div>
             <div>
-              <b>Holy Matrimony</b>
-              <p>Sunday, 17 January 2027<br />11:00 WIB</p>
-              <p class="detail-venue">Grand Mercure Magnolia Ballroom<br />Jakarta, Indonesia</p>
+              <b data-i18n="details.holy">Holy Matrimony</b>
+              <p><span data-i18n="details.date">Sunday, 17 January 2027</span><br /><span data-i18n="details.holyTime">11:00 WIB – finish</span></p>
+              <p class="detail-venue" data-i18n-html="details.venue">Grand Mercure Kemayoran<br />Magnolia Ballroom, Jakarta, Indonesia</p>
             </div>
           </article>
           <article class="detail-row">
-            <div class="detail-icon">⌖</div>
+            <div class="detail-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>
+            </div>
             <div>
-              <b>Reception</b>
-              <p>Sunday, 17 January 2027<br />18:00 WIB – finish</p>
-              <p class="detail-venue">Grand Mercure Magnolia Ballroom<br />Jakarta, Indonesia</p>
+              <b data-i18n="details.reception">Reception</b>
+              <p><span data-i18n="details.date">Sunday, 17 January 2027</span><br /><span data-i18n="details.receptionTime">18:00 WIB – finish</span></p>
+              <p class="detail-venue" data-i18n-html="details.venue">Grand Mercure Kemayoran<br />Magnolia Ballroom, Jakarta, Indonesia</p>
             </div>
           </article>
         </div>
         <div class="details-actions">
-          <a class="secondary" href="https://www.google.com/maps/search/?api=1&amp;query=Grand+Mercure+Magnolia+Ballroom+Jakarta" target="_blank" rel="noopener noreferrer">View location <span aria-hidden="true">↗</span></a>
-          <p class="detail-note">Formal or traditional attire, please.</p>
+          <a class="secondary" href="https://www.google.com/maps/search/?api=1&amp;query=Grand+Mercure+Kemayoran+Magnolia+Ballroom+Jakarta" target="_blank" rel="noopener noreferrer" data-i18n-html="details.viewLocation">View location <span aria-hidden="true">↗</span></a>
+          <p class="detail-note" data-i18n="details.note">Formal or traditional attire, please.</p>
         </div>
       </section>
 
-      <section class="countdown-section" aria-label="Countdown to the wedding" data-reveal-group>
-        <div class="section-intro">COUNTING DOWN TO FOREVER</div>
-        <h2>We can’t wait</h2>
-        <div class="countdown-grid" role="group" aria-label="Time remaining until the wedding">
-          <div class="count-box"><span class="count-num" id="countDays">000</span><span class="count-label">Days</span></div>
-          <div class="count-box"><span class="count-num" id="countHours">00</span><span class="count-label">Hours</span></div>
-          <div class="count-box"><span class="count-num" id="countMinutes">00</span><span class="count-label">Minutes</span></div>
-          <div class="count-box"><span class="count-num" id="countSeconds">00</span><span class="count-label">Seconds</span></div>
+      <section class="countdown-section" aria-label="Countdown to the wedding" data-reveal-group data-i18n-aria="countdown.aria">
+        <div class="section-intro" data-i18n="countdown.intro">COUNTING DOWN TO FOREVER</div>
+        <h2 data-i18n="countdown.title">We can’t wait</h2>
+        <div class="countdown-grid" role="group" aria-label="Time remaining until the wedding" data-i18n-aria="countdown.groupAria">
+          <div class="count-box"><span class="count-num" id="countDays">000</span><span class="count-label" data-i18n="countdown.days">Days</span></div>
+          <div class="count-box"><span class="count-num" id="countHours">00</span><span class="count-label" data-i18n="countdown.hours">Hours</span></div>
+          <div class="count-box"><span class="count-num" id="countMinutes">00</span><span class="count-label" data-i18n="countdown.minutes">Minutes</span></div>
+          <div class="count-box"><span class="count-num" id="countSeconds">00</span><span class="count-label" data-i18n="countdown.seconds">Seconds</span></div>
         </div>
-        <p class="countdown-note">Sunday, 17 January 2027 · 18:00 WIB</p>
+        <p class="countdown-note" data-i18n="countdown.note">Sunday, 17 January 2027 · 18:00 WIB</p>
       </section>
 
       <section class="story-section" id="story">
         <div class="section-head" data-reveal-group>
-          <div class="section-intro">A JOURNEY OF TWO</div>
-          <h2>Our Story</h2>
+          <div class="section-intro" data-i18n="story.intro">A JOURNEY OF TWO</div>
+          <h2 data-i18n="story.title">Our Story</h2>
         </div>
         <div class="story-body">
           <div class="photo-frame" data-reveal>
-            <img src="assets/photos/demo-hanfu-couple.jpg" alt="Placeholder hanfu couple photo" />
+            <img src="assets/photos/placeholder-2.jpeg" alt="Placeholder hanfu couple photo" data-i18n-alt="story.photoAlt" />
             <img class="frame-overlay" src="assets/svg/portrait-frame.svg" alt="" />
           </div>
           <div class="story-copy">
-            <p class="story-lead" data-reveal>Ours is a love written across cities and time zones, and now, finally, we are counting down to the day we say “I do.”</p>
+            <p class="story-lead" data-reveal data-i18n="story.lead">Ours is a love written across cities and time zones, and now, finally, we are counting down to the day we say “I do.”</p>
 
             <ol class="milestones" data-reveal-group>
               <li>
-                <span class="milestone-date">APRIL 2021</span>
-                <h3>First met</h3>
-                <p>Two strangers, one ordinary day, and the quiet beginning of something extraordinary.</p>
+                <span class="milestone-date" data-i18n="story.m1date">APRIL 2021</span>
+                <h3 data-i18n="story.m1title">How We Met</h3>
+                <p data-i18n="story.m1text">We met for the first time, never imagining that such a simple encounter would be the beginning of our story.</p>
               </li>
               <li>
-                <span class="milestone-date">1 JUNE 2023</span>
-                <h3>Our first date</h3>
-                <p>Mall Kelapa Gading. A simple meal that turned into hours of conversation neither of us wanted to end.</p>
+                <span class="milestone-date" data-i18n="story.m2date">JUNE 1, 2023</span>
+                <h3 data-i18n="story.m2title">Our First Date</h3>
+                <p data-i18n="story.m2text">Our first date was at Mall Kelapa Gading. What started as a simple meal turned into hours of conversation, and before we knew it, time had flown by.</p>
               </li>
               <li>
-                <span class="milestone-date">2 JUNE 2025</span>
-                <h3>The engagement</h3>
-                <p>With full hearts, and happy tears, Natasha said yes.</p>
+                <span class="milestone-date" data-i18n="story.m3date">JUNE 2, 2025</span>
+                <h3 data-i18n="story.m3title">The Proposal</h3>
+                <p data-i18n="story.m3text">After years of making memories together, Richard asked Natasha to marry him. With happy tears and a heart full of love, she said yes.</p>
               </li>
               <li>
-                <span class="milestone-date">2025–2026</span>
-                <h3>Across the miles</h3>
-                <p>While Natasha studies abroad at Imperial College London, we have learned that love is measured in late-night calls, counted sleeps, and every mile closed.</p>
+                <span class="milestone-date" data-i18n="story.m4date">2025–2026</span>
+                <h3 data-i18n="story.m4title">Miles Apart, Still Together</h3>
+                <p data-i18n="story.m4text">Natasha moved to London to pursue her studies at Imperial College London. Though thousands of miles apart, we stayed close through phone calls, everyday stories, and counting down the days until we could see each other again.</p>
               </li>
               <li>
-                <span class="milestone-date">17 JANUARY 2027</span>
-                <h3>Together, forever</h3>
-                <p>The long-distance chapter closes, and our next one begins, with you there to celebrate it.</p>
+                <span class="milestone-date" data-i18n="story.m5date">JANUARY 17, 2027</span>
+                <h3 data-i18n="story.m5title">A New Chapter</h3>
+                <p data-i18n="story.m5text">After everything we've shared and all the miles we've crossed, we're finally getting married. We can't wait to celebrate this special day with the family and friends we love.</p>
               </li>
             </ol>
           </div>
         </div>
 
         <img class="divider-img story-divider" src="assets/svg/cloud-divider.svg" alt="" />
-        <div class="section-intro">THE NEXT CHAPTER BEGINS</div>
+        <div class="section-intro" data-i18n="story.next">THE NEXT CHAPTER BEGINS</div>
       </section>
 
       <section class="paper-section rsvp-section" id="rsvp">
         <div class="rsvp-layout">
           <div class="rsvp-copy" data-reveal-group>
-            <div class="section-intro">WE SAVED YOU A SEAT</div>
-            <h2>Will You Join Us?</h2>
-            <p class="rsvp-intro">Your presence would mean the world to us.<br /><span class="rsvp-deadline">Kindly respond by 17 December 2026.</span></p>
+            <div class="section-intro" data-i18n="rsvp.intro">WE SAVED YOU A SEAT</div>
+            <h2 data-i18n="rsvp.title">Will You Join Us?</h2>
+            <p class="rsvp-intro" data-i18n-html="rsvp.body">Your presence would mean the world to us.<br /><span class="rsvp-deadline">Kindly respond by 3 January 2027.</span></p>
             <p class="guest-seat-note" id="guestSeatNote" hidden></p>
           </div>
           <form id="rsvpForm" data-reveal>
           <input class="hp-field" type="text" id="rsvpWebsite" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
-          <fieldset class="attendance"><legend>Attendance</legend>
-            <label><input type="radio" name="attendance" value="attending" checked /> <span>✓ I will attend</span></label>
-            <label><input type="radio" name="attendance" value="not-attending" /> <span>× I can't attend</span></label>
+          <fieldset class="attendance"><legend data-i18n="rsvp.attendance">Attendance</legend>
+            <label><input type="radio" name="attendance" value="attending" checked /> <span data-i18n="rsvp.attendYes">✓ I will attend</span></label>
+            <label><input type="radio" name="attendance" value="not-attending" /> <span data-i18n="rsvp.attendNo">× I can't attend</span></label>
           </fieldset>
-          <fieldset class="events-choice"><legend>Which events will you join?</legend>
-            <label><input type="radio" name="events" value="both" checked /> <span>Holy Matrimony + Reception</span></label>
-            <label><input type="radio" name="events" value="holy-matrimony" /> <span>Holy Matrimony only</span></label>
-            <label><input type="radio" name="events" value="reception" /> <span>Reception only</span></label>
+          <fieldset class="events-choice"><legend data-i18n="rsvp.events">Which events will you join?</legend>
+            <label><input type="radio" name="events" value="both" checked /> <span data-i18n="rsvp.both">Holy Matrimony + Reception</span></label>
+            <label><input type="radio" name="events" value="holy-matrimony" /> <span data-i18n="rsvp.holyOnly">Holy Matrimony only</span></label>
+            <label><input type="radio" name="events" value="reception" /> <span data-i18n="rsvp.receptionOnly">Reception only</span></label>
           </fieldset>
-          <label class="form-label" for="guestName">Your name</label>
-          <input class="field" type="text" id="guestName" name="name" placeholder="Full name" required maxlength="100" autocomplete="name" />
-          <label class="form-label" for="guestCount">How many people are coming?</label>
+          <label class="form-label" for="guestName" data-i18n="rsvp.name">Your name</label>
+          <input class="field" type="text" id="guestName" name="name" placeholder="Full name" required maxlength="100" autocomplete="name" data-i18n-placeholder="rsvp.namePlaceholder" />
+          <label class="form-label" for="guestCount" data-i18n="rsvp.count">How many people are coming?</label>
           <select class="field" id="guestCount" name="guests">
-            <option value="1">Just me (1 seat)</option>
-            <option value="2">2 people (me + 1)</option>
-            <option value="3">3 people</option>
-            <option value="4">4 people</option>
-            <option value="5">5 people</option>
-            <option value="6">6 people</option>
+            <option value="1" data-i18n="rsvp.count1">Just me (1)</option>
+            <option value="2" data-i18n="rsvp.count2">2 people</option>
+            <option value="3" data-i18n="rsvp.count3">3 people</option>
+            <option value="4" data-i18n="rsvp.count4">4 people</option>
           </select>
-          <p class="field-hint">If you are bringing a plus one, please add their name in the note below.</p>
-          <label class="form-label" for="guestMessage">A note for us (optional)</label>
-          <textarea class="field" id="guestMessage" name="message" rows="3" maxlength="500" placeholder="Your wishes, guest names, or dietary notes"></textarea>
-          <button class="primary form-submit" type="submit">Submit RSVP →</button>
+          <p class="field-hint" data-i18n="rsvp.countHint">If you are bringing a plus one, please add their name in the note below.</p>
+          <label class="form-label" for="guestMessage" data-i18n="rsvp.note">A note for us (optional)</label>
+          <textarea class="field" id="guestMessage" name="message" rows="3" maxlength="500" placeholder="Your wishes, guest names, or dietary notes" data-i18n-placeholder="rsvp.notePlaceholder"></textarea>
+          <button class="primary form-submit" type="submit" data-i18n="rsvp.submit">Submit RSVP →</button>
           <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
         </form>
         </div>
@@ -199,34 +204,34 @@
 
       <section class="paper-section gift-section" id="gift">
         <div class="section-head" data-reveal-group>
-          <div class="section-intro">WITH GRATITUDE</div>
-          <h2>Wedding Gift</h2>
+          <div class="section-intro" data-i18n="gift.intro">WITH GRATITUDE</div>
+          <h2 data-i18n="gift.title">Wedding Gift</h2>
           <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
-          <p class="gift-intro">Your presence is the greatest gift we could ask for. If you would like to bless us with something more, a contribution toward our first home would be received with heartfelt thanks.</p>
+          <p class="gift-intro" data-i18n="gift.body">Your presence is the greatest gift we could ask for. If you would like to bless us with something more, a contribution toward our first home would be received with heartfelt thanks.</p>
         </div>
 
         <div class="gift-grid" data-reveal-group>
-          <div class="gift-card">
-            <span class="gift-tag">DOMESTIC TRANSFER</span>
+          <div class="gift-card gift-card--domestic">
+            <span class="gift-tag" data-i18n="gift.domestic">DOMESTIC TRANSFER</span>
             <p class="gift-bank">Bank Central Asia (BCA)</p>
             <p class="gift-number" id="domesticAccount">0000000000</p>
             <p class="gift-owner">a/n Kristy Natasha Yohanes</p>
-            <button class="gift-copy" type="button" data-copy="domesticAccount">Copy account number</button>
+            <button class="gift-copy" type="button" data-copy="domesticAccount" data-i18n="gift.copyAccount">Copy account number</button>
           </div>
 
-          <div class="gift-card">
-            <span class="gift-tag">INTERNATIONAL TRANSFER</span>
+          <div class="gift-card gift-card--international">
+            <span class="gift-tag" data-i18n="gift.international">INTERNATIONAL TRANSFER</span>
             <dl class="gift-details">
-              <div><dt>Bank</dt><dd>Bank Central Asia (BCA)</dd></div>
-              <div><dt>SWIFT / BIC</dt><dd id="swiftCode">CENAIDJA</dd></div>
-              <div><dt>Account number</dt><dd id="internationalAccount">0000000000</dd></div>
-              <div><dt>Account name</dt><dd>Kristy Natasha Yohanes</dd></div>
-              <div><dt>Bank address</dt><dd>Menara BCA, Jl. M.H. Thamrin No. 1, Jakarta 10310, Indonesia</dd></div>
+              <div><dt data-i18n="gift.bank">Bank</dt><dd>Bank Central Asia (BCA)</dd></div>
+              <div><dt data-i18n="gift.swift">SWIFT / BIC</dt><dd id="swiftCode">CENAIDJA</dd></div>
+              <div><dt data-i18n="gift.accountNumber">Account number</dt><dd id="internationalAccount">0000000000</dd></div>
+              <div><dt data-i18n="gift.accountName">Account name</dt><dd>Kristy Natasha Yohanes</dd></div>
+              <div><dt data-i18n="gift.bankAddress">Bank address</dt><dd>Menara BCA, Jl. M.H. Thamrin No. 1, Jakarta 10310, Indonesia</dd></div>
             </dl>
-            <p class="gift-note">Please use your full name as the transfer reference. For transfer assistance, please contact us directly.</p>
+            <p class="gift-note" data-i18n="gift.note">Please use your full name as the transfer reference. For transfer assistance, please contact us directly.</p>
             <div class="gift-actions">
-              <button class="gift-copy" type="button" data-copy="swiftCode">Copy SWIFT code</button>
-              <button class="gift-copy" type="button" data-copy="internationalAccount">Copy account number</button>
+              <button class="gift-copy" type="button" data-copy="swiftCode" data-i18n="gift.copySwift">Copy SWIFT code</button>
+              <button class="gift-copy" type="button" data-copy="internationalAccount" data-i18n="gift.copyAccount">Copy account number</button>
             </div>
           </div>
         </div>
@@ -235,23 +240,23 @@
       <section class="paper-section wishes-section" id="wishes">
         <div class="wishes-layout">
           <div class="wishes-copy" data-reveal-group>
-            <div class="section-intro">FROM THE HEART</div>
-            <h2>Words of Love</h2>
+            <div class="section-intro" data-i18n="wishes.intro">FROM THE HEART</div>
+            <h2 data-i18n="wishes.title">Words of Love</h2>
             <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
-            <p class="wishes-intro">Leave a wish for the two of us. Every message becomes part of the story we keep.</p>
+            <p class="wishes-intro" data-i18n="wishes.body">Leave a wish for the two of us. Every message becomes part of the story we keep.</p>
 
             <form id="wishForm" class="wish-form">
-              <label class="form-label" for="wishName">Your name</label>
-              <input class="field" type="text" id="wishName" name="wishName" placeholder="Your name" required maxlength="60" autocomplete="name" />
-              <label class="form-label" for="wishMessage">Your wish</label>
-              <textarea class="field" id="wishMessage" name="wishMessage" rows="3" maxlength="300" placeholder="A few words for Richard &amp; Natasha" required></textarea>
-              <button class="primary form-submit" type="submit">Send your wish →</button>
+              <label class="form-label" for="wishName" data-i18n="wishes.name">Your name</label>
+              <input class="field" type="text" id="wishName" name="wishName" placeholder="Your name" required maxlength="60" autocomplete="name" data-i18n-placeholder="wishes.namePlaceholder" />
+              <label class="form-label" for="wishMessage" data-i18n="wishes.wish">Your wish</label>
+              <textarea class="field" id="wishMessage" name="wishMessage" rows="3" maxlength="300" placeholder="A few words for Richard &amp; Natasha" required data-i18n-placeholder="wishes.wishPlaceholder"></textarea>
+              <button class="primary form-submit" type="submit" data-i18n="wishes.submit">Send your wish →</button>
               <div class="form-status" id="wishStatus" role="status" aria-live="polite"></div>
             </form>
           </div>
 
           <div class="wishes-feed" data-reveal>
-            <p class="wishes-empty" id="wishesEmpty">No wishes yet. Be the first to leave one.</p>
+            <p class="wishes-empty" id="wishesEmpty" data-i18n="wishes.empty">No wishes yet. Be the first to leave one.</p>
             <ul class="wish-list" id="wishList" aria-live="polite"></ul>
           </div>
         </div>
@@ -259,14 +264,19 @@
 
       <footer class="closing" data-reveal-group>
         <div class="closing-seal seal-mark" aria-hidden="true"></div>
-        <h2>Thank You</h2>
-        <p>For being part of this beautiful chapter of our lives.</p>
+        <h2 data-i18n="footer.title">Thank You</h2>
+        <p data-i18n="footer.text">For being part of this beautiful chapter of our lives.</p>
         <div class="footer-names">Richard &amp; Natasha</div>
         <p class="footer-date">17 · 01 · 2027 · JAKARTA</p>
         <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
       </footer>
     </main>
   </div>
+    <div class="lang-switch lang-switch--floating" role="group" aria-label="Language">
+      <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <span aria-hidden="true">/</span>
+      <button type="button" data-lang="id" aria-pressed="false">ID</button>
+    </div>
   <audio id="bgMusic" src="assets/bgsong/a-heartbeats-turn.mp3" loop preload="auto"></audio>
   <button class="music-toggle" id="musicToggle" type="button" aria-label="Pause background music" aria-pressed="true" hidden>
     <span aria-hidden="true">♪</span>

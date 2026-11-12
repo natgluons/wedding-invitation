@@ -5,7 +5,7 @@
  *   node tools/generate-links.js --base https://yourname.github.io/wedding-invitation/
  *   node tools/generate-links.js --in guests.csv --out guest-links.csv --html guest-links.html
  *
- * Input CSV: two columns, `name` and `seats` (1-6). A header row is optional.
+ * Input CSV: two columns, `name` and `seats` (1-4). A header row is optional.
  * Output:   a CSV for mail merge plus an HTML page with copy buttons.
  */
 
@@ -13,10 +13,10 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const ROOT = path.resolve(__dirname, '..');
-const MAX_SEATS = 6;
+const MAX_SEATS = 4;
 
 function readArgs(argv) {
-  const args = {in: 'guests.csv', out: 'guest-links.csv', html: 'guest-links.html', base: ''};
+  const args = {in: 'guests.csv', out: 'guest-links.csv', html: 'guest-links.html', base: '', lang: ''};
   for (let i = 0; i < argv.length; i++) {
     const key = argv[i];
     const value = argv[i + 1];
@@ -98,10 +98,11 @@ function normaliseBase(base) {
   return trimmed;
 }
 
-function buildLink(base, name, seats) {
+function buildLink(base, name, seats, lang) {
   const url = new URL(base);
   url.searchParams.set('name', name);
   url.searchParams.set('guests', String(seats));
+  if (lang) url.searchParams.set('lang', lang);
   return url.toString();
 }
 
@@ -201,8 +202,16 @@ function main() {
   --in <file>    Guest list CSV (default guests.csv)
   --out <file>   Output CSV (default guest-links.csv)
   --html <file>  Output HTML preview (default guest-links.html)
+  --lang <en|id> Language to add to every link (optional)
 
 Guest CSV columns: name, seats (1-${MAX_SEATS}). Example in guests.example.csv.`);
+    return;
+  }
+
+  const lang = args.lang.trim().toLowerCase();
+  if (lang && lang !== 'en' && lang !== 'id') {
+    console.error('Language must be en or id.');
+    process.exitCode = 1;
     return;
   }
 
@@ -264,7 +273,7 @@ Guest CSV columns: name, seats (1-${MAX_SEATS}). Example in guests.example.csv.`
     if (rawSeats && Number.parseInt(rawSeats, 10) > MAX_SEATS) {
       console.warn(`${name}: ${rawSeats} seats exceeds the form maximum, using ${MAX_SEATS}.`);
     }
-    rows.push({name, seats, link: buildLink(base, name, seats)});
+    rows.push({name, seats, link: buildLink(base, name, seats, lang)});
   }
 
   if (!rows.length) {

@@ -156,5 +156,6 @@
     }
   ],
   "example": "index.html",
-  "photoPlaceholder": "assets/photos/demo-hanfu-couple.jpg"
+  "photoPlaceholder": "assets/photos/placeholder-1.jpeg",
+  "storyPhotoPlaceholder": "assets/photos/placeholder-2.jpeg"
 }
