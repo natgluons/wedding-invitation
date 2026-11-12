@@ -89,6 +89,7 @@
       "rsvp.name": "Your name",
       "rsvp.namePlaceholder": "Full name",
       "rsvp.count": "How many people are coming?",
+      "rsvp.countPlaceholder": "Select number of people",
       "rsvp.count1": "Just me (1)",
       "rsvp.count2": "2 people",
       "rsvp.count3": "3 people",
@@ -96,7 +97,7 @@
       "rsvp.countHint": "If you are bringing a plus one, please add their name in the note below.",
       "rsvp.note": "A note for us (optional)",
       "rsvp.notePlaceholder": "Your wishes, guest names, or dietary notes",
-      "rsvp.submit": "Submit RSVP →",
+      "rsvp.submit": "Submit RSVP",
       "gift.intro": "WITH GRATITUDE",
       "gift.title": "Wedding Gift",
       "gift.body": "Your presence is the greatest gift we could ask for. If you would like to bless us with something more, a contribution toward our first home would be received with heartfelt thanks.",
@@ -235,6 +236,7 @@
       "rsvp.name": "Nama Anda",
       "rsvp.namePlaceholder": "Nama lengkap",
       "rsvp.count": "Berapa orang yang akan datang?",
+      "rsvp.countPlaceholder": "Pilih jumlah orang",
       "rsvp.count1": "Hanya saya (1)",
       "rsvp.count2": "2 orang",
       "rsvp.count3": "3 orang",
@@ -242,7 +244,7 @@
       "rsvp.countHint": "Jika Anda membawa pasangan, mohon tambahkan nama mereka di catatan di bawah.",
       "rsvp.note": "Catatan untuk kami (opsional)",
       "rsvp.notePlaceholder": "Ucapan, nama tamu, atau catatan makanan",
-      "rsvp.submit": "Kirim RSVP →",
+      "rsvp.submit": "Kirim RSVP",
       "gift.intro": "DENGAN RASA SYUKUR",
       "gift.title": "Hadiah Pernikahan",
       "gift.body": "Kehadiran Anda adalah hadiah terbaik yang kami harapkan. Jika Anda ingin memberi lebih, kontribusi untuk rumah pertama kami akan kami terima dengan penuh rasa syukur.",
@@ -648,7 +650,6 @@
   if (savedResponse && savedResponse.name) {
     guestNameInput.value = savedResponse.name;
     if (savedResponse.message) guestMessageInput.value = savedResponse.message;
-    if (savedResponse.guests) guestCountSelect.value = String(clampSeats(Number(savedResponse.guests) || 1));
     if (savedResponse.attendance) {
       const input = form.querySelector(`input[name="attendance"][value="${savedResponse.attendance}"]`);
       if (input) input.checked = true;
@@ -696,11 +697,11 @@
     personalization = {invitedName, seats};
 
     guestNameInput.value = invitedName;
-    guestCountSelect.value = String(seats);
     if (!wishNameInput.value) wishNameInput.value = invitedName;
-  } else if (Number.isFinite(requestedSeats)) {
-    guestCountSelect.value = String(clampSeats(requestedSeats));
   }
+
+  // Guests must explicitly confirm their party size, including on personalised links.
+  guestCountSelect.value = '';
 
   function renderGuestCopy() {
     if (!personalization.invitedName) {
@@ -952,7 +953,7 @@
       name: guestNameInput.value.trim().slice(0, 100),
       attendance: attending ? 'attending' : 'not-attending',
       events: attending ? form.querySelector('input[name="events"]:checked').value : '',
-      guests: attending ? clampSeats(Number(guestCountSelect.value) || 1) : 0,
+      guests: attending ? Number(guestCountSelect.value) : 0,
       message: guestMessageInput.value.trim().slice(0, 500),
       invitedAs: invitedName,
       submittedAt: new Date().toISOString(),

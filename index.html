@@ -16,9 +16,9 @@
   </style>
   <script>document.documentElement.classList.add('assets-loading'); window.assetLoadTimeout = setTimeout(function () { document.documentElement.classList.remove('assets-loading'); }, 10000);</script>
   <link rel="preload" as="image" href="assets/photos/placeholder-1-1536.webp" imagesrcset="assets/photos/placeholder-1-768.webp 768w, assets/photos/placeholder-1-1536.webp 1536w" imagesizes="(min-width: 960px) 1240px, 100vw" />
-  <link rel="stylesheet" href="styles.css?v=20261112-parallax-3" />
+  <link rel="stylesheet" href="styles.css?v=20261112-rsvp-count-4" />
   <script defer src="config.js"></script>
-  <script defer src="main.js?v=20261112-parallax-3"></script>
+  <script defer src="main.js?v=20261112-rsvp-count-4"></script>
 </head>
 <body>
   <div class="asset-loader" role="status" aria-label="Loading invitation"><span class="asset-spinner" aria-hidden="true"></span></div>
@@ -215,7 +215,8 @@
           <label class="form-label" for="guestName" data-i18n="rsvp.name">Your name</label>
           <input class="field" type="text" id="guestName" name="name" placeholder="Full name" required maxlength="100" autocomplete="name" data-i18n-placeholder="rsvp.namePlaceholder" />
           <label class="form-label" for="guestCount" data-i18n="rsvp.count">How many people are coming?</label>
-          <select class="field" id="guestCount" name="guests">
+          <select class="field" id="guestCount" name="guests" required>
+            <option value="" disabled selected data-i18n="rsvp.countPlaceholder">Select number of people</option>
             <option value="1" data-i18n="rsvp.count1">Just me (1)</option>
             <option value="2" data-i18n="rsvp.count2">2 people</option>
             <option value="3" data-i18n="rsvp.count3">3 people</option>
@@ -224,7 +225,7 @@
           <p class="field-hint" data-i18n="rsvp.countHint">If you are bringing a plus one, please add their name in the note below.</p>
           <label class="form-label" for="guestMessage" data-i18n="rsvp.note">A note for us (optional)</label>
           <textarea class="field" id="guestMessage" name="message" rows="3" maxlength="500" placeholder="Your wishes, guest names, or dietary notes" data-i18n-placeholder="rsvp.notePlaceholder"></textarea>
-          <button class="primary form-submit" type="submit" data-i18n="rsvp.submit">Submit RSVP →</button>
+          <button class="primary form-submit" type="submit" data-i18n="rsvp.submit">Submit RSVP</button>
           <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
         </form>
         </div>
