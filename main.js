@@ -542,7 +542,6 @@
   // The cover fades away while the invitation fades in beneath it, so the
   // guest never sees an empty screen between the letter and the content.
   function completeOpen() {
-    if (!invitationReady) return;
     clearOpenTimers();
     cover.hidden = true;
     cover.classList.remove('is-departing');
@@ -555,7 +554,6 @@
   function finishOpening() {
     if (!hasOpened || !openingAnimationDone || openingDepartureStarted) return;
     renderInvitationGate();
-    if (!invitationReady || invitationChecking) return;
     openingDepartureStarted = true;
     startMusic();
     if (prefersReducedMotion()) { completeOpen(); return; }
@@ -565,7 +563,7 @@
   }
 
   function openInvitation(options = {}) {
-    if (hasOpened || (!invitationReady && !invitationChecking)) return;
+    if (hasOpened) return;
     hasOpened = true;
     for (const button of openButtons) button.disabled = true;
     if (options.instant || prefersReducedMotion()) {
@@ -1000,7 +998,7 @@
     status.textContent = invitationStatusKey ? t(invitationStatusKey) : '';
     status.hidden = !invitationStatusKey || (invitationChecking && !openingAnimationDone);
     status.classList.toggle('is-error', Boolean(invitationStatusKey && invitationStatusKey !== 'dynamic.inviteLoading'));
-    for (const button of openButtons) button.disabled = (!invitationReady && !invitationChecking) || hasOpened;
+    for (const button of openButtons) button.disabled = hasOpened;
     const retry = document.getElementById('retryInvitation');
     retry.hidden = !invitationRetry;
     retry.textContent = currentLang === 'id' ? 'Coba lagi' : 'Try again';
