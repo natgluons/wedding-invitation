@@ -433,9 +433,10 @@
       if (!rect.height || rect.bottom < 0 || rect.top > window.innerHeight) return;
       const progress = Math.max(-1, Math.min(1,
         (window.innerHeight / 2 - rect.top - rect.height / 2) / ((window.innerHeight + rect.height) / 2)));
-      // Keep the travel very small so the top of each photograph (and the
-      // faces) stays inside the frame at every scroll position.
-      const travel = Math.min(32, rect.height * 0.045);
+      const desktopClosing = scene.matches('.closing-photo') && window.innerWidth >= 960;
+      const travel = desktopClosing
+        ? Math.min(80, rect.height * 0.1)
+        : Math.min(300, rect.height * 0.36);
       image.style.setProperty('--parallax-travel', `${travel}px`);
       image.style.transform = `translate3d(0, ${progress * travel}px, 0)`;
     });
@@ -657,8 +658,10 @@
       if (input) input.checked = true;
     }
     if (savedResponse.events) {
-      const input = form.querySelector(`input[name="events"][value="${savedResponse.events}"]`);
-      if (input) input.checked = true;
+      const select = form.elements.events;
+      if ([...select.options].some(option => option.value === savedResponse.events)) {
+        select.value = savedResponse.events;
+      }
     }
   } else {
     savedResponse = null;
@@ -910,12 +913,12 @@
   // RSVP
   // ---------------------------------------------------------------------
   const attendanceInputs = form.querySelectorAll('input[name="attendance"]');
-  const eventInputs = form.querySelectorAll('input[name="events"]');
+  const eventSelect = form.elements.events;
 
   function syncAttendance() {
     const attending = form.querySelector('input[name="attendance"]:checked').value === 'attending';
     guestCountSelect.disabled = !attending;
-    for (const input of eventInputs) input.disabled = !attending;
+    eventSelect.disabled = !attending;
   }
   for (const input of attendanceInputs) input.addEventListener('change', syncAttendance);
   syncAttendance();
@@ -954,7 +957,7 @@
       type: 'rsvp',
       name: guestNameInput.value.trim().slice(0, 100),
       attendance: attending ? 'attending' : 'not-attending',
-      events: attending ? form.querySelector('input[name="events"]:checked').value : '',
+      events: attending ? eventSelect.value : '',
       guests: attending ? Number(guestCountSelect.value) : 0,
       message: guestMessageInput.value.trim().slice(0, 500),
       invitedAs: invitedName,

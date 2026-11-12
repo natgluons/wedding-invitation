@@ -16,10 +16,10 @@
   </style>
   <script>document.documentElement.classList.add('assets-loading'); window.assetLoadTimeout = setTimeout(function () { document.documentElement.classList.remove('assets-loading'); }, 10000);</script>
   <link rel="preload" as="image" href="assets/photos/placeholder-1-1536.webp" imagesrcset="assets/photos/placeholder-1-768.webp 768w, assets/photos/placeholder-1-1536.webp 1536w" imagesizes="(min-width: 960px) 1240px, 100vw" />
-  <link rel="stylesheet" href="styles.css?v=20261112-desktop-closing-10" />
-  <link rel="stylesheet" href="desktop.css?v=20261112-portrait-6" media="(min-width: 960px)" />
+  <link rel="stylesheet" href="styles.css?v=20261112-envelope-clip-17" />
+  <link rel="stylesheet" href="desktop.css?v=20261112-wave-pattern-20" media="(min-width: 960px)" />
   <script defer src="config.js"></script>
-  <script defer src="main.js?v=20261112-desktop-closing-10"></script>
+  <script defer src="main.js?v=20261112-event-select-16"></script>
 </head>
 <body>
   <div class="asset-loader" role="status" aria-label="Loading invitation"><span class="asset-spinner" aria-hidden="true"></span></div>
@@ -208,11 +208,12 @@
             <label><input type="radio" name="attendance" value="attending" checked /> <span data-i18n="rsvp.attendYes">✓ I will attend</span></label>
             <label><input type="radio" name="attendance" value="not-attending" /> <span data-i18n="rsvp.attendNo">× I can't attend</span></label>
           </fieldset>
-          <fieldset class="events-choice"><legend data-i18n="rsvp.events">Which events will you join?</legend>
-            <label><input type="radio" name="events" value="both" checked /> <span data-i18n="rsvp.both">Holy Matrimony + Reception</span></label>
-            <label><input type="radio" name="events" value="holy-matrimony" /> <span data-i18n="rsvp.holyOnly">Holy Matrimony only</span></label>
-            <label><input type="radio" name="events" value="reception" /> <span data-i18n="rsvp.receptionOnly">Reception only</span></label>
-          </fieldset>
+          <label class="form-label" for="guestEvents" data-i18n="rsvp.events">Which events will you join?</label>
+          <select class="field" id="guestEvents" name="events" required>
+            <option value="both" data-i18n="rsvp.both">Holy Matrimony + Reception</option>
+            <option value="holy-matrimony" data-i18n="rsvp.holyOnly">Holy Matrimony only</option>
+            <option value="reception" data-i18n="rsvp.receptionOnly">Reception only</option>
+          </select>
           <label class="form-label" for="guestName" data-i18n="rsvp.name">Your name</label>
           <input class="field" type="text" id="guestName" name="name" placeholder="Full name" required maxlength="100" autocomplete="name" data-i18n-placeholder="rsvp.namePlaceholder" />
           <label class="form-label" for="guestCount" data-i18n="rsvp.count">How many people are coming?</label>
@@ -298,6 +299,7 @@
 
       <footer class="closing closing-photo">
         <img class="closing-portrait" src="assets/photos/placeholder-6.jpeg" alt="" loading="lazy" decoding="async" />
+        <span class="closing-blossom" aria-hidden="true"></span>
         <div class="closing-copy" data-reveal-group>
         <div class="closing-seal seal-mark" aria-hidden="true"></div>
         <h2 data-i18n="footer.title">Thank You</h2>

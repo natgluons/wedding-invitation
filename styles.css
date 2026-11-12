@@ -624,3 +624,12 @@ section, footer { scroll-margin-top: 66px; }
   .closing-photo .footer-date { font-size:10px; letter-spacing:.18em; }
   .closing-copy .divider-img { margin-bottom:0; }
 }
+
+.envelope-flap::after { content:""; position:absolute; left:2%; top:5%; width:31%; height:48%; background:url('assets/blossoms/branch-left.webp') left top/contain no-repeat; clip-path:polygon(5.4% 0,100% 0,100% 100%,85% 100%); pointer-events:none; }
+.closing-blossom { display:none; }
+@media(max-width:959px) {
+  #details { background-image:url('assets/blossoms/corner-top-right.webp'); background-position:right -10px top -18px; background-size:95px auto; }
+  .story-section { background:url('assets/blossoms/side-left.webp') left -14px top -20px/100px auto no-repeat,linear-gradient(#fbf5ea,#f3e6d5 160px); }
+  .gallery-section::before { top:auto; right:auto; bottom:0; left:0; width:74px; height:74px; background-image:url('assets/blossoms/corner-bottom-left.webp'); background-position:left bottom; }
+  .gift-section { background-image:url('assets/blossoms/branch-right.webp'),linear-gradient(var(--cream),#f3e6d5 96px); background-position:right -6px top -12px,0 0; }
+}

@@ -173,3 +173,151 @@ h2 { font-family:"Cormorant Garamond",Georgia,serif; font-size:84px; font-weight
   .closing-copy::after { background-image:url('assets/blossoms/corner-top-right.webp'); right:-36px; top:-44px; }
   .rsvp-section { background-image:url('assets/blossoms/side-left.webp'); background-position:-20px 18px; background-size:200px auto; }
 }
+
+/* Quiet silk grounds the page; branches grow from edges rather than float. */
+body { background:#2c2026 url('assets/svg/silk-grain.svg') repeat; }
+body::before {
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.23;
+  background:radial-gradient(ellipse at left 20%,#b9956655,transparent 42%),radial-gradient(ellipse at right 80%,#792a3277,transparent 42%);
+}
+body::after { content:""; position:fixed; inset:18px; z-index:0; border:1px solid #d9b47b30; pointer-events:none; }
+.site-shell { position:relative; z-index:1; box-shadow:0 0 70px #120b1080; }
+.story-section {
+  background:url('assets/blossoms/corner-top-right.webp') right -25px top -32px/220px auto no-repeat,
+    url('assets/svg/cloud-pattern.svg') repeat,#45232c;
+}
+.wishes-section {
+  position:relative;
+  background:url('assets/blossoms/side-right.webp') right -8px top -16px/260px auto no-repeat,
+    url('assets/svg/cloud-pattern.svg') repeat,#45232c;
+}
+.wishes-feed { background:none; }
+.closing-copy::after { display:none; }
+.closing-photo::after { background:none; }
+
+/* Distinct branch silhouettes, with their stems meeting a section edge. */
+.story-section { background-position:right -25px top -32px,0 0; }
+#details { background-image:url('assets/blossoms/corner-top-right.webp'); background-position:right -20px top -28px; background-size:200px auto; background-color:#f7f1e6; }
+.gift-section { background-position:right -8px top -12px; }
+.closing-photo .closing-blossom { display:block; position:absolute; left:-12px; bottom:-10px; width:210px; height:210px; background:url('assets/blossoms/corner-bottom-left.webp') left bottom/contain no-repeat; pointer-events:none; z-index:0; }
+.closing-photo .closing-copy { z-index:1; }
+
+/* Equal event columns and denser spreads after the story. */
+#details { grid-template-columns:1fr 1fr; column-gap:0; padding:88px 0; }
+#details .section-head { padding:0 48px 72px; text-align:center; }
+#details h2 { margin:26px auto; }
+#details .divider-img { margin-inline:auto; }
+#details .detail-list { padding-left:56px; margin-right:88px; border-block:0; border-left:1px solid #b9956670; }
+#details .detail-row:first-child { border-top:1px solid #b9956670; }
+#details .detail-row:last-child { border-bottom:1px solid #b9956670; }
+#details .details-actions { padding-left:56px; margin-right:88px; }
+
+.gallery-section {
+  display:grid; grid-template-columns:.85fr 1.65fr; gap:48px;
+  align-items:center; padding:80px 64px;
+  background:linear-gradient(90deg,#45232c 34%,#dcc3a1 34%);
+}
+.gallery-section .section-head { margin:0; text-align:left; padding-right:12px; }
+.gallery-section .section-intro { color:#d9b47b; line-height:1.9; }
+.gallery-section h2 { color:#fff4e4; font-size:88px; max-width:8ch; line-height:.95; margin-block:26px; }
+.gallery-section .photo-gallery { margin:0; gap:24px; }
+.gallery-section .gallery-wide { transform:rotate(-2deg); }
+.gallery-section .gallery-second { transform:rotate(2deg); }
+.gallery-section .gallery-offset { margin-left:0; margin-right:0; }
+
+.rsvp-section {
+  padding-block:80px;
+  background:url('assets/blossoms/side-left.webp') left -20px top 18px/180px auto no-repeat,
+    url('assets/svg/cloud-pattern.svg') repeat,
+    linear-gradient(90deg,#d5c3aa 48%,#e9ddcb 48%);
+}
+.rsvp-layout { gap:56px; align-items:center; }
+.rsvp-copy { padding-top:0; }
+.rsvp-copy h2 { max-width:10ch; font-size:80px; }
+.rsvp-copy::after { margin-top:30px; width:94%; }
+.rsvp-layout form { padding:30px; }
+
+.gift-section {
+  padding:72px 88px; column-gap:56px;
+  background:url('assets/blossoms/branch-right.webp') right -8px top -12px/125px auto no-repeat,
+    url('assets/svg/cloud-pattern.svg') repeat,
+    linear-gradient(90deg,#eee1cb 50%,#ddc8a9 50%);
+}
+.gift-section h2 { font-size:76px; }
+.gift-section .gift-intro { max-width:44ch; font-size:16px; line-height:1.75; }
+.gift-section .gift-card { background:#fff6e5; padding:30px; box-shadow:8px 8px 0 #ae8c5d22; }
+.gift-section .gift-tabs { background:#f7f1e6a8; }
+
+@media(max-width:1100px) {
+  #details .detail-list, #details .details-actions { padding-left:32px; margin-right:40px; }
+  #details .section-head { padding-inline:32px; }
+  .gallery-section { padding:64px 40px; gap:32px; grid-template-columns:.8fr 1.6fr; }
+  .gallery-section h2 { font-size:66px; }
+  .gallery-section .photo-gallery { gap:18px; }
+  .rsvp-section { padding-block:64px; }
+  .rsvp-copy h2 { font-size:68px; }
+  .gift-section { padding:64px 48px; gap:24px 40px; }
+  .gift-section h2 { font-size:66px; }
+}
+
+/* A moon-window photo spread, writing paper, and a framed gift panel. */
+.gallery-section { position:relative; isolation:isolate; background:#45232c url('assets/svg/cloud-pattern.svg') repeat; padding-block:96px; }
+.gallery-section::before { content:""; position:absolute; z-index:-1; width:590px; height:590px; right:90px; top:50%; transform:translateY(-50%); border-radius:50%; background:#dbc19a url('assets/svg/silk-grain.svg'); border:1px solid #d9b47b; outline:1px solid #d9b47b66; outline-offset:16px; }
+.gallery-section::after { content:""; position:absolute; inset:24px; border:1px solid #d9b47b55; pointer-events:none; z-index:-1; }
+.gallery-section .photo-gallery figure { border:8px solid #fff4e4; box-shadow:0 16px 32px #160e1c60; }
+.gallery-section .gallery-wide { transform:rotate(-5deg); }
+.gallery-section .gallery-second { transform:rotate(4deg); }
+.gallery-section .gallery-offset { transform:rotate(-3deg); }
+
+.rsvp-section { position:relative; isolation:isolate; background:url('assets/blossoms/side-left.webp') left -20px top 18px/180px auto no-repeat,url('assets/svg/silk-grain.svg') repeat,#e8ddcc; }
+.rsvp-section::before { display:block; content:""; position:absolute; inset:24px; border:1px solid #aa805b66; z-index:-1; pointer-events:none; }
+.rsvp-section::after { display:block; content:""; position:absolute; left:32px; bottom:32px; width:180px; height:180px; background:none; -webkit-mask-image:linear-gradient(45deg,#000,transparent 75%); mask-image:linear-gradient(45deg,#000,transparent 75%); z-index:-1; pointer-events:none; }
+.rsvp-copy::after { border-width:12px 12px 40px; width:90%; transform:rotate(-5deg); box-shadow:8px 12px 24px #51362b25; }
+.rsvp-layout form { outline:1px solid #b9956655; outline-offset:-9px; padding:38px; box-shadow:5px 6px 0 #f5ecdc,6px 7px 0 #b9956670,0 24px 44px #51362b20; }
+
+/* The transfer area fills its half of the spread. */
+.gift-section { position:relative; isolation:isolate; grid-template-columns:1fr 1fr; gap:0; padding:0; grid-template-rows:auto 1fr; align-content:stretch; background:#f1e5d2 url('assets/svg/silk-grain.svg') repeat; }
+.gift-section::before { display:none; }
+.gift-section::after { display:block; content:""; position:absolute; inset:0 0 0 50%; border:0; background:url('assets/blossoms/branch-right.webp') right -14px top -18px/180px auto no-repeat,url('assets/svg/wave-pattern.svg') repeat,#45232c; z-index:-1; pointer-events:none; }
+.gift-section .section-head { padding:72px 64px; align-self:start; }
+.gift-section h2 { font-size:88px; }
+.gift-section .gift-intro { max-width:37ch; }
+.gift-section .gift-tabs { width:auto; margin:72px 48px 0; padding:0 0 14px; border:0; border-bottom:1px solid #d9b47b66; border-radius:0; background:none; align-self:start; }
+.gift-section .gift-tabs button { color:#ecd8bd; border-radius:0; background:none; padding:12px; }
+.gift-section .gift-tabs button[aria-selected="true"] { background:#ecd8bd; color:#612b33; }
+.gift-section .gift-grid { width:auto; margin:0 48px 64px; padding:0; border:0; background:none; box-shadow:none; }
+.gift-section .gift-card { background:none; color:#fff4e4; border:0; border-radius:0; box-shadow:none; padding:32px 0 0; }
+.gift-section .gift-bank { color:#fff4e4; font-size:30px; }
+.gift-section .gift-number { color:#fff4e4; font-size:clamp(32px,3.2vw,46px); letter-spacing:.08em; margin:30px 0 12px; }
+.gift-section .gift-tag, .gift-section .gift-owner, .gift-section .gift-note, .gift-section .gift-details dd { color:#e6cda7; }
+.gift-section .gift-owner { font-size:15px; }
+.gift-section .gift-copy { margin-top:20px; background:#edd6b1; color:#612b33; border-color:#d9b47b; padding:13px 22px; }
+@media(max-width:1100px) {
+  .gallery-section::before { width:450px; height:450px; right:44px; }
+  .rsvp-layout form { padding:28px; }
+  .gift-section .section-head { padding:56px 40px; }
+  .gift-section .gift-tabs { margin:48px 32px 0; }
+  .gift-section .gift-grid { margin:0 32px 48px; }
+  .gift-section h2 { font-size:72px; }
+}
+
+/* Readable international details, aligned to the same panel edges as domestic. */
+.gift-section .gift-details { gap:0; margin:20px 0 0; }
+.gift-section .gift-details div { grid-template-columns:132px minmax(0,1fr); gap:16px; padding:12px 0; border-bottom:1px solid #d9b47b33; }
+.gift-section .gift-details dt { color:#d9b47b; font-size:11px; line-height:1.6; }
+.gift-section .gift-details dd { font-size:17px; line-height:1.6; overflow-wrap:anywhere; }
+.gift-section .gift-note { font-size:15px; line-height:1.75; margin:22px 0; }
+.gift-section .gift-actions { gap:12px; }
+.wishes-section { border-top:0; }
+@media(max-width:1100px) {
+  .gift-section .gift-details div { grid-template-columns:106px minmax(0,1fr); gap:12px; }
+  .gift-section .gift-details dd { font-size:16px; }
+}
+
+/* Separate the two decorative grounds with a continuous gold rule. */
+.gift-section { border-bottom:1px solid #b99566; }
+
+/* Deliberate section boundaries keep independently tiled patterns apart. */
+.gallery-section { border-top:1px solid #b99566; background:#45232c url('assets/svg/silk-grain.svg') repeat; }
+
+.gift-section::after { border-block:3px double #b9956680; }
