@@ -50,6 +50,13 @@
       "transparent": true
     },
     {
+      "path": "assets/svg/double-happiness.svg",
+      "role": "Vector double-happiness mark for the header and closing seal (no CJK font needed)",
+      "width": 240,
+      "height": 240,
+      "transparent": true
+    },
+    {
       "path": "assets/svg/envelope-back.svg",
       "role": "Envelope base; stays behind letter",
       "width": 900,
@@ -68,6 +75,13 @@
       "role": "Foreground pocket and folds",
       "width": 900,
       "height": 620,
+      "transparent": false
+    },
+    {
+      "path": "assets/svg/favicon.svg",
+      "role": "Vector favicon with the double-happiness mark",
+      "width": 64,
+      "height": 64,
       "transparent": false
     },
     {
@@ -142,5 +156,6 @@
     }
   ],
   "example": "index.html",
-  "photoPlaceholder": "assets/photos/demo-hanfu-couple.jpg"
+  "photoPlaceholder": "assets/photos/placeholder-1.jpeg",
+  "storyPhotoPlaceholder": "assets/photos/placeholder-2.jpeg"
 }

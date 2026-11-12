@@ -11,9 +11,11 @@ For best results, from the repo root run: `python -m http.server 8000` and open 
 ## Current invitation
 
 - **Couple:** Richard Putra, S.Kom. & Kristy Natasha Yohanes, S.Si., M.Sc. (shown as **Richard & Natasha**)
-- **Date:** Sunday, 17 January 2027, 18:00 WIB – finish
-- **Venue:** Grand Mercure Magnolia Ballroom, Jakarta
-- **RSVP deadline:** 17 December 2026
+- **Date:** Sunday, 17 January 2027
+  - **Holy Matrimony:** 11:00 WIB – finish
+  - **Reception:** 18:00 WIB – finish
+- **Venue:** Grand Mercure Kemayoran, Magnolia Ballroom, Jakarta, Indonesia
+- **RSVP deadline:** 3 January 2027
 - **Story:** first met April 2021; first date 1 June 2023 at Mall Kelapa Gading (MKG); engaged 2 June 2025; long-distance while Natasha studies abroad at Imperial College London; wedding day 17 January 2027.
 
 The countdown in `main.js` is set to `2027-01-17T18:00:00+07:00`.
@@ -26,6 +28,7 @@ Add a guest name to the URL to personalise the cover and pre-fill the RSVP:
 - `/alice?plus=0` → 1 seat and **Dear Alice,**
 - `/alice?guests=3` → 3 seats and **Dear Alice & Guests,**
 - `?name=John` or `?to=John` also work, with the same `plus` / `guests` options.
+- `?lang=id` or `?lang=en` switches the whole invitation language (also `/id` and `/en`). The ID version shows domestic bank transfer details, while EN shows the international transfer details.
 
 Path links (`/alice`) keep the URL clean. They need a host that serves `index.html` for unknown paths: `_redirects` covers Netlify, and `404.html` makes GitHub Pages forward `/alice` to `index.html?name=alice`. On GitHub Pages the address changes after the forward, though the invitation still greets Alice.
 
@@ -48,12 +51,12 @@ Then run:
 node tools/generate-links.js --base https://yourname.github.io/wedding-invitation/
 ```
 
-The base URL defaults to `siteUrl` in `config.js`. The script writes:
+The base URL defaults to `siteUrl` in `config.js`. Add `--lang id` or `--lang en` to put the language in every generated link. The script writes:
 
 - `guest-links.csv`: guest name, seats, and full link (opens cleanly in Excel/Sheets)
 - `guest-links.html`: a preview table with a copy button per guest, handy for WhatsApp
 
-Duplicate names are skipped, names with commas/quotes/`&` are encoded correctly, and seat counts are clamped to the 1–6 options in the RSVP form.
+Duplicate names are skipped, names with commas/quotes/`&` are encoded correctly, and seat counts are clamped to the 1–4 options in the RSVP form.
 
 ## RSVP backend (Google Sheets)
 
@@ -78,7 +81,7 @@ window.WEDDING_CONFIG = {
 };
 ```
 
-The sheet records: submitted time (Asia/Jakarta), name, attendance, guest count, message, the name from the personalised link, and the page URL. A guest who submits again updates their existing row instead of creating a duplicate.
+The sheet records: submitted time (Asia/Jakarta), name, attendance, events (Holy Matrimony + Reception, Holy Matrimony only, or Reception only), guest count, message, the name from the personalised link, and the page URL. A guest who submits again updates their existing row instead of creating a duplicate.
 
 If the request fails, the form offers a WhatsApp fallback when `contactWhatsApp` is set. If `rsvpEndpoint` is blank the form stays in preview mode and tells you so.
 
@@ -103,9 +106,10 @@ The **Words of Love** section above the closing screen lets guests leave a wish.
 - `rsvp-backend/Code.gs`: Google Apps Script backend for the RSVP sheet
 - `tools/generate-links.js`: builds personalised links from a guest CSV
 - `guests.example.csv`: guest list template (`name,seats`)
-- `assets/svg/`: source assets in editable, resolution-independent SVG (20 files)
+- `assets/svg/`: source assets in editable, resolution-independent SVG (22 files)
 - `assets/png/`: exported PNG variants for common decorative layers (15 files)
-- `assets/photos/demo-hanfu-couple.jpg`: **AI-generated sample photo**, cropped from our earlier mockup, **not the couple's actual photograph**
+- `assets/photos/placeholder-1.jpeg`: front/top portrait placeholder (replace with the couple's photo)
+- `assets/photos/placeholder-2.jpeg`: Our Story portrait placeholder (replace with the couple's photo)
 - `assets/bgsong/a-heartbeats-turn.mp3`: background music, starts when the letter is opened
 - `references/design-reference.png`: earlier generated visual design reference; **not intended as a directly usable interface**
 - `design-tokens.json`: colors, spacing, motion and typography values
@@ -123,7 +127,8 @@ The **Words of Love** section above the closing screen lets guests leave a wish.
 | `envelope-front.svg` | Pocket/side folds (in front of paper) |
 | `envelope-flap.svg` | Animate `rotateX(179deg)` from top hinge |
 | `letter-paper.svg` | Revealed sheet, leaving all letter text in HTML |
-| `wax-seal.svg` | Individual seal with 囍; fade / shrink on open |
+| `wax-seal.svg` | Individual seal with a vector 囍; fade / shrink on open |
+| `double-happiness.svg` | Vector 囍 mark used by the header and closing seal |
 | `red-tassel.svg` | Optional hanging tassel on cover |
 | `blossom-branch-left/right.svg` | Optional transparent foreground layers |
 | `pavilion-landscape.svg` | Transparent mountain landscape footer |
@@ -132,9 +137,24 @@ The **Words of Love** section above the closing screen lets guests leave a wish.
 | `portrait-frame.svg` | Transparent overlay for user-supplied photos |
 | `petal-01..04.svg` | Four alpha-transparent petal assets for animation |
 
+## Desktop and motion
+
+The invitation is one page at every width:
+
+- **Below 700px:** the original single-column mobile layout.
+- **700–959px:** a wider single column (up to 720px) with paper frames.
+- **960px and above:** a wide editorial layout (up to 1240px): the opening cover splits into wording and envelope, the hero becomes photograph plus copy, details and gift cards sit in two columns, story becomes photograph plus timeline, and RSVP and the guestbook become copy plus form.
+- **1300px and above:** the floating music button aligns with the invitation edge.
+
+Opening sequence: seal fades → flap folds → letter rises → the cover crossfades into the invitation while the hero settles. It finishes in about 2 seconds. **Skip the opening**, Escape, and `prefers-reduced-motion` all reveal the invitation immediately.
+
+While reading, headings, detail rows, story milestones and cards fade up once as they enter view. Content is visible without JavaScript; only `.motion-ready` hides items while waiting. Motion never moves text after it has been read, and forms never animate while focused.
+
+The header links to the existing sections. No additional pages or sections were added.
+
 ## Replace with the real photos
 
-Replace `assets/photos/demo-hanfu-couple.jpg` with your own portrait(s), preserving paths or editing the HTML. The invitation uses one image twice; production can use one landscape portrait for the reveal and multiple portraits for the story. Favor the **actual user-provided hanfu photos** over AI-generated placeholder people. Keep names, date, address, and RSVP text as HTML, not rasterized images.
+Replace `assets/photos/placeholder-1.jpeg` (hero/front portrait) and `assets/photos/placeholder-2.jpeg` (Our Story portrait) with your own photos, preserving the paths or editing the HTML. Keep names, date, address, and RSVP text as HTML, not rasterized images.
 
 ## Core interaction sequence
 
@@ -143,7 +163,7 @@ Replace `assets/photos/demo-hanfu-couple.jpg` with your own portrait(s), preserv
 3. **Unfold:** Paper lifts out from behind envelope pocket.
 4. **Reveal:** Enter the full invitation with an unobstructed photo, then details and RSVP.
 
-The reference implementation has CSS transitions and honors `prefers-reduced-motion`. An agent can translate these ideas to Next.js / React / Framer Motion; preserve accessibility and a way to skip the animation if making it longer.
+The opening crossfades into the invitation instead of unmounting the cover abruptly, and the whole sequence can be skipped. Section reveals are one-time and use `IntersectionObserver`; there is no animation library and no scroll hijacking.
 
 ## Production checklist
 
@@ -153,6 +173,8 @@ The reference implementation has CSS transitions and honors `prefers-reduced-mot
 - **Replace the background song** if needed: keep the path `assets/bgsong/a-heartbeats-turn.mp3` or update the `<audio>` source in `index.html`. Confirm you have permission to use the track, and compress it for mobile (the current file is about 2.6 MB).
 - Prefer SVG layers over giant exported layouts to keep text crisp and language-neutral.
 - Consider image compression and lazy loading for mobile users.
+- Check the invitation at 320px, 390px, 768px, 1024px and 1440px, and confirm the two-column layouts do not clip long guest names.
+- Check keyboard opening, Skip, Escape, and `prefers-reduced-motion` before publishing.
 - The theme needs no external fonts or network calls.
 
 ## Licensing / usage note

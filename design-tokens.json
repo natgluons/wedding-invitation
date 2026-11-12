@@ -6,9 +6,32 @@
   },
   "typography": {
     "display": "Georgia, 'Times New Roman', serif", "body": "Georgia, 'Times New Roman', serif",
-    "chineseFallback": "'Noto Serif CJK SC', 'Songti SC', 'SimSun', serif"
+    "chineseFallback": "Vector seal artwork is used instead of a CJK font"
   },
-  "layout": {"mobileMaxWidthPx": 460, "sectionPaddingPx": 32, "coverAssetAspect": "1080:1920"},
-  "motion": {"sealFadeMs": 500, "flapFoldMs": 700, "letterLiftMs": 900, "revealAfterMs": 1450},
-  "notes": ["The envelope uses multiple compositable layers", "Respect prefers-reduced-motion", "Text is always editable HTML"]
+  "layout": {
+    "mobileMaxWidthPx": 460,
+    "tabletMaxWidthPx": 720,
+    "desktopMaxWidthPx": 1240,
+    "breakpointsPx": [700, 960, 1300],
+    "sectionPaddingPx": 32,
+    "coverAssetAspect": "1080:1920",
+    "heroPhotoMinHeightPx": 620
+  },
+  "motion": {
+    "sealFadeMs": 500,
+    "flapFoldMs": 700,
+    "letterLiftMs": 900,
+    "crossfadeStartMs": 1250,
+    "revealCompleteMs": 2050,
+    "sectionRevealMs": 650,
+    "sectionRevealDistancePx": 18,
+    "staggerMs": 80
+  },
+  "notes": [
+    "The envelope uses multiple compositable layers",
+    "The opening crossfades into the invitation; it never leaves an empty screen",
+    "Skip, Escape, and prefers-reduced-motion all reveal instantly",
+    "Section reveals are one-time and content is visible without JavaScript",
+    "Text is always editable HTML"
+  ]
 }

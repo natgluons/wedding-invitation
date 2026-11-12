@@ -19,7 +19,12 @@
 const SHEET_ID = 'PASTE_YOUR_GOOGLE_SHEET_ID_HERE';
 const RSVP_SHEET = 'RSVP';
 const WISHES_SHEET = 'Wishes';
-const RSVP_HEADERS = ['Submitted at', 'Name', 'Attendance', 'Guests', 'Message', 'Invited as', 'Page'];
+const RSVP_HEADERS = ['Submitted at', 'Name', 'Attendance', 'Guests', 'Message', 'Invited as', 'Page', 'Events'];
+const EVENT_LABELS = {
+  'both': 'Holy Matrimony + Reception',
+  'holy-matrimony': 'Holy Matrimony only',
+  'reception': 'Reception only'
+};
 const WISHES_HEADERS = ['Submitted at', 'Name', 'Message'];
 
 function setup() {
@@ -31,6 +36,7 @@ function setup() {
   rsvpSheet.setColumnWidth(5, 320);
   rsvpSheet.setColumnWidth(6, 150);
   rsvpSheet.setColumnWidth(7, 260);
+  rsvpSheet.setColumnWidth(8, 190);
 
   wishesSheet.setColumnWidth(1, 165);
   wishesSheet.setColumnWidth(2, 170);
@@ -82,7 +88,8 @@ function saveRsvp_(data) {
     Number(data.guests) || 0,
     clean_(data.message, 500),
     clean_(data.invitedAs, 60),
-    clean_(data.page, 300)
+    clean_(data.page, 300),
+    clean_(EVENT_LABELS[data.events] || data.events, 60)
   ];
 
   // A guest submitting twice updates their existing row instead of duplicating it.
@@ -147,8 +154,14 @@ function getSheet_(name, headers) {
   const spreadsheet = SpreadsheetApp.openById(SHEET_ID);
   let sheet = spreadsheet.getSheetByName(name);
   if (!sheet) sheet = spreadsheet.insertSheet(name);
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(headers);
+  // Keep existing sheets working when new columns (such as Events) are added.
+  const lastColumn = Math.max(sheet.getLastColumn(), headers.length);
+  const current = sheet.getLastRow() === 0
+    ? []
+    : sheet.getRange(1, 1, 1, lastColumn).getValues()[0];
+  const needsHeaders = headers.some((header, index) => String(current[index] || '').trim() !== header);
+  if (needsHeaders) {
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
     sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold');
     sheet.setFrozenRows(1);
   }
