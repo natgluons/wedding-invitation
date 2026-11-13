@@ -1614,27 +1614,48 @@
     return result + chunk;
   }
 
+  // Calendar exports end at `event.end` when set, otherwise after a short
+  // default duration. An empty range is rejected by most calendar clients.
+  function calendarEnd(event) {
+    if (event.end) return new Date(event.end);
+    const minutes = Number(config.calendarDefaultMinutes) || 120;
+    return new Date(new Date(event.start).getTime() + minutes * 60000);
+  }
+
   function buildCalendar(events) {
     const stamp = calendarTimestamp(Date.now());
     const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Richard and Natasha//Wedding Invitation//EN', 'CALSCALE:GREGORIAN'];
     for (const event of events) {
       lines.push('BEGIN:VEVENT', `UID:richard-natasha-20270117-${event.id}@wedding-invitation`,
         `DTSTAMP:${stamp}`, `DTSTART:${calendarTimestamp(event.start)}`,
+        `DTEND:${calendarTimestamp(calendarEnd(event))}`,
         `SUMMARY:${calendarEscape(format(t('details.calendarTitle'), {event: t(event.label)}))}`,
-        `LOCATION:${calendarEscape(config.calendarLocation)}`, 'END:VEVENT');
+        `LOCATION:${calendarEscape(config.calendarLocation)}`,
+        ...(config.calendarDetails ? [`DESCRIPTION:${calendarEscape(config.calendarDetails)}`] : []),
+        'END:VEVENT');
     }
     lines.push('END:VCALENDAR');
     return lines.map(calendarFold).join('\r\n') + '\r\n';
   }
 
   function googleCalendarLink(event) {
-    const url = new URL('https://calendar.google.com/calendar/r/eventedit');
-    const start = calendarTimestamp(event.start);
-    url.search = new URLSearchParams({
-      action: 'TEMPLATE', text: format(t('details.calendarTitle'), {event: t(event.label)}),
-      dates: `${start}/${event.end ? calendarTimestamp(event.end) : start}`,
-      stz: 'Asia/Jakarta', etz: 'Asia/Jakarta', location: config.calendarLocation
-    }).toString();
+    // Enter through `www.google.com/calendar/render`. Unlike
+    // `calendar.google.com/calendar/r/eventedit`, this host answers a plain
+    // request with a 302 that keeps the query string on the calendar host, and
+    // that redirect is what the Android Calendar app follows when it takes over
+    // the link. The `/r/eventedit` path redirects to accounts.google.com
+    // instead, so the app has nothing to open and no new event appears.
+    const url = new URL('https://www.google.com/calendar/render');
+    const params = {
+      action: 'TEMPLATE',
+      dates: `${calendarTimestamp(event.start)}/${calendarTimestamp(calendarEnd(event))}`,
+      stz: config.calendarTimeZone,
+      etz: config.calendarTimeZone,
+      text: format(t('details.calendarTitle'), {event: t(event.label)}),
+      location: config.calendarLocation
+    };
+    if (config.calendarDetails) params.details = config.calendarDetails;
+    url.search = new URLSearchParams(params).toString();
     return url.toString();
   }
 
