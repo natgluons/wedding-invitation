@@ -10,5 +10,10 @@
     "database_name": "wedding-invitation-validation",
     "database_id": "fd2e2f4a-5740-47d1-b2b9-3f6ab22e9db0"
   }],
-  "vars": {"MAX_SYNC_AGE_SECONDS": "900"}
+  "vars": {
+    "MAX_SYNC_AGE_SECONDS": "900",
+    // Public Apps Script Web App URL, also present in config.js. Used only to
+    // forward read-only queries; writes still go straight to Apps Script.
+    "RSVP_ENDPOINT": "https://script.google.com/macros/s/AKfycbyqwO8aTk6kJJXZQpbFDJoFfIY3adJMOUPVsQq0yl-_Uy2cCsk0hhW-sT_vFX8uugL9/exec"
+  }
 }

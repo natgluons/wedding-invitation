@@ -61,6 +61,34 @@ export default {
         if(!row.name || row.revoked) return reply({ok:false,error:'Invalid invitation'},403);
         return reply({ok:true,guest:{name:row.name,maxGuests:row.max_guests}});
       }
+      // Proxies read-only Apps Script queries (guest lookup, wishes feed,
+      // receipt poll) server-side. The invitation page cannot call that
+      // endpoint directly from a phone: Apps Script answers with a 302 to
+      // script.googleusercontent.com and cannot set CORS headers, so the page
+      // has to inject a <script> tag, which mobile browsers block. Forwarding
+      // here removes that dependency. Writes still go straight to Apps Script,
+      // so this route never sees a submitted RSVP. Nothing is cached or logged.
+      if(path==='/rsvp' && request.method==='GET') {
+        if(!env.RSVP_ENDPOINT) return reply({ok:false,error:'Not configured'},503);
+        const incoming=new URL(request.url);
+        const target=new URL(env.RSVP_ENDPOINT);
+        incoming.searchParams.forEach((value,key)=>{
+          if(key!=='callback') target.searchParams.set(key,value);
+        });
+        const upstream=await fetch(target.href,{redirect:'follow',headers:{'Accept':'text/plain'}});
+        const text=await upstream.text();
+        if(text.length>200000) return reply({ok:false,error:'Upstream too large'},502);
+        // Apps Script replies as a JSONP callback; strip it so the page
+        // receives plain JSON it can parse.
+        const match=text.match(/^\s*[A-Za-z_$][\w$]*\(([\s\S]*)\)\s*;?\s*$/);
+        const jsonText=(match ? match[1] : text).trim();
+        try {
+          JSON.parse(jsonText);
+        } catch {
+          return reply({ok:false,error:'Upstream unavailable'},502);
+        }
+        return new Response(jsonText,{status:200,headers});
+      }
       return reply({ok:false,error:'Not found'},404);
     }catch{return reply({ok:false,unavailable:true},503);}
   }

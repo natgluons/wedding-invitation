@@ -1141,9 +1141,33 @@
   // ---------------------------------------------------------------------
 
   let querySequence = 0;
+  // Reads prefer the validation Worker, which forwards to Apps Script
+  // server-side and returns plain JSON with CORS. The direct Apps Script path
+  // needs a <script> tag (JSONP) because it cannot set CORS headers, and mobile
+  // browsers block that; the Worker remains the fallback-safe route.
+  async function workerProxyQuery(parameters) {
+    const worker = String(config.validationEndpoint || '').trim();
+    if (!worker) throw new Error('no worker');
+    const proxy = new URL('/rsvp', worker);
+    Object.entries(parameters).forEach(([key, value]) => proxy.searchParams.set(key, value));
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 12000);
+    try {
+      const response = await fetch(proxy.href, {signal:controller.signal, cache:'no-store'});
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      return await response.json();
+    } finally { clearTimeout(timer); }
+  }
+
   async function backendQuery(parameters) {
     const url = new URL(backendEndpoint());
     Object.entries(parameters).forEach(([key, value]) => url.searchParams.set(key, value));
+    // Try the CORS proxy first; it avoids JSONP entirely.
+    if (/script\.google\.com/.test(url.hostname)) {
+      try {
+        return await workerProxyQuery(parameters);
+      } catch { /* Fall through to the JSONP path below. */ }
+    }
     // Apps Script uses one JSONP request, avoiding duplicate sheet executions.
     if (url.hostname !== 'script.google.com') {
       const controller = new AbortController();
@@ -1157,14 +1181,20 @@
     return new Promise((resolve, reject) => {
       const callback = 'wedding_' + Date.now() + '_' + (++querySequence);
       const script = document.createElement('script');
-      const timer = setTimeout(() => { cleanup(); reject(new Error('Invitation lookup timed out')); }, 20000);
+      const timer = setTimeout(() => {
+        cleanup();
+        reject(new Error('Invitation lookup timed out'));
+      }, 20000);
       const cleanup = () => {
         clearTimeout(timer); script.remove();
         window[callback] = () => {};
         setTimeout(() => { delete window[callback]; }, 60000);
       };
       window[callback] = result => { cleanup(); resolve(result); };
-      script.onerror = () => { cleanup(); reject(new Error('Invitation script request blocked')); };
+      script.onerror = () => {
+        cleanup();
+        reject(new Error('Invitation script request blocked'));
+      };
       url.searchParams.set('callback', callback); script.src = url.href;
       document.body.appendChild(script);
     });
@@ -1334,12 +1364,16 @@
     return {ok: false, reason: 'network'};
   }
 
-  // Apps Script cannot set CORS headers reliably, so wishes are read with
-  // JSONP there and with plain fetch for any other endpoint.
+  // Apps Script cannot set CORS headers reliably, so the wishes feed goes
+  // through the Worker proxy first and falls back to JSONP.
   function fetchWishes() {
     const endpoint = backendEndpoint();
     if (!endpoint) return Promise.resolve([]);
-    if (/script\.google\.com/.test(endpoint)) return jsonpWishes(endpoint);
+    if (/script\.google\.com/.test(endpoint)) {
+      return workerProxyQuery({action: 'wishes'})
+        .then(result => result.wishes || [])
+        .catch(() => jsonpWishes(endpoint));
+    }
 
     const url = `${endpoint}${endpoint.includes('?') ? '&' : '?'}action=wishes`;
     const controller = new AbortController();
