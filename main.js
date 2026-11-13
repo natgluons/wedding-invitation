@@ -6,8 +6,6 @@
   let invitationRetry = false;
   const MAX_SEATS = 4;
   const inviteCode = new URLSearchParams(window.location.search).get('code') || '';
-  const STORAGE_KEY = 'richard-natasha-rsvp:' + (inviteCode || 'preview');
-  const WISH_KEY = 'richard-natasha-wishes';
   const LANG_KEY = 'richard-natasha-lang';
   const seenWishes = new Set();
   const params = new URLSearchParams(window.location.search);
@@ -47,6 +45,11 @@
       "details.receptionTime": "18:00 WIB – finish",
       "details.venue": "Grand Mercure Kemayoran<br />Magnolia Ballroom, Jakarta, Indonesia",
       "details.viewLocation": 'View location',
+      "details.calendar": "Add to calendar",
+      "details.calendarBoth": "Both events",
+      "details.calendarClose": "Close",
+      "details.calendarChoose": "Choose your calendar app.",
+      "details.calendarTitle": "Richard & Natasha — {event}",
       "countdown.aria": "Countdown to the wedding",
       "countdown.intro": "COUNTING DOWN TO FOREVER",
       "countdown.title": "We can’t wait",
@@ -84,12 +87,15 @@
       "rsvp.intro": "WE SAVED YOU A SEAT",
       "rsvp.title": "Will You Join Us?",
       "rsvp.body": 'Your presence would mean the world to us.<br /><span class="rsvp-deadline">Kindly respond by 3 January 2027.</span>',
+      "rsvp.lateNotice": "If you are replying within two weeks of the wedding, or need to change your plans later, please contact us directly.",
       "rsvp.attendance": "Attendance",
       "rsvp.attendYes": "✓ I will attend",
       "rsvp.attendNo": "× I can't attend",
       "rsvp.events": "Which events will you join?",
       "rsvp.eventsPlaceholder": "Select events",
       "dynamic.inviteLoading": "Checking your invitation…",
+      "dynamic.responseLoading": "Loading your saved response…",
+      "dynamic.responseUnavailable": "We couldn’t load your saved response. Reload to try again.",
       "dynamic.inviteInvalid": "Please use your personal invitation link to RSVP. If it no longer works, contact us.",
       "dynamic.inviteUnavailable": "We couldn’t check your invitation. Please reload to try again.",
       "dynamic.inviteRejected": "Your RSVP was not saved. Please check your invitation and party size, then try again.",
@@ -104,10 +110,20 @@
       "rsvp.count2": "2 people",
       "rsvp.count3": "3 people",
       "rsvp.count4": "4 people",
-      "rsvp.countHint": "Please include the names of anyone joining you in the note below.",
-      "rsvp.note": "A note for us (optional)",
-      "rsvp.notePlaceholder": "Your wishes, guest names, or dietary notes",
+      "rsvp.countHint": "Please list the names of additional guests in the private note below.",
+      "rsvp.note": "Guest names & dietary needs (optional)",
+      "rsvp.privateHint": "Only visible to us.",
+      "rsvp.notePlaceholder": "Names of additional guests, dietary needs, or accessibility requests",
       "rsvp.submit": "Submit RSVP",
+      "rsvp.savedTitle": "Your saved response",
+      "rsvp.edit": "Edit response",
+      "rsvp.cancel": "Cancel",
+      "rsvp.saveChanges": "Save changes",
+      "rsvp.savedAttendance": "Attendance",
+      "rsvp.savedEvents": "Events",
+      "rsvp.savedGuests": "People",
+      "rsvp.savedNote": "Private note",
+      "rsvp.savedDate": "Saved",
       "gift.intro": "WITH GRATITUDE",
       "gift.title": "Wedding Gift",
       "gift.body": "Your presence is the greatest gift we could ask for. If you would like to bless us with something more, a contribution toward our first home would be received with heartfelt thanks.",
@@ -116,6 +132,7 @@
       "gift.domestic": "DOMESTIC TRANSFER",
       "gift.international": "INTERNATIONAL TRANSFER",
       "gift.bank": "Bank",
+      "gift.bankTransfer": "Bank transfer",
       "gift.swift": "SWIFT / BIC",
       "gift.accountNumber": "Account number",
       "gift.accountName": "Account name",
@@ -123,14 +140,29 @@
       "gift.note": "Please use your full name as the transfer reference. For transfer assistance, please contact us directly.",
       "gift.copyAccount": "Copy account number",
       "gift.copySwift": "Copy SWIFT code",
+      "gift.copy": "Copy",
+      "gift.network": "Network",
+      "gift.wallet": "Wallet address",
+      "gift.memo": "Memo / tag",
+      "gift.details": "Details",
+      "gift.link": "Link",
+      "gift.paypalAccount": "PayPal account",
+      "gift.openPaypal": "Open PayPal",
+      "gift.openLink": "Open link",
+      "gift.methods": "Gift methods",
+      "gift.unavailable": "Gift details are being prepared.",
+      "gift.networkNote": "Use the selected network when sending.",
       "wishes.intro": "FROM THE HEART",
       "wishes.title": "Words of Love",
-      "wishes.body": "Leave a wish for the two of us. Every message becomes part of the story we keep.",
+      "wishes.body": "Leave a wish for the two of us. Your message will be public in the Words of Love feed.",
       "wishes.name": "Your name",
       "wishes.namePlaceholder": "Your name",
       "wishes.wish": "Your wish",
       "wishes.wishPlaceholder": "A few words for Richard & Natasha",
-      "wishes.submit": "Send your wish →",
+      "wishes.submit": "Send your wish",
+      "wishes.edit": "Edit your wish",
+      "wishes.update": "Save changes",
+      "wishes.editHint": "One wish per invitation. You can come back and edit yours anytime.",
       "wishes.empty": "No wishes yet. Be the first to leave one.",
       "footer.title": "Thank You",
       "footer.text": "For being part of this beautiful chapter of our lives.",
@@ -143,7 +175,7 @@
       "dynamic.rsvpError": "We couldn’t send your RSVP automatically. Please try again.",
       "dynamic.whatsapp": "Message us on WhatsApp instead →",
       "dynamic.sendingWish": "Sending your wish…",
-      "dynamic.wishSuccess": "Thank you, your wish has been added to our letter.",
+      "dynamic.wishSuccess": "Thank you, your wish has been saved. You can return to edit it.",
       "dynamic.wishSaved": "Saved on this device only. Add your Google Apps Script URL to config.js so every guest’s wish is collected.",
       "dynamic.wishError": "We couldn’t send your wish. Please try again in a moment.",
       "dynamic.honeypot": "Thank you. Your RSVP has been received.",
@@ -199,6 +231,11 @@
       "details.receptionTime": "18:00 WIB – selesai",
       "details.venue": "Grand Mercure Kemayoran<br />Magnolia Ballroom, Jakarta, Indonesia",
       "details.viewLocation": 'Lihat lokasi',
+      "details.calendar": "Tambah ke kalender",
+      "details.calendarBoth": "Kedua acara",
+      "details.calendarClose": "Tutup",
+      "details.calendarChoose": "Pilih aplikasi kalender Anda.",
+      "details.calendarTitle": "Richard & Natasha — {event}",
       "countdown.aria": "Hitung mundur menuju pernikahan",
       "countdown.intro": "MENGHITUNG HARI MENUJU SELAMANYA",
       "countdown.title": "Kami sangat menantikan hari bahagia ini",
@@ -236,12 +273,15 @@
       "rsvp.intro": "KAMI MENYIAPKAN TEMPAT UNTUK ANDA",
       "rsvp.title": "Maukah Anda Bergabung?",
       "rsvp.body": 'Kehadiran Anda sangat berarti bagi kami.<br /><span class="rsvp-deadline">Mohon konfirmasi kehadiran sebelum 3 Januari 2027.</span>',
+      "rsvp.lateNotice": "Jika Anda mengonfirmasi dalam 14 hari menjelang pernikahan, atau perlu mengubah rencana setelahnya, silakan hubungi kami langsung.",
       "rsvp.attendance": "Kehadiran",
       "rsvp.attendYes": "✓ Saya akan hadir",
       "rsvp.attendNo": "× Saya tidak bisa hadir",
       "rsvp.events": "Acara yang akan Anda hadiri",
       "rsvp.eventsPlaceholder": "Pilih acara",
       "dynamic.inviteLoading": "Memeriksa undangan Anda…",
+      "dynamic.responseLoading": "Memuat jawaban Anda yang tersimpan…",
+      "dynamic.responseUnavailable": "Jawaban Anda belum dapat dimuat. Muat ulang halaman untuk mencoba lagi.",
       "dynamic.inviteInvalid": "Silakan gunakan tautan undangan pribadi Anda untuk RSVP. Hubungi kami jika tautan tidak berfungsi.",
       "dynamic.inviteUnavailable": "Undangan belum dapat diperiksa. Muat ulang halaman untuk mencoba lagi.",
       "dynamic.inviteRejected": "RSVP belum tersimpan. Periksa undangan dan jumlah tamu Anda, lalu coba lagi.",
@@ -256,10 +296,20 @@
       "rsvp.count2": "2 orang",
       "rsvp.count3": "3 orang",
       "rsvp.count4": "4 orang",
-      "rsvp.countHint": "Tuliskan nama tamu lain yang ikut di kolom catatan di bawah.",
-      "rsvp.note": "Catatan untuk kami (opsional)",
-      "rsvp.notePlaceholder": "Ucapan, nama tamu, atau pantangan makanan",
+      "rsvp.countHint": "Tuliskan nama tamu tambahan di catatan pribadi di bawah.",
+      "rsvp.note": "Nama tamu & kebutuhan makan (opsional)",
+      "rsvp.privateHint": "Hanya terlihat oleh kami.",
+      "rsvp.notePlaceholder": "Nama tamu tambahan, pantangan makanan, atau kebutuhan aksesibilitas",
       "rsvp.submit": "Kirim RSVP",
+      "rsvp.savedTitle": "Jawaban Anda tersimpan",
+      "rsvp.edit": "Ubah jawaban",
+      "rsvp.cancel": "Batal",
+      "rsvp.saveChanges": "Simpan perubahan",
+      "rsvp.savedAttendance": "Kehadiran",
+      "rsvp.savedEvents": "Acara",
+      "rsvp.savedGuests": "Jumlah orang",
+      "rsvp.savedNote": "Catatan pribadi",
+      "rsvp.savedDate": "Tersimpan",
       "gift.intro": "DENGAN RASA SYUKUR",
       "gift.title": "Hadiah Pernikahan",
       "gift.body": "Kehadiran Anda adalah hadiah terindah bagi kami. Jika ingin memberikan hadiah, dukungan Anda untuk mewujudkan rumah pertama kami akan sangat berarti.",
@@ -268,6 +318,7 @@
       "gift.domestic": "TRANSFER DALAM NEGERI",
       "gift.international": "TRANSFER LUAR NEGERI",
       "gift.bank": "Bank",
+      "gift.bankTransfer": "Transfer bank",
       "gift.swift": "SWIFT / BIC",
       "gift.accountNumber": "Nomor rekening",
       "gift.accountName": "Nama rekening",
@@ -275,14 +326,29 @@
       "gift.note": "Cantumkan nama lengkap Anda pada keterangan transfer. Jika ada pertanyaan, silakan hubungi kami.",
       "gift.copyAccount": "Salin nomor rekening",
       "gift.copySwift": "Salin kode SWIFT",
+      "gift.copy": "Salin",
+      "gift.network": "Jaringan",
+      "gift.wallet": "Alamat dompet",
+      "gift.memo": "Memo / tag",
+      "gift.details": "Keterangan",
+      "gift.link": "Tautan",
+      "gift.paypalAccount": "Akun PayPal",
+      "gift.openPaypal": "Buka PayPal",
+      "gift.openLink": "Buka tautan",
+      "gift.methods": "Pilihan hadiah",
+      "gift.unavailable": "Informasi hadiah sedang disiapkan.",
+      "gift.networkNote": "Gunakan jaringan yang dipilih saat mengirim.",
       "wishes.intro": "DARI HATI",
       "wishes.title": "Ucapan untuk Kami",
-      "wishes.body": "Tuliskan doa dan harapan untuk kami. Setiap pesan akan menjadi kenangan yang berharga.",
+      "wishes.body": "Tuliskan doa dan harapan untuk kami. Pesan Anda akan ditampilkan di bagian Ucapan untuk Kami agar dapat dibaca tamu lain.",
       "wishes.name": "Nama Anda",
       "wishes.namePlaceholder": "Nama Anda",
       "wishes.wish": "Ucapan Anda",
       "wishes.wishPlaceholder": "Tuliskan pesan untuk Richard & Natasha",
-      "wishes.submit": "Kirim ucapan →",
+      "wishes.submit": "Kirim ucapan",
+      "wishes.edit": "Ubah ucapan Anda",
+      "wishes.update": "Simpan perubahan",
+      "wishes.editHint": "Satu ucapan untuk setiap undangan. Anda bisa kembali untuk mengubahnya kapan saja.",
       "wishes.empty": "Belum ada ucapan. Anda bisa menjadi yang pertama.",
       "footer.title": "Terima Kasih",
       "footer.text": "Terima kasih telah menjadi bagian dari kisah indah kami.",
@@ -295,7 +361,7 @@
       "dynamic.rsvpError": "Kami tidak dapat mengirim RSVP Anda secara otomatis. Silakan coba lagi.",
       "dynamic.whatsapp": "Hubungi kami lewat WhatsApp →",
       "dynamic.sendingWish": "Mengirim ucapan…",
-      "dynamic.wishSuccess": "Terima kasih, ucapan Anda sudah kami terima.",
+      "dynamic.wishSuccess": "Terima kasih, ucapan Anda sudah tersimpan. Anda bisa kembali untuk mengubahnya.",
       "dynamic.wishSaved": "Hanya tersimpan di perangkat ini. Tambahkan URL Google Apps Script Anda di config.js agar ucapan setiap tamu terkumpul.",
       "dynamic.wishError": "Kami tidak dapat mengirim ucapan Anda. Silakan coba lagi sebentar lagi.",
       "dynamic.honeypot": "Terima kasih. RSVP Anda telah kami terima.",
@@ -379,9 +445,13 @@
       button.setAttribute('aria-pressed', String(button.dataset.lang === lang));
     }
 
+    renderCalendarTimes();
     renderGuestCopy();
     renderInvitationGate();
     renderSavedStatus();
+    renderOwnWish();
+    renderGifts();
+    if (submitButton) submitButton.textContent = t(editingSavedResponse ? 'rsvp.saveChanges' : 'rsvp.submit');
     if (latestWishes.length) renderWishes(latestWishes);
     if (music) updateMusicButton(!music.paused);
   }
@@ -448,7 +518,7 @@
     photoFrame = 0;
     const elapsed = lastPhotoTick ? Math.min(32, Math.max(1, now - lastPhotoTick)) : 16;
     lastPhotoTick = now;
-    const blend = 1 - Math.exp(-elapsed / 55);
+    const blend = 1 - Math.exp(-elapsed / 300);
     let settling = false;
     if (photoMeasurementsDirty) {
       for (const photo of photoScenes) {
@@ -717,12 +787,15 @@
 
   const guestNameInput = document.getElementById('guestName');
   const guestCountSelect = document.getElementById('guestCount');
-  const guestMessageInput = document.getElementById('guestMessage');
   const form = document.getElementById('rsvpForm');
   const formStatus = document.getElementById('formStatus');
-  const submitButton = form.querySelector('.form-submit');
+  const submitButton = form.querySelector('button[type="submit"]');
+  const rsvpFields = document.getElementById('rsvpFields');
+  const savedRsvp = document.getElementById('savedRsvp');
+  const savedRsvpDetails = document.getElementById('savedRsvpDetails');
+  const editRsvpButton = document.getElementById('editRsvp');
+  const cancelRsvpEdit = document.getElementById('cancelRsvpEdit');
   const coverGuest = document.getElementById('coverGuest');
-  const coverSeats = document.getElementById('coverSeats');
   const guestSeatNote = document.getElementById('guestSeatNote');
   const letterFor = document.getElementById('letterFor');
   const honeypot = document.getElementById('rsvpWebsite');
@@ -733,7 +806,12 @@
   const wishStatus = document.getElementById('wishStatus');
   const wishList = document.getElementById('wishList');
   const wishesEmpty = document.getElementById('wishesEmpty');
-  const wishSubmit = wishForm.querySelector('.form-submit');
+  const wishSubmit = wishForm.querySelector('button[type=submit]');
+  const wishFields = document.getElementById('wishFields');
+  const savedWishBox = document.getElementById('savedWish');
+  const cancelWish = document.getElementById('cancelWish');
+  let ownWish = null;
+  let editingWish = false;
 
   const clampSeats = (value) => Math.min(MAX_SEATS, Math.max(1, value));
   const backendEndpoint = () => (config.rsvpEndpoint || '').trim();
@@ -756,66 +834,71 @@
     return segment;
   }
 
-  // Restore a previous RSVP so guests can review or update it.
-  function readSavedResponse() {
-    try {
-      return JSON.parse(window.localStorage.getItem(STORAGE_KEY) || 'null');
-    } catch {
-      return null;
-    }
+  let savedResponse = null;
+  let editingSavedResponse = false;
+  function clearRsvpFields() {
+    for (const input of form.querySelectorAll('input[name="attendance"]')) input.checked = false;
+    form.elements.events.value = '';
+    guestCountSelect.value = '';
   }
-
-  function saveResponse(payload) {
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify({...payload, savedAt: Date.now()}));
-    } catch {}
+  function fillRsvpFields(response) {
+    const value = response || {};
+    for (const input of form.querySelectorAll('input[name="attendance"]')) input.checked = input.value === value.attendance;
+    form.elements.events.value = value.events || '';
+    guestCountSelect.value = value.attendance === 'attending' && value.guests ? String(value.guests) : '';
+    syncAttendance();
   }
-
-  let savedResponse = readSavedResponse();
-  if (savedResponse && savedResponse.name) {
-    guestNameInput.value = savedResponse.name;
-    if (savedResponse.message) guestMessageInput.value = savedResponse.message;
-    if (savedResponse.attendance) {
-      const input = form.querySelector(`input[name="attendance"][value="${savedResponse.attendance}"]`);
-      if (input) input.checked = true;
-    }
-    if (savedResponse.events) {
-      const select = form.elements.events;
-      if ([...select.options].some(option => option.value === savedResponse.events)) {
-        select.value = savedResponse.events;
-      }
-    }
-  } else {
-    savedResponse = null;
+  function savedDate(value) {
+    const date = typeof value === 'string' && /^\d{4}-\d\d-\d\d \d\d:\d\d:\d\d$/.test(value)
+      ? new Date(value.replace(' ', 'T') + '+07:00') : new Date(value || Date.now());
+    return date.toLocaleDateString(currentLang === 'id' ? 'id-ID' : 'en-GB', {day:'numeric', month:'long', year:'numeric', timeZone:'Asia/Jakarta'});
   }
-
-  function renderSavedStatus(force = false) {
-    if (!savedResponse) return;
-    if (!force && !formStatus.classList.contains('is-saved')) return;
-    const when = new Date(savedResponse.savedAt || Date.now()).toLocaleDateString(
-      currentLang === 'id' ? 'id-ID' : 'en-GB',
-      {day: 'numeric', month: 'long', year: 'numeric'}
-    );
-    setStatus(formStatus, format(t('dynamic.savedStatus'), {date: when}), 'saved');
+  function renderSavedResponse() {
+    if (!savedResponse) { savedRsvp.hidden = true; return; }
+    const attending = savedResponse.attendance === 'attending';
+    const attendanceText = t(attending ? 'dynamic.waAttending' : 'dynamic.waNotAttending');
+    const eventText = savedResponse.events ? t(({both:'rsvp.both','holy-matrimony':'rsvp.holyOnly',reception:'rsvp.receptionOnly'})[savedResponse.events] || 'rsvp.both') : '';
+    const rows = [
+      [t('rsvp.savedAttendance'), attendanceText],
+      ...(attending ? [[t('rsvp.savedEvents'), eventText], [t('rsvp.savedGuests'), String(savedResponse.guests || '')]] : []),
+      [t('rsvp.savedDate'), savedDate(savedResponse.submittedAt)]
+    ];
+    savedRsvpDetails.replaceChildren(...rows.flatMap(([label, value]) => {
+      const dt = document.createElement('dt'); dt.textContent = label;
+      const dd = document.createElement('dd'); dd.textContent = value;
+      return [dt, dd];
+    }));
+    savedRsvp.hidden = editingSavedResponse;
+    rsvpFields.hidden = !editingSavedResponse;
   }
+  function beginRsvpEdit() {
+    editingSavedResponse = true;
+    fillRsvpFields(savedResponse);
+    renderSavedResponse();
+    cancelRsvpEdit.hidden = false;
+    editRsvpButton.hidden = true;
+    submitButton.textContent = t('rsvp.saveChanges');
+    setStatus(formStatus, '', '');
+  }
+  editRsvpButton.addEventListener('click', beginRsvpEdit);
+  cancelRsvpEdit.addEventListener('click', () => {
+    editingSavedResponse = false;
+    fillRsvpFields(savedResponse);
+    renderSavedResponse();
+    cancelRsvpEdit.hidden = true;
+    editRsvpButton.hidden = false;
+    submitButton.textContent = t('rsvp.submit');
+    setStatus(formStatus, '', '');
+  });
+  function renderSavedStatus() { renderSavedResponse(); }
 
-  renderSavedStatus(true);
-
-  // Personalised links:
-  //   /alice                     -> "Dear Alice & Guest", 2 places
-  //   /alice?plus=0              -> "Dear Alice", 1 place
-  //   /alice?guests=3            -> "Dear Alice & Guests", 3 places
-  //   ?name=Alice / ?to=Alice    -> same as a path link
-  //   ?lang=id / ?lang=en        -> language, also accepted as /id or /en
+  // URL name is provisional; verified sheet names are used exactly as entered.
   const rawName = params.get('name') || params.get('to') || nameFromPath();
-  const cleanName = rawName.replace(/[<>]/g, '').replace(/\s+/g, ' ').trim().slice(0, 60);
-  // /alice and ?name=alice read better as "Alice"; mixed-case names are left alone.
-  const invitedName = cleanName && cleanName === cleanName.toLowerCase()
-    ? cleanName.replace(/[-_]+/g, ' ').replace(/\b[a-z]/g, (letter) => letter.toUpperCase())
-    : cleanName;
+  const invitedName = rawName.replace(/[<>]/g, '').replace(/\s+/g, ' ').trim().slice(0, 100);
   const requestedSeats = Number.parseInt(params.get('guests') || '', 10);
   let verifiedGuest = null;
-  let personalization = {invitedName: '', seats: 0};
+  let invitationDetailsReady = !backendEndpoint();
+  let personalization = {invitedName: '', seats: null};
 
   if (invitedName && !backendEndpoint()) {
     const plusOne = params.get('plus') !== '0';
@@ -826,6 +909,11 @@
 
     guestNameInput.value = invitedName;
     if (!wishNameInput.value) wishNameInput.value = invitedName;
+  } else if (invitedName) {
+    // URL names are provisional display copy only; code verification supplies
+    // the authoritative name and allowance before RSVP can be submitted.
+    personalization = {invitedName, seats: null};
+    guestNameInput.value = invitedName;
   }
 
   // Guests must explicitly confirm their party size, including on personalised links.
@@ -833,36 +921,25 @@
 
   function renderGuestCopy() {
     document.getElementById('guestNameDisplay').textContent = guestNameInput.value || '—';
+    document.getElementById('wishNameDisplay').textContent = guestNameInput.value || '—';
     if (!personalization.invitedName) {
       coverGuest.hidden = true;
-      coverSeats.hidden = true;
       guestSeatNote.hidden = true;
       letterFor.textContent = t('cover.letterForYou');
       return;
     }
 
-    const seats = personalization.seats;
-    const labelKey = seats === 1 ? '' : seats === 2
-      ? 'dynamic.guestGreetingLabel'
-      : 'dynamic.guestGreetingLabelPlural';
-    const guestLabel = labelKey ? t(labelKey) : '';
-
     coverGuest.hidden = false;
     coverGuest.textContent = format(t('dynamic.guestGreeting'), {
       name: personalization.invitedName,
-      label: guestLabel
+      label: ''
     });
-    coverSeats.hidden = false;
-    coverSeats.textContent = format(
-      t(seats === 1 ? 'dynamic.seatsReserved' : 'dynamic.seatsReservedPlural'),
-      {n: seats}
-    );
     letterFor.textContent = format(t('dynamic.letterFor'), {name: personalization.invitedName});
     guestSeatNote.hidden = true;
   }
 
   // Countdown to the ceremony: Sunday, 17 January 2027, 18:00 WIB (UTC+7).
-  const weddingDate = new Date('2027-01-17T18:00:00+07:00');
+  const weddingDate = new Date(config.weddingDate || '2027-01-17T18:00:00+07:00');
   const countdown = {
     days: document.getElementById('countDays'),
     hours: document.getElementById('countHours'),
@@ -873,6 +950,8 @@
 
   function updateCountdown() {
     const remaining = weddingDate.getTime() - Date.now();
+    const lateNotice = document.getElementById('rsvpLateNotice');
+    if (lateNotice) lateNotice.hidden = remaining < 0 || remaining > 14 * 24 * 60 * 60 * 1000;
     if (remaining <= 0) {
       countdown.days.textContent = '000';
       countdown.hours.textContent = countdown.minutes.textContent = countdown.seconds.textContent = '00';
@@ -888,29 +967,132 @@
   updateCountdown();
   window.setInterval(updateCountdown, 1000);
 
-  // Transfer choice is independent of the display language.
+  // Sheet-driven gift methods remain independent of the display language.
+  let giftData = null;
+  let giftGroup = 'domestic';
+  const giftMethod = {domestic:'bca', international:'bank'};
+  const giftAccount = {};
   const giftTabs = Array.from(document.querySelectorAll('.gift-tabs [role="tab"]'));
-  function selectGiftTab(selected) {
-    giftTabs.forEach((tab) => {
-      const active = tab === selected;
-      tab.setAttribute('aria-selected', String(active));
-      tab.tabIndex = active ? 0 : -1;
-      document.getElementById(tab.getAttribute('aria-controls')).hidden = !active;
-    });
+  const methodNames = {bca:'BCA', jago:'Jago', bank:'Bank transfer', paypal:'PayPal', crypto:'Crypto'};
+
+  function giftText(tag, value, className) {
+    const node = document.createElement(tag); node.textContent = value;
+    if (className) node.className = className;
+    return node;
   }
-  giftTabs.forEach((tab, index) => {
-    tab.addEventListener('click', () => selectGiftTab(tab));
-    tab.addEventListener('keydown', (event) => {
-      let next;
-      if (event.key === 'ArrowRight') next = (index + 1) % giftTabs.length;
-      if (event.key === 'ArrowLeft') next = (index - 1 + giftTabs.length) % giftTabs.length;
-      if (event.key === 'Home') next = 0;
-      if (event.key === 'End') next = giftTabs.length - 1;
-      if (next === undefined) return;
-      event.preventDefault();
-      selectGiftTab(giftTabs[next]);
-      giftTabs[next].focus();
-    });
+
+  function giftField(list, key, value, id) {
+    if (!value) return;
+    const row = document.createElement('div');
+    const label = giftText('dt', t(key));
+    const dd = document.createElement('dd');
+    const text = giftText('span', value); text.id = id;
+    const copy = document.createElement('button');
+    copy.className = 'gift-copy gift-copy-inline';
+    const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    icon.setAttribute('viewBox', '0 0 24 24'); icon.setAttribute('aria-hidden', 'true');
+    icon.innerHTML = '<rect class="copy-shape" x="8" y="8" width="12" height="12" rx="2"/><path class="copy-shape" d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/><path class="copy-check" d="m5 12 4 4L19 6"/>';
+    copy.append(icon);
+    copy.type = 'button'; copy.dataset.copy = id;
+    copy.setAttribute('aria-label', `${t('gift.copy')}: ${t(key)}`);
+    copy.title = copy.getAttribute('aria-label');
+    dd.append(text, copy); row.append(label, dd); list.append(row);
+  }
+
+  function tabKeys(event, tabs, current, choose) {
+    let index = tabs.indexOf(current);
+    if (event.key === 'ArrowRight') index = (index + 1) % tabs.length;
+    else if (event.key === 'ArrowLeft') index = (index - 1 + tabs.length) % tabs.length;
+    else if (event.key === 'Home') index = 0;
+    else if (event.key === 'End') index = tabs.length - 1;
+    else return;
+    event.preventDefault(); choose(tabs[index]);
+    document.getElementById(tabs[index].id)?.focus();
+  }
+
+  function renderGifts() {
+    const section = document.getElementById('gift');
+    const empty = Array.isArray(giftData) && giftData.length === 0;
+    section.hidden = false;
+    document.querySelector('.head-nav a[href="#gift"]').hidden = false;
+    document.querySelector('.gift-tabs').hidden = empty;
+    if (empty) {
+      document.getElementById('domesticPanel').hidden = false;
+      document.getElementById('domesticPanel').replaceChildren(giftText('p', t('gift.unavailable'), 'gift-note'));
+      document.getElementById('internationalPanel').hidden = true;
+      return;
+    }
+    const groups = ['domestic', 'international'];
+    if (giftData && !giftData.some(row => row.group === giftGroup)) giftGroup = groups.find(group => giftData.some(row => row.group === group)) || 'domestic';
+    for (const group of groups) {
+      const tab = document.getElementById(group + 'Tab');
+      const panel = document.getElementById(group + 'Panel');
+      const rows = (giftData || []).filter(row => row.group === group);
+      tab.hidden = Boolean(giftData && !rows.length);
+      const active = giftGroup === group;
+      tab.setAttribute('aria-selected', String(active)); tab.tabIndex = active ? 0 : -1;
+      panel.hidden = !active; panel.replaceChildren();
+      if (!giftData) { panel.append(giftText('p', t('gift.unavailable'), 'gift-note')); continue; }
+      if (!rows.length) continue;
+      const order = ['bca','jago','bank','paypal','crypto'];
+      const methods = [...new Set(rows.map(row => row.method))].sort((a,b) => order.indexOf(a) - order.indexOf(b));
+      if (!methods.includes(giftMethod[group])) giftMethod[group] = methods[0];
+      const tabs = document.createElement('div'); tabs.className = 'gift-method-tabs';
+      tabs.setAttribute('role','tablist'); tabs.setAttribute('aria-label', t('gift.methods'));
+      const methodPanelId = group + '-gift-method-panel';
+      for (const method of methods) {
+        const button = giftText('button', method === 'bank' ? t('gift.bankTransfer') : methodNames[method] || method);
+        button.id = group + '-gift-' + method; button.type = 'button'; button.setAttribute('role','tab');
+        button.setAttribute('aria-controls', methodPanelId);
+        button.setAttribute('aria-selected', String(method === giftMethod[group]));
+        button.tabIndex = method === giftMethod[group] ? 0 : -1;
+        const choose = selected => {giftMethod[group] = selected.dataset.method; renderGifts();};
+        button.dataset.method = method;
+        button.addEventListener('click', () => {choose(button); document.getElementById(button.id).focus();});
+        button.addEventListener('keydown', event => tabKeys(event, Array.from(tabs.children), button, choose));
+        tabs.append(button);
+      }
+      panel.append(tabs);
+      const content = document.createElement('div'); content.id = methodPanelId;
+      content.setAttribute('role','tabpanel'); content.setAttribute('aria-labelledby', group + '-gift-' + giftMethod[group]);
+      const accounts = rows.filter(row => row.method === giftMethod[group]);
+      const choiceKey = group + '-' + giftMethod[group];
+      let account = accounts.find(row => row.id === giftAccount[choiceKey]) || accounts[0];
+      if (accounts.length > 1 || account.method === 'crypto') {
+        const label = giftText('label', t(account.method === 'crypto' ? 'gift.network' : 'gift.accountNumber'), 'form-label');
+        label.htmlFor = group + '-gift-account';
+        const select = document.createElement('select'); select.id = label.htmlFor; select.className = 'field gift-network';
+        for (const row of accounts) select.add(new Option(row.network || row.label, row.id));
+        select.value = account.id;
+        select.addEventListener('change', () => {giftAccount[choiceKey] = select.value; renderGifts(); document.getElementById(select.id)?.focus();});
+        content.append(label, select);
+      }
+      content.append(giftText('p', account.method === 'crypto' ? account.network : account.label, 'gift-bank'));
+      const list = document.createElement('dl'); list.className = 'gift-details';
+      const id = 'gift-value-' + account.id + '-';
+      if (account.method === 'crypto') giftField(list, 'gift.network', account.network, id + 'network');
+      giftField(list, account.method === 'crypto' ? 'gift.wallet' : account.method === 'paypal' ? 'gift.paypalAccount' : 'gift.accountNumber', account.account, id + 'account');
+      giftField(list, 'gift.accountName', account.accountName, id + 'name');
+      giftField(list, 'gift.swift', account.swift, id + 'swift');
+      giftField(list, 'gift.bankAddress', account.bankAddress, id + 'bank-address');
+      giftField(list, 'gift.memo', account.memo, id + 'memo');
+      giftField(list, 'gift.details', account.details, id + 'details');
+      giftField(list, 'gift.link', account.link, id + 'link');
+      content.append(list);
+      if (account.link && /^https:\/\//i.test(account.link)) {
+        const link = giftText('a', t(account.method === 'paypal' ? 'gift.openPaypal' : 'gift.openLink'), 'gift-copy gift-open-link');
+        link.href = account.link; link.target = '_blank'; link.rel = 'noopener noreferrer'; content.append(link);
+      }
+      if (account.example) {
+        content.querySelectorAll('.gift-open-link').forEach(link => link.remove());
+      } else if (account.method === 'crypto') content.append(giftText('p', t('gift.networkNote'), 'gift-note'));
+      panel.append(content);
+    }
+  }
+  giftTabs.forEach(tab => {
+    const choose = selected => {giftGroup = selected.id === 'domesticTab' ? 'domestic' : 'international'; renderGifts();};
+    tab.addEventListener('click', () => choose(tab));
+    tab.addEventListener('keydown', event => tabKeys(event, giftTabs.filter(item => !item.hidden), tab, choose));
   });
 
   // Copy buttons for bank details.
@@ -938,17 +1120,20 @@
     return fallbackCopy(text);
   }
 
-  document.querySelectorAll('[data-copy]').forEach((button) => {
-    button.addEventListener('click', async () => {
-      const target = document.getElementById(button.dataset.copy);
-      if (!target) return;
-      const original = button.textContent;
-      const copied = await copyToClipboard(target.textContent.trim());
-      button.textContent = copied ? t('dynamic.copied') : t('dynamic.copyFailed');
-      window.setTimeout(() => {
-        button.textContent = button.dataset.i18n ? t(button.dataset.i18n) : original;
-      }, 1600);
-    });
+  document.addEventListener('click', async event => {
+    const button = event.target.closest('[data-copy]');
+    if (!button) return;
+    const target = document.getElementById(button.dataset.copy);
+    if (!target) return;
+    const originalLabel = button.getAttribute('aria-label');
+    const copied = await copyToClipboard(target.textContent.trim());
+    button.dataset.copyState = copied ? 'copied' : 'failed';
+    button.setAttribute('aria-label', t(copied ? 'dynamic.copied' : 'dynamic.copyFailed'));
+    button.title = t(copied ? 'dynamic.copied' : 'dynamic.copyFailed');
+    window.setTimeout(() => {
+      delete button.dataset.copyState;
+      button.setAttribute('aria-label', originalLabel); button.title = originalLabel;
+    }, 1600);
   });
 
   // ---------------------------------------------------------------------
@@ -959,46 +1144,38 @@
   async function backendQuery(parameters) {
     const url = new URL(backendEndpoint());
     Object.entries(parameters).forEach(([key, value]) => url.searchParams.set(key, value));
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 20000);
-    const jsonRequest = fetch(url.href, {signal: controller.signal, cache: 'no-store'})
-      .then(response => {
+    // Apps Script uses one JSONP request, avoiding duplicate sheet executions.
+    if (url.hostname !== 'script.google.com') {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 20000);
+      try {
+        const response = await fetch(url.href, {signal:controller.signal, cache:'no-store'});
         if (!response.ok) throw new Error('HTTP ' + response.status);
-        return response.json();
-      });
-    let cancelScript = () => {};
-    const scriptRequest = new Promise((resolve, reject) => {
+        return await response.json();
+      } finally { clearTimeout(timer); }
+    }
+    return new Promise((resolve, reject) => {
       const callback = 'wedding_' + Date.now() + '_' + (++querySequence);
       const script = document.createElement('script');
       const timer = setTimeout(() => { cleanup(); reject(new Error('Invitation lookup timed out')); }, 20000);
       const cleanup = () => {
-        clearTimeout(timer);
-        script.remove();
-        // A redirected JSONP response may still execute after the JSON fetch wins.
+        clearTimeout(timer); script.remove();
         window[callback] = () => {};
         setTimeout(() => { delete window[callback]; }, 60000);
       };
-      cancelScript = cleanup;
       window[callback] = result => { cleanup(); resolve(result); };
       script.onerror = () => { cleanup(); reject(new Error('Invitation script request blocked')); };
-      const scriptUrl = new URL(url);
-      scriptUrl.searchParams.set('callback', callback);
-      script.src = scriptUrl.href;
+      url.searchParams.set('callback', callback); script.src = url.href;
       document.body.appendChild(script);
     });
-    try {
-      return await Promise.any([jsonRequest, scriptRequest]);
-    } finally {
-      clearTimeout(timeout);
-      controller.abort();
-      cancelScript();
-    }
   }
 
   function renderInvitationGate() {
     const status = document.getElementById('invitationStatus');
     status.textContent = invitationStatusKey ? t(invitationStatusKey) : '';
-    status.hidden = !invitationStatusKey || (invitationChecking && !openingAnimationDone);
+    // Keep the message slot in the layout while verification waits for the animation.
+    status.hidden = false;
+    status.style.visibility = invitationStatusKey && (!invitationChecking || openingAnimationDone) ? 'visible' : 'hidden';
     status.classList.toggle('is-error', Boolean(invitationStatusKey && invitationStatusKey !== 'dynamic.inviteLoading'));
     for (const button of openButtons) button.disabled = (!invitationReady && !invitationChecking) || hasOpened;
     const retry = document.getElementById('retryInvitation');
@@ -1018,45 +1195,114 @@
     if (!backendEndpoint()) { renderInvitationGate(); return; }
     invitationReady = false;
     invitationChecking = true;
+    invitationDetailsReady = false;
+    wishFields.inert = true;
+    renderOwnWish();
     setInvitationGate('dynamic.inviteLoading');
+    rsvpFields.inert = true;
     submitButton.disabled = true;
     guestCountSelect.disabled = true;
     setStatus(formStatus, t('dynamic.inviteLoading'), 'pending');
     if (!/^[a-zA-Z0-9]{8,64}$/.test(inviteCode)) {
+      personalization = {invitedName: '', seats: null};
+      guestNameInput.value = '';
+      renderGuestCopy();
       invitationChecking = false;
       setStatus(formStatus, t('dynamic.inviteInvalid'), 'error');
       setInvitationGate('dynamic.inviteInvalid');
       return;
     }
+    let earlyValidated = false;
     try {
+      const worker = String(config.validationEndpoint || '').trim();
+      if (worker) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 4000);
+        try {
+          const response = await fetch(worker, {
+            method:'POST', headers:{'Content-Type':'text/plain;charset=UTF-8'},
+            body:JSON.stringify({code:inviteCode}), signal:controller.signal, cache:'no-store'
+          });
+          const edge = await response.json();
+          if (response.status === 400 || response.status === 403) {
+            personalization = {invitedName:'', seats:null}; guestNameInput.value=''; renderGuestCopy();
+            invitationChecking=false;
+            setInvitationGate('dynamic.inviteInvalid');
+            setStatus(formStatus,t('dynamic.inviteInvalid'),'error');
+            return;
+          }
+          if (response.ok && edge.ok && edge.guest && String(edge.guest.name||'').trim() && Number.isInteger(edge.guest.maxGuests) && edge.guest.maxGuests >= 1 && edge.guest.maxGuests <= 100) {
+            earlyValidated = true;
+            verifiedGuest = edge.guest;
+            invitationReady = true; invitationChecking = false;
+            personalization = {invitedName:verifiedGuest.name,seats:verifiedGuest.maxGuests};
+            guestNameInput.value = verifiedGuest.name; wishNameInput.value = verifiedGuest.name;
+            renderGuestCopy(); setInvitationGate('');
+            setStatus(formStatus,t('dynamic.responseLoading'),'pending');
+            setStatus(wishStatus,t('dynamic.responseLoading'),'pending');
+            finishOpening();
+          }
+        } catch { /* A temporary Worker failure falls back to private-sheet validation. */ }
+        finally { clearTimeout(timer); }
+      }
       const result = await backendQuery({action: 'guest', code: inviteCode});
-      if (!result.ok || !result.guest || !Number.isInteger(result.guest.maxGuests) || result.guest.maxGuests < 1 || result.guest.maxGuests > 100) {
+      if (!result.ok || !result.guest || !String(result.guest.name || '').trim() || !Number.isInteger(result.guest.maxGuests) || result.guest.maxGuests < 1 || result.guest.maxGuests > 100) {
+        personalization = {invitedName: '', seats: null};
+        guestNameInput.value = '';
+        renderGuestCopy();
         invitationChecking = false;
         setStatus(formStatus, t('dynamic.inviteInvalid'), 'error');
-        setInvitationGate('dynamic.inviteInvalid'); return;
+        if (!earlyValidated) setInvitationGate('dynamic.inviteInvalid');
+        verifiedGuest = null; renderOwnWish();
+        setStatus(wishStatus, t('dynamic.inviteInvalid'), 'error'); return;
       }
       verifiedGuest = result.guest;
+      invitationDetailsReady = true;
+      wishFields.inert = false;
+      setStatus(wishStatus, '', '');
       invitationReady = true;
       invitationChecking = false;
       setInvitationGate('');
       personalization = {invitedName: verifiedGuest.name, seats: verifiedGuest.maxGuests};
       guestNameInput.value = verifiedGuest.name;
       guestNameInput.readOnly = true;
-      if (!wishNameInput.value) wishNameInput.value = verifiedGuest.name;
+      wishNameInput.value = verifiedGuest.name;
+      giftData = Array.isArray(result.gifts) ? result.gifts : null;
+      renderGifts();
+      ownWish = result.wish || null;
+      editingWish = false;
+      renderOwnWish();
       guestCountSelect.replaceChildren(guestCountSelect.options[0]);
       for (let count = 1; count <= verifiedGuest.maxGuests; count++) {
         guestCountSelect.add(new Option(String(count), String(count)));
       }
       guestCountSelect.value = '';
       renderGuestCopy();
+      savedResponse = result.response && result.response.attendance ? {
+        ...result.response,
+        name: verifiedGuest.name
+      } : null;
+      editingSavedResponse = false;
+      if (savedResponse) fillRsvpFields(savedResponse);
+      else clearRsvpFields();
+      renderSavedResponse();
+      cancelRsvpEdit.hidden = true;
+      editRsvpButton.hidden = false;
+      rsvpFields.inert = false;
       submitButton.disabled = false;
       syncAttendance();
       setStatus(formStatus, '', '');
       finishOpening();
     } catch {
       invitationChecking = false;
-      setStatus(formStatus, t('dynamic.inviteUnavailable'), 'error');
-      setInvitationGate('dynamic.inviteUnavailable', true);
+      if (earlyValidated) {
+        setStatus(formStatus, t('dynamic.responseUnavailable'), 'error');
+        setStatus(wishStatus, t('dynamic.responseUnavailable'), 'error');
+      } else {
+        personalization = {invitedName:'',seats:null}; guestNameInput.value=''; renderGuestCopy();
+        setStatus(formStatus, t('dynamic.inviteUnavailable'), 'error');
+        setInvitationGate('dynamic.inviteUnavailable', true);
+      }
     }
   }
 
@@ -1074,8 +1320,8 @@
       }
     } catch {}
     // An unreadable response is never treated as a successful RSVP.
-    // Retrying the same request ID is idempotent on the server.
-    if (payload.type !== 'rsvp') return {ok: false, reason: 'network'};
+    // Retrying the same request ID does not create another wish or RSVP.
+    if (!payload.code || !payload.requestId) return {ok: false, reason: 'network'};
     try {
       await fetch(endpoint, {method: 'POST', mode: 'no-cors',
         headers: {'Content-Type': 'text/plain;charset=utf-8'}, body});
@@ -1136,8 +1382,9 @@
   eventSelect.value = '';
 
   function syncAttendance() {
-    const attending = form.querySelector('input[name="attendance"]:checked').value === 'attending';
-    guestCountSelect.disabled = !attending || Boolean(backendEndpoint() && !verifiedGuest);
+    const attendance = form.querySelector('input[name="attendance"]:checked');
+    const attending = Boolean(attendance && attendance.value === 'attending');
+    guestCountSelect.disabled = !attending || Boolean(backendEndpoint() && (!verifiedGuest || !invitationDetailsReady));
     eventSelect.disabled = !attending;
   }
   for (const input of attendanceInputs) input.addEventListener('change', syncAttendance);
@@ -1164,7 +1411,7 @@
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
-    if (backendEndpoint() && !verifiedGuest) {
+    if (backendEndpoint() && (!verifiedGuest || !invitationDetailsReady)) {
       setStatus(formStatus, t('dynamic.inviteInvalid'), 'error'); return;
     }
     if (!form.reportValidity()) return;
@@ -1178,7 +1425,9 @@
       return;
     }
 
-    const attending = form.querySelector('input[name="attendance"]:checked').value === 'attending';
+    const attendance = form.querySelector('input[name="attendance"]:checked');
+    if (!attendance) return;
+    const attending = attendance.value === 'attending';
     const payload = {
       type: 'rsvp',
       code: inviteCode,
@@ -1187,7 +1436,6 @@
       attendance: attending ? 'attending' : 'not-attending',
       events: attending ? eventSelect.value : '',
       guests: attending ? Number(guestCountSelect.value) : 0,
-      message: guestMessageInput.value.trim().slice(0, 500),
       invitedAs: verifiedGuest ? verifiedGuest.name : invitedName,
       submittedAt: new Date().toISOString(),
       page: window.location.origin + window.location.pathname
@@ -1195,16 +1443,29 @@
 
     submitButton.disabled = true;
     submitButton.textContent = t('dynamic.sendingRsvp');
+    rsvpFields.inert = true;
     setStatus(formStatus, t('dynamic.sendingRsvp'), 'pending');
 
     const result = await postToBackend(payload);
 
     submitButton.disabled = false;
-    submitButton.textContent = t('rsvp.submit');
+    rsvpFields.inert = false;
+    submitButton.textContent = t(editingSavedResponse ? 'rsvp.saveChanges' : 'rsvp.submit');
 
     if (result.ok) {
-      saveResponse(payload);
-      savedResponse = {...payload, savedAt: Date.now()};
+      savedResponse = {
+        ...payload,
+        name: verifiedGuest ? verifiedGuest.name : payload.name,
+        submittedAt: result.submittedAt || new Date().toISOString()
+      };
+      editingSavedResponse = false;
+      submitButton.textContent = t('rsvp.submit');
+      fillRsvpFields(savedResponse);
+      rsvpFields.hidden = true;
+      savedRsvp.hidden = false;
+      cancelRsvpEdit.hidden = true;
+      editRsvpButton.hidden = false;
+      renderSavedResponse();
       setStatus(formStatus, t('dynamic.rsvpSuccess'), 'success');
       return;
     }
@@ -1229,21 +1490,6 @@
   // ---------------------------------------------------------------------
   // Wishes / guestbook
   // ---------------------------------------------------------------------
-  function readLocalWishes() {
-    try {
-      const list = JSON.parse(window.localStorage.getItem(WISH_KEY) || '[]');
-      return Array.isArray(list) ? list : [];
-    } catch {
-      return [];
-    }
-  }
-
-  function saveLocalWish(wish) {
-    const list = [wish, ...readLocalWishes()].slice(0, 50);
-    try { window.localStorage.setItem(WISH_KEY, JSON.stringify(list)); } catch {}
-    return list;
-  }
-
   function formatWishDate(value) {
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return '';
@@ -1254,17 +1500,9 @@
 
   function renderWishes(wishes) {
     latestWishes = wishes;
-    const seen = new Set();
     const visible = wishes
-      .filter((wish) => wish && String(wish.message || '').trim() && String(wish.name || '').trim())
-      .filter((wish) => {
-        const key = `${wish.name}|${wish.message}`.toLowerCase();
-        if (seen.has(key)) return false;
-        seen.add(key);
-        return true;
-      })
-      .sort((a, b) => new Date(b.submittedAt || 0) - new Date(a.submittedAt || 0))
-      .slice(0, 30);
+      .filter(wish => wish && String(wish.message || '').trim() && String(wish.name || '').trim())
+      .sort((a, b) => new Date(b.submittedAt || 0) - new Date(a.submittedAt || 0));
 
     wishList.textContent = '';
     wishesEmpty.hidden = visible.length > 0;
@@ -1297,49 +1535,138 @@
     if (backendEndpoint()) {
       renderWishes(await fetchWishes());
     } else {
-      renderWishes(readLocalWishes());
+      renderWishes([]);
     }
   }
+
+  function renderOwnWish() {
+    savedWishBox.hidden = !ownWish || editingWish;
+    wishFields.hidden = Boolean(ownWish && !editingWish);
+    cancelWish.hidden = !ownWish;
+    wishSubmit.textContent = t(ownWish ? 'wishes.update' : 'wishes.submit');
+    wishSubmit.disabled = Boolean(backendEndpoint() && (!verifiedGuest || !invitationDetailsReady));
+    if (ownWish) document.getElementById('savedWishMessage').textContent = `“${ownWish.message}”`;
+  }
+
+  document.getElementById('editWish').addEventListener('click', () => {
+    editingWish = true;
+    wishMessageInput.value = ownWish.message;
+    renderOwnWish();
+    setStatus(wishStatus, '', '');
+    wishMessageInput.focus();
+  });
+  cancelWish.addEventListener('click', () => {
+    editingWish = false;
+    wishMessageInput.value = ownWish.message;
+    renderOwnWish();
+    setStatus(wishStatus, '', '');
+    document.getElementById('editWish').focus();
+  });
 
   wishForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     if (!wishForm.reportValidity()) return;
-
+    if (backendEndpoint() && (!verifiedGuest || !invitationDetailsReady)) {
+      setStatus(wishStatus, t('dynamic.inviteInvalid'), 'error'); return;
+    }
     const wish = {
-      type: 'wish',
-      name: wishNameInput.value.trim().slice(0, 60),
-      message: wishMessageInput.value.trim().slice(0, 300),
-      submittedAt: new Date().toISOString(),
-      page: window.location.origin + window.location.pathname
+      type: 'wish', code: inviteCode, requestId: crypto.randomUUID(),
+      name: verifiedGuest ? verifiedGuest.name : wishNameInput.value.trim(),
+      message: wishMessageInput.value.trim().slice(0, 300)
     };
     if (!wish.name || !wish.message) return;
-
+    wishFields.inert = true;
     wishSubmit.disabled = true;
-    wishSubmit.textContent = t('dynamic.sendingWish');
     setStatus(wishStatus, t('dynamic.sendingWish'), 'pending');
-
     const result = await postToBackend(wish);
-
-    wishSubmit.disabled = false;
-    wishSubmit.textContent = t('wishes.submit');
-
+    wishFields.inert = false;
     if (result.ok) {
-      renderWishes(await fetchWishes());
-      wishMessageInput.value = '';
+      ownWish = result.wish || {...wish, submittedAt: new Date().toISOString()};
+      editingWish = false;
+      renderOwnWish();
+      // A successful response includes the moderated feed; no second request.
+      if (Array.isArray(result.wishes)) renderWishes(result.wishes);
       setStatus(wishStatus, t('dynamic.wishSuccess'), 'success');
       return;
     }
-
-    if (result.reason === 'unconfigured') {
-      const local = saveLocalWish(wish);
-      renderWishes(local);
-      wishMessageInput.value = '';
-      setStatus(wishStatus, t('dynamic.wishSaved'), 'saved');
-      return;
-    }
-
-    setStatus(wishStatus, t('dynamic.wishError'), 'error');
+    renderOwnWish();
+    setStatus(wishStatus, t(result.reason === 'unconfigured' ? 'dynamic.rsvpPreview' : 'dynamic.wishError'), 'error');
   });
+
+  // Calendar files contain event information only, never invitation credentials.
+  function calendarTimestamp(value) {
+    return new Date(value).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
+  }
+
+  function calendarEscape(value) {
+    return String(value).replace(/\\/g, '\\\\').replace(/\r?\n/g, '\\n')
+      .replace(/;/g, '\\;').replace(/,/g, '\\,');
+  }
+
+  function calendarFold(line) {
+    // RFC 5545 folds at 75 octets, without splitting a UTF-8 character.
+    let result = '', chunk = '', bytes = 0;
+    for (const character of line) {
+      const length = new TextEncoder().encode(character).length;
+      if (bytes + length > 75) { result += chunk + '\r\n'; chunk = ' '; bytes = 1; }
+      chunk += character; bytes += length;
+    }
+    return result + chunk;
+  }
+
+  function buildCalendar(events) {
+    const stamp = calendarTimestamp(Date.now());
+    const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Richard and Natasha//Wedding Invitation//EN', 'CALSCALE:GREGORIAN'];
+    for (const event of events) {
+      lines.push('BEGIN:VEVENT', `UID:richard-natasha-20270117-${event.id}@wedding-invitation`,
+        `DTSTAMP:${stamp}`, `DTSTART:${calendarTimestamp(event.start)}`,
+        `SUMMARY:${calendarEscape(format(t('details.calendarTitle'), {event: t(event.label)}))}`,
+        `LOCATION:${calendarEscape(config.calendarLocation)}`, 'END:VEVENT');
+    }
+    lines.push('END:VCALENDAR');
+    return lines.map(calendarFold).join('\r\n') + '\r\n';
+  }
+
+  function googleCalendarLink(event) {
+    const url = new URL('https://calendar.google.com/calendar/r/eventedit');
+    const start = calendarTimestamp(event.start);
+    url.search = new URLSearchParams({
+      action: 'TEMPLATE', text: format(t('details.calendarTitle'), {event: t(event.label)}),
+      dates: `${start}/${event.end ? calendarTimestamp(event.end) : start}`,
+      stz: 'Asia/Jakarta', etz: 'Asia/Jakarta', location: config.calendarLocation
+    }).toString();
+    return url.toString();
+  }
+
+  function renderCalendarTimes() {
+    for (const event of config.calendarEvents || []) {
+      const googleLink = document.querySelector(`[data-google-calendar="${event.id}"]`);
+      if (googleLink) googleLink.href = googleCalendarLink(event);
+    }
+  }
+
+  const calendarDialog = document.getElementById('calendarDialog');
+  calendarDialog.addEventListener('close', () => document.getElementById('openCalendar').focus());
+  document.getElementById('openCalendar').addEventListener('click', () => calendarDialog.showModal());
+  document.getElementById('closeCalendar').addEventListener('click', () => calendarDialog.close());
+  calendarDialog.addEventListener('click', event => {
+    if (event.target !== calendarDialog) return;
+    const bounds = calendarDialog.getBoundingClientRect();
+    if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) calendarDialog.close();
+  });
+  for (const button of calendarDialog.querySelectorAll('[data-calendar]')) {
+    button.addEventListener('click', () => {
+      const choice = button.dataset.calendar;
+      const events = (config.calendarEvents || []).filter(event => choice === 'both' || event.id === choice);
+      if (!events.length) return;
+      const url = URL.createObjectURL(new Blob([buildCalendar(events)], {type: 'text/calendar;charset=utf-8'}));
+      const link = document.createElement('a');
+      link.href = url; link.download = `richard-natasha-${choice}.ics`;
+      document.body.append(link); link.click(); link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 60000);
+      calendarDialog.close();
+    });
+  }
 
   applyLanguage(currentLang);
   loadInvitation();

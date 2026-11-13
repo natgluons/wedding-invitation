@@ -1,0 +1,14 @@
+{
+  "$schema": "https://unpkg.com/wrangler/config-schema.json",
+  "name": "wedding-invitation-validation",
+  "main": "src.mjs",
+  "compatibility_date": "2026-11-13",
+  "account_id": "6cc4909357b979d56f7b3d86b5c56338",
+  "workers_dev": true,
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "wedding-invitation-validation",
+    "database_id": "fd2e2f4a-5740-47d1-b2b9-3f6ab22e9db0"
+  }],
+  "vars": {"MAX_SYNC_AGE_SECONDS": "900"}
+}

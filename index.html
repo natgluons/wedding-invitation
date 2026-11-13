@@ -16,10 +16,10 @@
   </style>
   <script>document.documentElement.classList.add('assets-loading'); window.assetLoadTimeout = setTimeout(function () { document.documentElement.classList.remove('assets-loading'); }, 25000);</script>
   <link rel="preload" as="image" href="assets/photos/placeholder-1-1536.webp" imagesrcset="assets/photos/placeholder-1-768.webp 768w, assets/photos/placeholder-1-1536.webp 1536w" imagesizes="(min-width: 960px) 1240px, 100vw" />
-  <link rel="stylesheet" href="styles.css?v=20261112-cover-status-center-58" />
-  <link rel="stylesheet" href="desktop.css?v=20261112-count-optical-54" media="(min-width: 960px)" />
-  <script defer src="config.js?v=20261112-live-backend-40"></script>
-  <script defer src="main.js?v=20261112-id-copy-56"></script>
+  <link rel="stylesheet" href="styles.css?v=20261113-gift-icon-only-71" />
+  <link rel="stylesheet" href="desktop.css?v=20261113-rsvp-summary-55" media="(min-width: 960px)" />
+  <script defer src="config.js?v=20261113-worker-validation-43"></script>
+  <script defer src="main.js?v=20261113-scroll-ease-72"></script>
 </head>
 <body>
   <div class="asset-loader" role="status" aria-label="Loading invitation"><span class="asset-spinner" aria-hidden="true"></span></div>
@@ -31,7 +31,6 @@
           <h1 class="cover-title">Richard <em>&amp;</em> Natasha</h1>
           <p class="sub" data-i18n="cover.sub">Sunday · 17 January 2027 · Jakarta</p>
           <p class="cover-guest" id="coverGuest" hidden></p>
-          <p class="cover-seats" id="coverSeats" hidden></p>
         </div>
         <div class="cover-visual">
           <button class="envelope-hit" id="openLetter" type="button" disabled aria-label="Open wedding invitation letter" data-i18n-aria="cover.openAria">
@@ -113,6 +112,7 @@
         </div>
         <div class="details-actions">
           <a class="secondary location-button" href="https://www.google.com/maps/search/?api=1&amp;query=Grand+Mercure+Kemayoran+Magnolia+Ballroom+Jakarta" target="_blank" rel="noopener noreferrer" ><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2.5"/></svg><span data-i18n="details.viewLocation">View location</span></a>
+          <button type="button" class="secondary location-button" id="openCalendar" aria-haspopup="dialog" aria-controls="calendarDialog"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 11h18m-11 5h4"/></svg><span data-i18n="details.calendar">Add to calendar</span></button>
         </div>
       </section>
 
@@ -206,12 +206,19 @@
             <div class="section-intro" data-i18n="rsvp.intro">WE SAVED YOU A SEAT</div>
             <h2 data-i18n="rsvp.title">Will You Join Us?</h2>
             <p class="rsvp-intro" data-i18n-html="rsvp.body">Your presence would mean the world to us.<br /><span class="rsvp-deadline">Kindly respond by 3 January 2027.</span></p>
+            <p class="rsvp-late-notice" id="rsvpLateNotice" data-i18n="rsvp.lateNotice" hidden>If you are replying within two weeks of the wedding, or need to change your plans later, please contact us directly.</p>
             <p class="guest-seat-note" id="guestSeatNote" hidden></p>
           </div>
           <form id="rsvpForm" data-reveal>
           <input class="hp-field" type="text" id="rsvpWebsite" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <div class="saved-rsvp" id="savedRsvp" hidden>
+            <h3 data-i18n="rsvp.savedTitle">Your saved response</h3>
+            <dl id="savedRsvpDetails"></dl>
+            <button class="primary form-submit" type="button" id="editRsvp" data-i18n="rsvp.edit">Edit response</button>
+          </div>
+          <div id="rsvpFields" class="rsvp-fields">
           <fieldset class="attendance"><legend data-i18n="rsvp.attendance">Attendance</legend>
-            <label><input type="radio" name="attendance" value="attending" checked /> <span data-i18n="rsvp.attendYes">✓ I will attend</span></label>
+            <label><input type="radio" name="attendance" value="attending" required /> <span data-i18n="rsvp.attendYes">✓ I will attend</span></label>
             <label><input type="radio" name="attendance" value="not-attending" /> <span data-i18n="rsvp.attendNo">× I can't attend</span></label>
           </fieldset>
           <label class="form-label" for="guestEvents" data-i18n="rsvp.events">Which events will you join?</label>
@@ -232,12 +239,10 @@
             <option value="3" data-i18n="rsvp.count3">3 people</option>
             <option value="4" data-i18n="rsvp.count4">4 people</option>
           </select>
-          <p class="field-hint" data-i18n="rsvp.countHint">Please include the names of anyone joining you in the note below.</p>
-          <label class="form-label" for="guestMessage" data-i18n="rsvp.note">A note for us (optional)</label>
-          <textarea class="field" id="guestMessage" name="message" rows="3" maxlength="500" placeholder="Your wishes, guest names, or dietary notes" data-i18n-placeholder="rsvp.notePlaceholder"></textarea>
-          <button class="primary form-submit" type="submit" data-i18n="rsvp.submit">Submit RSVP</button>
+          <div class="rsvp-actions"><button class="primary form-submit" type="submit" data-i18n="rsvp.submit">Submit RSVP</button><button class="text-button" type="button" id="cancelRsvpEdit" data-i18n="rsvp.cancel" hidden>Cancel</button></div>
+          </div>
           <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
-        </form>
+          </form>
         </div>
       </section>
 
@@ -255,29 +260,8 @@
           <button type="button" role="tab" id="internationalTab" aria-controls="internationalPanel" aria-selected="false" tabindex="-1"><svg class="gift-tab-icon gift-tab-globe" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18M5 6.5h14M5 17.5h14"/></svg><span data-i18n="gift.internationalTab">International</span></button>
         </div>
         <div class="gift-grid" data-reveal-group>
-          <div class="gift-card gift-card--domestic" id="domesticPanel" role="tabpanel" aria-labelledby="domesticTab">
-            <span class="gift-tag" data-i18n="gift.domestic">DOMESTIC TRANSFER</span>
-            <p class="gift-bank">Bank Central Asia (BCA)</p>
-            <p class="gift-number" id="domesticAccount">0000000000</p>
-            <p class="gift-owner">a/n Kristy Natasha Yohanes</p>
-            <button class="gift-copy" type="button" data-copy="domesticAccount" data-i18n="gift.copyAccount">Copy account number</button>
-          </div>
-
-          <div class="gift-card gift-card--international" id="internationalPanel" role="tabpanel" aria-labelledby="internationalTab" hidden>
-            <span class="gift-tag" data-i18n="gift.international">INTERNATIONAL TRANSFER</span>
-            <dl class="gift-details">
-              <div><dt data-i18n="gift.bank">Bank</dt><dd>Bank Central Asia (BCA)</dd></div>
-              <div><dt data-i18n="gift.swift">SWIFT / BIC</dt><dd id="swiftCode">CENAIDJA</dd></div>
-              <div><dt data-i18n="gift.accountNumber">Account number</dt><dd id="internationalAccount">0000000000</dd></div>
-              <div><dt data-i18n="gift.accountName">Account name</dt><dd>Kristy Natasha Yohanes</dd></div>
-              <div><dt data-i18n="gift.bankAddress">Bank address</dt><dd>Menara BCA, Jl. M.H. Thamrin No. 1, Jakarta 10310, Indonesia</dd></div>
-            </dl>
-            <p class="gift-note" data-i18n="gift.note">Please use your full name as the transfer reference. For transfer assistance, please contact us directly.</p>
-            <div class="gift-actions">
-              <button class="gift-copy" type="button" data-copy="swiftCode" data-i18n="gift.copySwift">Copy SWIFT code</button>
-              <button class="gift-copy" type="button" data-copy="internationalAccount" data-i18n="gift.copyAccount">Copy account number</button>
-            </div>
-          </div>
+          <div class="gift-card gift-card--domestic" id="domesticPanel" role="tabpanel" aria-labelledby="domesticTab"></div>
+          <div class="gift-card gift-card--international" id="internationalPanel" role="tabpanel" aria-labelledby="internationalTab" hidden></div>
         </div>
       </section>
 
@@ -288,14 +272,20 @@
             <div class="section-intro" data-i18n="wishes.intro">FROM THE HEART</div>
             <h2 data-i18n="wishes.title">Words of Love</h2>
             <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
-            <p class="wishes-intro" data-i18n="wishes.body">Leave a wish for the two of us. Every message becomes part of the story we keep.</p>
+            <p class="wishes-intro" data-i18n="wishes.body">Leave a wish for the two of us. Your message will be public in the Words of Love feed.</p>
 
+            <p class="field-hint wishes-edit-hint" data-i18n="wishes.editHint">One wish per invitation. You can come back and edit yours anytime.</p>
             <form id="wishForm" class="wish-form">
               <label class="form-label" for="wishName" data-i18n="wishes.name">Your name</label>
-              <input class="field" type="text" id="wishName" name="wishName" placeholder="Your name" required maxlength="60" autocomplete="name" data-i18n-placeholder="wishes.namePlaceholder" />
+              <p class="guest-name-display" id="wishNameDisplay">—</p>
+              <input type="hidden" id="wishName" name="wishName" />
+              <div id="savedWish" class="saved-wish" hidden><p id="savedWishMessage" class="wish-text"></p><button class="secondary" type="button" id="editWish" data-i18n="wishes.edit">Edit your wish</button></div>
+              <div id="wishFields">
               <label class="form-label" for="wishMessage" data-i18n="wishes.wish">Your wish</label>
               <textarea class="field" id="wishMessage" name="wishMessage" rows="3" maxlength="300" placeholder="A few words for Richard &amp; Natasha" required data-i18n-placeholder="wishes.wishPlaceholder"></textarea>
-              <button class="primary form-submit" type="submit" data-i18n="wishes.submit">Send your wish →</button>
+              <button class="primary form-submit" type="submit" data-i18n="wishes.submit">Send your wish</button>
+              <button class="text-button" id="cancelWish" type="button" data-i18n="rsvp.cancel" hidden>Cancel</button>
+              </div>
               <div class="form-status" id="wishStatus" role="status" aria-live="polite"></div>
             </form>
           </div>
@@ -330,5 +320,20 @@
   <button class="music-toggle" id="musicToggle" type="button" aria-label="Pause background music" aria-pressed="true" hidden>
     <span aria-hidden="true">♪</span>
   </button>
+  <dialog id="calendarDialog" class="calendar-dialog" aria-labelledby="calendarTitle" aria-describedby="calendarDescription">
+    <div class="calendar-dialog-head"><h2 id="calendarTitle" data-i18n="details.calendar">Add to calendar</h2><button type="button" id="closeCalendar" class="calendar-close" aria-label="Close" data-i18n-aria="details.calendarClose">×</button></div>
+    <p id="calendarDescription" data-i18n="details.calendarChoose">Choose your calendar app.</p>
+    <h3 class="calendar-provider">Google Calendar</h3>
+    <div class="calendar-options">
+      <a data-google-calendar="ceremony" target="_blank" rel="noopener noreferrer"><span data-i18n="details.holy">Holy Matrimony</span></a>
+      <a data-google-calendar="reception" target="_blank" rel="noopener noreferrer"><span data-i18n="details.reception">Reception</span></a>
+    </div>
+    <h3 class="calendar-provider">Apple / Outlook</h3>
+            <div class="calendar-options">
+              <button type="button" data-calendar="ceremony"><span data-i18n="details.holy">Holy Matrimony</span></button>
+              <button type="button" data-calendar="reception"><span data-i18n="details.reception">Reception</span></button>
+              <button type="button" data-calendar="both"><span data-i18n="details.calendarBoth">Both events</span></button>
+            </div>
+  </dialog>
 </body>
 </html>
