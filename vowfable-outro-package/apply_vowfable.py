@@ -7,7 +7,7 @@ from pathlib import Path
 import argparse, shutil, re, sys, html
 parser=argparse.ArgumentParser(description='Install Vowfable end section to the wedding invitation')
 parser.add_argument('repo', nargs='?', default='.', help='Original wedding-invitation repository directory')
-parser.add_argument('--url', default='https://YOUR-VOWFABLE-DOMAIN.example/', help='Your actual Vowfable website URL')
+parser.add_argument('--url', default='https://vowfable.arpicato.com/', help='Your actual Vowfable website URL')
 args=parser.parse_args()
 root=Path(args.repo).resolve();here=Path(__file__).resolve().parent
 index=root/'index.html'
@@ -29,7 +29,7 @@ if jslink not in source:
 if 'id="vowfable-outro"' not in source:
     match=re.search(r'(\s*</footer>)(\s*</main>)',source)
     if not match:sys.exit('Could not locate closing footer before </main>; original unchanged')
-    addition=(here/'vowfable-outro.html').read_text('utf-8').strip().replace('https://YOUR-VOWFABLE-DOMAIN.example/',html.escape(args.url,quote=True))
+    addition=(here/'vowfable-outro.html').read_text('utf-8').strip().replace('https://vowfable.arpicato.com/',html.escape(args.url,quote=True))
     source=source[:match.start()]+match.group(1)+'\n\n'+addition+'\n'+match.group(2)+source[match.end():]
 else:
     source=re.sub(r'(<a class="vf-outro__button" href=")[^"]+',lambda m:m.group(1)+html.escape(args.url,quote=True),source,count=1)

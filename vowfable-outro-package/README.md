@@ -19,7 +19,7 @@ Compared with the exact original `index.html` on [`natgluons/wedding-invitation`
 1. Make a backup of your repository's current `index.html`.
 2. Copy `index-full-with-vowfable.html` as `index.html` in the root of your existing repo.
 3. Copy `vowfable-outro.css` and `vowfable-outro.js` to the repo root, and the three SVGs to `assets/vowfable/`.
-4. In `index.html`, replace **`https://YOUR-VOWFABLE-DOMAIN.example/`** with your real business website URL.
+4. In `index.html`, replace **`https://vowfable.arpicato.com/`** with your real business website URL.
 5. Keep existing `main.js`, `styles.css`, `desktop.css`, your original photos and scripts intact. This package only includes *new* assets, not duplicates of existing assets.
 
 ## Option B — automatically apply to your CURRENT original code (safer if repo has changed)
