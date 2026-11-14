@@ -16,10 +16,12 @@
   </style>
   <script>document.documentElement.classList.add('assets-loading'); window.assetLoadTimeout = setTimeout(function () { document.documentElement.classList.remove('assets-loading'); }, 25000);</script>
   <link rel="preload" as="image" href="assets/photos/placeholder-1-1536.webp" imagesrcset="assets/photos/placeholder-1-768.webp 768w, assets/photos/placeholder-1-1536.webp 1536w" imagesizes="(min-width: 960px) 1240px, 100vw" />
-  <link rel="stylesheet" href="styles.css?v=20261114-couple-section-73" />
-  <link rel="stylesheet" href="desktop.css?v=20261114-couple-section-56" media="(min-width: 960px)" />
+  <link rel="stylesheet" href="styles.css?v=20261114-couple-section-74" />
+  <link rel="stylesheet" href="desktop.css?v=20261114-couple-section-57" media="(min-width: 960px)" />
+  <link rel="stylesheet" href="vowfable-outro.css?v=20261114-vowfable-1" />
   <script defer src="config.js?v=20261114-matrimony-time-44"></script>
-  <script defer src="main.js?v=20261114-couple-section-73"></script>
+  <script defer src="main.js?v=20261114-couple-section-74"></script>
+  <script defer src="vowfable-outro.js?v=20261114-vowfable-1"></script>
 </head>
 <body>
   <div class="asset-loader" role="status" aria-label="Loading invitation"><span class="asset-spinner" aria-hidden="true"></span></div>
@@ -114,6 +116,12 @@
             </p>
           </article>
         </div>
+      </section>
+
+      <section class="interlude-divider" aria-label="A promise of forever" data-i18n-aria="interlude.aria">
+        <div class="interlude-ornament" aria-hidden="true"><span></span><b>✦</b><span></span></div>
+        <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
+        <p class="interlude-quote" data-i18n-html="interlude.quote">“Two hearts, one promise —<br />A lifetime to keep it.”</p>
       </section>
 
       <section class="paper-section" id="details">
@@ -342,6 +350,41 @@
         <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
         </div>
       </footer>
+
+      <!-- VOWFABLE OUTRO: editorial maker's note, shown AFTER the couple's Thank You -->
+      <section class="vf-outro" id="vowfable-outro" aria-labelledby="vowfable-outro-title">
+        <div class="vf-outro__stage">
+          <span class="vf-outro__floral vf-outro__floral--top" aria-hidden="true"></span>
+          <span class="vf-outro__floral vf-outro__floral--bottom" aria-hidden="true"></span>
+          <div class="vf-outro__paper">
+            <div class="vf-outro__photo-col">
+              <figure class="vf-outro__photo">
+                <img src="assets/photos/placeholder-6.jpeg" loading="lazy" decoding="async"
+                     alt="Richard and Natasha wearing traditional hanfu" data-vf-alt="vowfable.photoAlt" />
+                <figcaption data-vf-i18n="vowfable.photoCaption">A little piece of our story</figcaption>
+              </figure>
+            </div>
+            <div class="vf-outro__copy">
+              <p class="vf-outro__eyebrow" data-vf-i18n="vowfable.eyebrow">A LITTLE NOTE FROM US</p>
+              <h2 id="vowfable-outro-title" data-vf-i18n="vowfable.heading">Made with love, by us.</h2>
+              <div class="vf-outro__rule" aria-hidden="true"><span>✧</span></div>
+              <p class="vf-outro__message" data-vf-i18n="vowfable.body">We personally designed and built this wedding invitation, piece by piece, as a small part of our story. If you'd love something just as personal for your special day, we'd be delighted to create it with you.</p>
+              <div class="vf-outro__signature">
+                <img src="assets/vowfable/vowfable-seal.svg" alt="" width="56" height="56" loading="lazy" />
+                <div class="vf-outro__brand-text"><strong>Vowfable</strong><span data-vf-i18n="vowfable.studio">Bespoke Digital Wedding Invitations</span></div>
+              </div>
+              <!-- IMPORTANT: Replace YOUR-VOWFABLE-DOMAIN.example with the real Vowfable URL before publishing. -->
+              <a class="vf-outro__button" href="https://YOUR-VOWFABLE-DOMAIN.example/" target="_blank" rel="noopener noreferrer">
+                <span data-vf-i18n="vowfable.cta">Visit Our Studio</span>
+                <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+              </a>
+              <p class="vf-outro__fineprint" data-vf-i18n="vowfable.fineprint">Explore our designs, packages &amp; details</p>
+            </div>
+          </div>
+          <div class="vf-outro__colophon" aria-hidden="true"><span></span><span class="vf-outro__diamond">◇</span><span></span></div>
+        </div>
+      </section>
+      <!-- END VOWFABLE OUTRO -->
     </main>
   </div>
     <div class="lang-switch lang-switch--floating" role="group" aria-label="Language">

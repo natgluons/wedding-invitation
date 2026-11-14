@@ -119,6 +119,17 @@ h2 { font:italic normal 35px/1.2 var(--font-display); margin:15px 0; color:var(-
 .couple-parents { margin:0; font-size:14px; line-height:1.8; color:#6b524a; }
 .couple-parents span { display:block; margin-bottom:4px; font-size:12px; font-style:italic; color:var(--burgundy); }
 .couple-amp { font:italic normal 34px/1 var(--font-display); color:var(--gold); }
+.interlude-divider { position:relative; overflow:hidden; padding:54px 32px 58px; text-align:center; background:radial-gradient(circle at 0% 0%,#240d15e6 0%,#240d1500 44%),radial-gradient(circle at 100% 100%,#240d15e6 0%,#240d1500 44%),linear-gradient(135deg,#6d1b28,#8d343c 55%,#671a26); border-block:1px solid #b9956680; color:var(--cream); }
+.interlude-divider::before, .interlude-divider::after { content:""; position:absolute; z-index:0; width:clamp(150px,26vw,300px); height:clamp(150px,26vw,300px); opacity:.55; pointer-events:none; }
+.interlude-divider::before { top:-34px; left:-34px; background:url('assets/blossoms/branch-left.webp') left top/contain no-repeat; transform:rotate(-6deg); }
+.interlude-divider::after { right:-34px; bottom:-34px; background:url('assets/blossoms/branch-right.webp') right bottom/contain no-repeat; transform:rotate(6deg); }
+.interlude-divider > * { position:relative; z-index:1; }
+.interlude-ornament { display:flex; align-items:center; justify-content:center; gap:14px; color:#d9b47b; }
+.interlude-ornament span { display:block; width:min(90px,22vw); height:1px; background:linear-gradient(90deg,transparent,#d9b47b); }
+.interlude-ornament span:last-child { background:linear-gradient(90deg,#d9b47b,transparent); }
+.interlude-ornament b { font:normal 18px/1 var(--font-display); }
+.interlude-divider .divider-img { width:135px; margin:14px auto 16px; opacity:.95; }
+.interlude-quote { max-width:24ch; margin:0 auto; font:italic 400 clamp(20px,6vw,24px)/1.5 var(--font-display); color:#fff6e9; text-shadow:0 2px 16px #2b141280; }
 .countdown-section { padding:56px 26px 58px; text-align:center; color:var(--cream); background:linear-gradient(135deg,#6d1b28,#8d343c 55%,#671a26); }
 .countdown-section h2 { color:#fff6e9; margin:12px 0 26px; }
 .countdown-section .section-intro { color:var(--gold); }

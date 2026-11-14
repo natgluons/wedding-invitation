@@ -69,6 +69,11 @@ h2 { font-family:"Cormorant Garamond",Georgia,serif; font-size:84px; font-weight
 .couple-parents { font-size:16px; }
 .couple-amp { align-self:center; font-size:56px; flex:none; }
 
+.interlude-divider { padding:76px 88px 80px; }
+.interlude-ornament span { width:120px; }
+.interlude-divider .divider-img { width:160px; }
+.interlude-quote { max-width:30ch; font-size:32px; line-height:1.45; }
+
 .countdown-section {
   display:grid; grid-template-columns:.9fr 1.1fr; column-gap:60px; padding:68px 88px;
   text-align:left; position:relative;

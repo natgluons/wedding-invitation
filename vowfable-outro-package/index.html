@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Vowfable — Wedding invitation closing section prototype</title>
+<style>*{box-sizing:border-box}html,body{margin:0}body{background:#210f19;color:#fff;font-family:Georgia,serif}.preview-banner{background:#f5ebde;color:#6e2732;padding:13px;text-align:center;font:12px/1.5 Georgia,serif}.preview-close{position:relative;min-height:min(600px,72svh);display:flex;align-items:center;justify-content:center;background:linear-gradient(90deg,transparent 30%,#2e1724e8 90%),url('assets/vowfable/preview-photo.webp') center 38%/cover no-repeat}.preview-close__content{text-align:center;position:relative;z-index:1;padding:40px 20px;background:#361925a8;border:1px solid #c4a16a;margin:22px}.preview-close h1{font:italic 400 clamp(42px,9vw,90px)/1 Georgia,serif;margin:15px;color:#fff8ee}.preview-close p{font-size:13px;font-style:italic;color:#f5eadc}.preview-close strong{font:italic 27px Georgia,serif;color:#dfb57c}</style>
+<link rel="stylesheet" href="vowfable-outro.css"/><script defer src="vowfable-outro.js"></script></head><body>
+<div class="preview-banner">Full HTML preview · Vowfable maker’s note after Thank You &nbsp; <button onclick="document.documentElement.lang='en'">EN</button> / <button onclick="document.documentElement.lang='id'">ID</button></div>
+<section class="preview-close"><div class="preview-close__content"><img src="assets/vowfable/vowfable-seal.svg" width="55" height="55" alt=""/><h1>Thank You</h1><p>For being part of this beautiful chapter of our lives.</p><strong>Richard &amp; Natasha</strong></div></section>
+<!-- VOWFABLE OUTRO: editorial maker's note, shown AFTER the couple's Thank You -->
+<section class="vf-outro" id="vowfable-outro" aria-labelledby="vowfable-outro-title">
+  <div class="vf-outro__stage">
+    <span class="vf-outro__floral vf-outro__floral--top" aria-hidden="true"></span>
+    <span class="vf-outro__floral vf-outro__floral--bottom" aria-hidden="true"></span>
+    <div class="vf-outro__paper">
+      <div class="vf-outro__photo-col">
+        <figure class="vf-outro__photo">
+          <img src="assets/vowfable/preview-photo.webp" loading="lazy" decoding="async"
+               alt="Richard and Natasha wearing traditional hanfu" data-vf-alt="vowfable.photoAlt" />
+          <figcaption data-vf-i18n="vowfable.photoCaption">A little piece of our story</figcaption>
+        </figure>
+      </div>
+      <div class="vf-outro__copy">
+        <p class="vf-outro__eyebrow" data-vf-i18n="vowfable.eyebrow">A LITTLE NOTE FROM US</p>
+        <h2 id="vowfable-outro-title" data-vf-i18n="vowfable.heading">Made with love, by us.</h2>
+        <div class="vf-outro__rule" aria-hidden="true"><span>✧</span></div>
+        <p class="vf-outro__message" data-vf-i18n="vowfable.body">We personally designed and built this wedding invitation, piece by piece, as a small part of our story. If you'd love something just as personal for your special day, we'd be delighted to create it with you.</p>
+        <div class="vf-outro__signature">
+          <img src="assets/vowfable/vowfable-seal.svg" alt="" width="56" height="56" loading="lazy" />
+          <div class="vf-outro__brand-text"><strong>Vowfable</strong><span data-vf-i18n="vowfable.studio">Bespoke Digital Wedding Invitations</span></div>
+        </div>
+        <!-- IMPORTANT: Replace YOUR-VOWFABLE-DOMAIN.example with the real Vowfable URL before publishing. -->
+        <a class="vf-outro__button" href="https://YOUR-VOWFABLE-DOMAIN.example/" target="_blank" rel="noopener noreferrer">
+          <span data-vf-i18n="vowfable.cta">Visit Our Studio</span>
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+        </a>
+        <p class="vf-outro__fineprint" data-vf-i18n="vowfable.fineprint">Explore our designs, packages &amp; details</p>
+      </div>
+    </div>
+    <div class="vf-outro__colophon" aria-hidden="true"><span></span><span class="vf-outro__diamond">◇</span><span></span></div>
+  </div>
+</section>
+<!-- END VOWFABLE OUTRO -->
+</body></html>

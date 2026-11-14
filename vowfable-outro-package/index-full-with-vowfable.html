@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#F7F1E6" />
+  <meta name="description" content="The wedding of Richard Putra and Kristy Natasha Yohanes, Sunday, 17 January 2027, Jakarta." />
+  <title>Richard &amp; Natasha · A Wedding Invitation</title>
+  <link rel="icon" type="image/svg+xml" href="assets/svg/favicon.svg?v=emblem-5" />
+  <style>
+    .asset-loader { display:none; }
+    html.assets-loading .asset-loader { position:fixed; inset:0; z-index:1000; display:grid; place-items:center; background:#f7f1e6; }
+    .asset-spinner { width:38px; height:38px; border:2px solid #c4a16a40; border-top-color:#792a32; border-radius:50%; animation:asset-spin .9s linear infinite; }
+    @keyframes asset-spin { to { transform:rotate(360deg); } }
+    @media(prefers-reduced-motion:reduce) { .asset-spinner { animation-duration:2s; } }
+  </style>
+  <script>document.documentElement.classList.add('assets-loading'); window.assetLoadTimeout = setTimeout(function () { document.documentElement.classList.remove('assets-loading'); }, 25000);</script>
+  <link rel="preload" as="image" href="assets/photos/placeholder-1-1536.webp" imagesrcset="assets/photos/placeholder-1-768.webp 768w, assets/photos/placeholder-1-1536.webp 1536w" imagesizes="(min-width: 960px) 1240px, 100vw" />
+  <link rel="stylesheet" href="styles.css?v=20261114-couple-section-73" />
+  <link rel="stylesheet" href="desktop.css?v=20261114-couple-section-56" media="(min-width: 960px)" />
+  <link rel="stylesheet" href="vowfable-outro.css?v=1" />
+  <script defer src="config.js?v=20261114-matrimony-time-44"></script>
+  <script defer src="main.js?v=20261114-couple-section-73"></script>
+  <script defer src="vowfable-outro.js?v=1"></script>
+</head>
+<body>
+  <div class="asset-loader" role="status" aria-label="Loading invitation"><span class="asset-spinner" aria-hidden="true"></span></div>
+  <div class="site-shell">
+    <section id="cover" class="cover" aria-label="Wedding invitation opening" data-i18n-aria="cover.aria">
+      <div class="cover-inner">
+        <div class="cover-copy">
+          <div class="eyebrow" data-i18n="cover.eyebrow">A WEDDING INVITATION</div>
+          <h1 class="cover-title">Richard <em>&amp;</em> Natasha</h1>
+          <p class="sub" data-i18n="cover.sub">Sunday · 17 January 2027 · Jakarta</p>
+          <p class="cover-guest" id="coverGuest" hidden></p>
+        </div>
+        <div class="cover-visual">
+          <button class="envelope-hit" id="openLetter" type="button" disabled aria-label="Open wedding invitation letter" data-i18n-aria="cover.openAria">
+            <span class="envelope" id="envelope" aria-hidden="true">
+              <span class="envelope-back"></span>
+              <span class="letter-peek"><span class="peek-name" id="letterFor" data-i18n="cover.letterForYou">For You</span><span class="peek-divider"></span><small data-i18n="cover.peekSmall">A day to remember</small></span>
+              <span class="envelope-front"></span>
+              <span class="envelope-flap"></span>
+              <span class="wax-seal"></span>
+              <span class="red-tassel"></span>
+            </span>
+          </button>
+          <p id="invitationStatus" class="invitation-status" role="status" aria-live="polite"></p>
+          <button id="retryInvitation" class="invitation-retry" type="button" hidden>Try again</button>
+          <p class="cover-open-hint" data-i18n="cover.hint">Tap the seal to open your invitation.</p>
+        </div>
+      </div>
+    </section>
+
+    <main id="invitation" class="invitation" tabindex="-1" hidden>
+      <header class="compact-head">
+        <span class="head-seal seal-mark" aria-hidden="true"></span>
+        <span class="head-brand" data-i18n="head.brand">A LETTER TO YOU</span>
+        <nav class="head-nav" aria-label="Invitation sections" data-i18n-aria="head.navAria">
+          <a href="#couple" data-i18n="nav.couple">Couple</a>
+          <a href="#details" data-i18n="nav.details">Details</a>
+          <a href="#story" data-i18n="nav.story">Story</a>
+          <a href="#rsvp" data-i18n="nav.rsvp">RSVP</a>
+          <a href="#gift" data-i18n="nav.gift">Gift</a>
+          <a href="#wishes" data-i18n="nav.wishes">Wishes</a>
+        </nav>
+        <div class="lang-switch" role="group" aria-label="Language">
+          <button type="button" data-lang="en" aria-pressed="true">EN</button>
+          <span aria-hidden="true">/</span>
+          <button type="button" data-lang="id" aria-pressed="false">ID</button>
+        </div>
+      </header>
+
+      <section class="hero" aria-label="The wedding of Richard and Natasha" data-i18n-aria="hero.aria">
+        <div class="hero-image-wrap">
+          <img class="hero-image" fetchpriority="high" decoding="async" src="assets/photos/placeholder-1-1536.webp" srcset="assets/photos/placeholder-1-768.webp 768w, assets/photos/placeholder-1-1536.webp 1536w" sizes="(min-width: 960px) 1240px, 100vw" alt="Placeholder couple portrait in traditional hanfu, replace with the couple's prewedding photograph" data-i18n-alt="hero.alt" />
+          <div class="hero-image-fade"></div>
+        </div>
+        <div class="hero-copy" data-reveal-group>
+          <div class="eyebrow" data-i18n="hero.eyebrow">THE WEDDING OF</div>
+          <h2 class="hero-names"><span>Richard</span><em>&amp;</em><span>Natasha</span></h2>
+          <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
+          <p data-i18n-html="hero.intro">With joyful hearts and our families,<br />we invite you to celebrate our wedding.</p>
+          <p class="hero-fullnames">Richard Putra, S.Kom.<br />&amp; Kristy Natasha Yohanes, S.Si., M.Sc.</p>
+          <p class="hero-date" data-i18n="hero.date">SUNDAY · 17 JANUARY 2027 · JAKARTA</p>
+        </div>
+      </section>
+
+      <section class="paper-section couple-section" id="couple">
+        <div class="section-head" data-reveal-group>
+          <div class="section-intro" data-i18n="couple.intro">TWO FAMILIES, ONE JOY</div>
+          <h2 data-i18n="couple.title">Bride &amp; Groom</h2>
+          <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
+          <p class="couple-intro" data-i18n="couple.body">With joyful hearts and the blessing of our families, we joyfully announce the union of our children.</p>
+        </div>
+        <div class="couple-grid" data-reveal-group>
+          <article class="couple-card" data-reveal>
+            <div class="couple-role" data-i18n="couple.groomRole">THE GROOM</div>
+            <h3 class="couple-name">Richard Putra</h3>
+            <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
+            <p class="couple-parents">
+              <span data-i18n="couple.sonOf">The son of</span><br />
+              Budiman Sandjapurna Nursalim<br />
+              &amp; Pitarti Basrie
+            </p>
+          </article>
+          <div class="couple-amp" aria-hidden="true"><em>&amp;</em></div>
+          <article class="couple-card" data-reveal>
+            <div class="couple-role" data-i18n="couple.brideRole">THE BRIDE</div>
+            <h3 class="couple-name">Kristy Natasha Yohanes</h3>
+            <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
+            <p class="couple-parents">
+              <span data-i18n="couple.daughterOf">The daughter of</span><br />
+              Hery<br />
+              &amp; Liliana Suryana
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="paper-section" id="details">
+        <span class="painting-backdrop painting-landscape" aria-hidden="true"></span>
+        <div class="section-head" data-reveal-group>
+          <div class="section-intro" data-i18n="details.intro">THE DAY WE SAY I DO</div>
+          <h2 data-i18n="details.title">Wedding Details</h2>
+          <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
+        </div>
+        <div class="detail-list" data-reveal-group>
+          <article class="detail-row">
+            <div class="detail-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path d="M5 28V14l11-8 11 8v14H5Z M12 28v-8a4 4 0 0 1 8 0v8 M16 2v9 M12 5h8"/><path d="M9 15h2m10 0h2"/></svg></div>
+            <div>
+              <b data-i18n="details.holy">Holy Matrimony</b>
+              <p><span data-i18n="details.date">Sunday, 17 January 2027</span><br /><span data-i18n="details.holyTime">13:00 WIB – finish</span></p>
+              <p class="detail-venue" data-i18n-html="details.venue">Grand Mercure Kemayoran<br />Magnolia Ballroom, Jakarta, Indonesia</p>
+            </div>
+          </article>
+          <article class="detail-row">
+            <div class="detail-icon" aria-hidden="true">
+              <svg viewBox="0 0 32 32" focusable="false"><path d="m7 4 7 3-3 9a4 4 0 0 1-7-3L7 4Zm18 0-7 3 3 9a4 4 0 0 0 7-3l-3-9ZM7 18l-3 9m-3-1 6 2m18-10 3 9m-3 1 6-2M16 2v3m-2 14 2 2 2-2"/><path d="m5 10 7 3m8 0 7-3"/></svg>
+            </div>
+            <div>
+              <b data-i18n="details.reception">Reception</b>
+              <p><span data-i18n="details.date">Sunday, 17 January 2027</span><br /><span data-i18n="details.receptionTime">18:00 WIB – finish</span></p>
+              <p class="detail-venue" data-i18n-html="details.venue">Grand Mercure Kemayoran<br />Magnolia Ballroom, Jakarta, Indonesia</p>
+            </div>
+          </article>
+        </div>
+        <div class="details-actions">
+          <a class="secondary location-button" href="https://www.google.com/maps/search/?api=1&amp;query=Grand+Mercure+Kemayoran+Magnolia+Ballroom+Jakarta" target="_blank" rel="noopener noreferrer" ><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2.5"/></svg><span data-i18n="details.viewLocation">View location</span></a>
+          <button type="button" class="secondary location-button" id="openCalendar" aria-haspopup="dialog" aria-controls="calendarDialog"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 11h18m-11 5h4"/></svg><span data-i18n="details.calendar">Add to calendar</span></button>
+        </div>
+      </section>
+
+      <section class="countdown-section" aria-label="Countdown to the wedding" data-reveal-group data-i18n-aria="countdown.aria">
+        <div class="section-intro" data-i18n="countdown.intro">COUNTING DOWN TO FOREVER</div>
+        <h2 data-i18n="countdown.title">We can’t wait</h2>
+        <div class="countdown-grid" role="group" aria-label="Time remaining until the wedding" data-i18n-aria="countdown.groupAria">
+          <div class="count-box"><span class="count-num" id="countDays">000</span><span class="count-label" data-i18n="countdown.days">Days</span></div>
+          <div class="count-box"><span class="count-num" id="countHours">00</span><span class="count-label" data-i18n="countdown.hours">Hours</span></div>
+          <div class="count-box"><span class="count-num" id="countMinutes">00</span><span class="count-label" data-i18n="countdown.minutes">Minutes</span></div>
+          <div class="count-box"><span class="count-num" id="countSeconds">00</span><span class="count-label" data-i18n="countdown.seconds">Seconds</span></div>
+        </div>
+        <p class="countdown-note" data-i18n="countdown.note">Sunday, 17 January 2027 · 18:00 WIB</p>
+      </section>
+
+      <section class="portrait-interlude" aria-label="A moment together" data-i18n-aria="portrait.aria">
+        <img src="assets/photos/demo-hanfu-couple-1536.webp" alt="Placeholder portrait of a couple in traditional wedding attire" loading="lazy" decoding="async" />
+        <div class="portrait-caption" data-reveal-group>
+          <div class="section-intro" data-i18n="portrait.intro">THROUGH EVERY SEASON</div>
+          <h2 data-i18n-html="portrait.title">You, me,<br />and all that’s to come.</h2>
+          <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
+        </div>
+      </section>
+
+      <section class="story-section" id="story">
+        <span class="painting-backdrop painting-story" aria-hidden="true"></span>
+        <div class="section-head" data-reveal-group>
+          <div class="section-intro" data-i18n="story.intro">A JOURNEY OF TWO</div>
+          <h2 data-i18n="story.title">Our Story</h2>
+        </div>
+        <div class="story-body">
+          <div class="photo-frame" data-reveal>
+            <img src="assets/photos/placeholder-2.jpeg" alt="Placeholder hanfu couple photo" data-i18n-alt="story.photoAlt" loading="lazy" decoding="async" />
+            <img class="frame-overlay" src="assets/svg/portrait-frame.svg" alt="" />
+          </div>
+          <div class="story-copy">
+            <p class="story-lead" data-reveal data-i18n="story.lead">Ours is a love written across cities and time zones, and now, finally, we are counting down to the day we say “I do.”</p>
+
+            <ol class="milestones" data-reveal>
+              <li>
+                <span class="milestone-date" data-i18n="story.m1date">APRIL 2021</span>
+                <h3 data-i18n="story.m1title">How We Met</h3>
+                <p data-i18n="story.m1text">We met for the first time, never imagining that such a simple encounter would be the beginning of our story.</p>
+              </li>
+              <li>
+                <span class="milestone-date" data-i18n="story.m2date">JUNE 1, 2023</span>
+                <h3 data-i18n="story.m2title">Our First Date</h3>
+                <p data-i18n="story.m2text">Our first date was at Mall Kelapa Gading. What started as a simple meal turned into hours of conversation, and before we knew it, time had flown by.</p>
+              </li>
+              <li>
+                <span class="milestone-date" data-i18n="story.m3date">JUNE 2, 2025</span>
+                <h3 data-i18n="story.m3title">The Proposal</h3>
+                <p data-i18n="story.m3text">After years of making memories together, Richard asked Natasha to marry him. With happy tears and a heart full of love, she said yes.</p>
+              </li>
+              <li>
+                <span class="milestone-date" data-i18n="story.m4date">2025–2026</span>
+                <h3 data-i18n="story.m4title">Miles Apart, Still Together</h3>
+                <p data-i18n="story.m4text">Natasha moved to London to pursue her studies at Imperial College London. Though thousands of miles apart, we stayed close through phone calls, everyday stories, and counting down the days until we could see each other again.</p>
+              </li>
+              <li>
+                <span class="milestone-date" data-i18n="story.m5date">JANUARY 17, 2027</span>
+                <h3 data-i18n="story.m5title">A New Chapter</h3>
+                <p data-i18n="story.m5text">After everything we've shared and all the miles we've crossed, we're finally getting married. We can't wait to celebrate this special day with the family and friends we love.</p>
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        <img class="divider-img story-divider" src="assets/svg/cloud-divider.svg" alt="" />
+        <div class="section-intro" data-i18n="story.next">THE NEXT CHAPTER BEGINS</div>
+      </section>
+
+      <section class="gallery-section" aria-labelledby="gallery-title">
+        <div class="section-head" data-reveal-group>
+          <div class="section-intro" data-i18n="gallery.intro">LITTLE MOMENTS, A LIFETIME OF LOVE</div>
+          <h2 id="gallery-title" data-i18n="gallery.title">Together, Always</h2>
+          <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
+        </div>
+        <div class="photo-gallery" data-reveal>
+          <figure class="gallery-wide"><img src="assets/photos/placeholder-3.jpeg" alt="The couple together on a pavilion overlooking a misty lake at sunset" loading="lazy" decoding="async" /></figure>
+          <figure class="gallery-second"><img src="assets/photos/placeholder-4.jpeg" alt="The couple face to face beneath blossoming branches at golden hour" loading="lazy" decoding="async" /></figure>
+          <figure class="gallery-offset"><img src="assets/photos/placeholder-5.jpeg" alt="The couple in the snow beneath glowing lanterns" loading="lazy" decoding="async" /></figure>
+        </div>
+      </section>
+
+      <section class="paper-section rsvp-section" id="rsvp">
+        <span class="painting-backdrop painting-plum" aria-hidden="true"></span>
+        <span class="painting-backdrop painting-rsvp-side" aria-hidden="true"></span>
+        <div class="rsvp-layout">
+          <div class="rsvp-copy" data-reveal-group>
+            <div class="section-intro" data-i18n="rsvp.intro">WE SAVED YOU A SEAT</div>
+            <h2 data-i18n="rsvp.title">Will You Join Us?</h2>
+            <p class="rsvp-intro" data-i18n-html="rsvp.body">Your presence would mean the world to us.<br /><span class="rsvp-deadline">Kindly respond by 3 January 2027.</span></p>
+            <p class="rsvp-late-notice" id="rsvpLateNotice" data-i18n="rsvp.lateNotice" hidden>If you are replying within two weeks of the wedding, or need to change your plans later, please contact us directly.</p>
+            <p class="guest-seat-note" id="guestSeatNote" hidden></p>
+          </div>
+          <form id="rsvpForm" data-reveal>
+          <input class="hp-field" type="text" id="rsvpWebsite" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <div class="saved-rsvp" id="savedRsvp" hidden>
+            <h3 data-i18n="rsvp.savedTitle">Your saved response</h3>
+            <dl id="savedRsvpDetails"></dl>
+            <button class="primary form-submit" type="button" id="editRsvp" data-i18n="rsvp.edit">Edit response</button>
+          </div>
+          <div id="rsvpFields" class="rsvp-fields">
+          <fieldset class="attendance"><legend data-i18n="rsvp.attendance">Attendance</legend>
+            <label><input type="radio" name="attendance" value="attending" required /> <span data-i18n="rsvp.attendYes">✓ I will attend</span></label>
+            <label><input type="radio" name="attendance" value="not-attending" /> <span data-i18n="rsvp.attendNo">× I can't attend</span></label>
+          </fieldset>
+          <label class="form-label" for="guestEvents" data-i18n="rsvp.events">Which events will you join?</label>
+          <select class="field" id="guestEvents" name="events" required>
+            <option value="" disabled selected data-i18n="rsvp.eventsPlaceholder">Select events</option>
+            <option value="both" data-i18n="rsvp.both">Holy Matrimony + Reception</option>
+            <option value="holy-matrimony" data-i18n="rsvp.holyOnly">Holy Matrimony only</option>
+            <option value="reception" data-i18n="rsvp.receptionOnly">Reception only</option>
+          </select>
+          <span class="form-label" id="guestNameLabel" data-i18n="rsvp.name">Your name</span>
+          <p class="guest-name-display" id="guestNameDisplay" aria-labelledby="guestNameLabel">—</p>
+          <input type="hidden" id="guestName" name="name" />
+          <label class="form-label" for="guestCount" data-i18n="rsvp.count">How many people are coming?</label>
+          <select class="field" id="guestCount" name="guests" required>
+            <option value="" disabled selected data-i18n="rsvp.countPlaceholder">Select number of people</option>
+            <option value="1" data-i18n="rsvp.count1">Just me (1)</option>
+            <option value="2" data-i18n="rsvp.count2">2 people</option>
+            <option value="3" data-i18n="rsvp.count3">3 people</option>
+            <option value="4" data-i18n="rsvp.count4">4 people</option>
+          </select>
+          <div class="rsvp-actions"><button class="primary form-submit" type="submit" data-i18n="rsvp.submit">Submit RSVP</button><button class="text-button" type="button" id="cancelRsvpEdit" data-i18n="rsvp.cancel" hidden>Cancel</button></div>
+          </div>
+          <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
+          </form>
+        </div>
+      </section>
+
+      <section class="paper-section gift-section" id="gift">
+        <span class="painting-backdrop painting-peonies" aria-hidden="true"></span>
+        <div class="section-head" data-reveal-group>
+          <div class="section-intro" data-i18n="gift.intro">WITH GRATITUDE</div>
+          <h2 data-i18n="gift.title">Wedding Gift</h2>
+          <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
+          <p class="gift-intro" data-i18n="gift.body">Your presence is the greatest gift we could ask for. If you would like to bless us with something more, a contribution toward our first home would be received with heartfelt thanks.</p>
+        </div>
+
+        <div class="gift-tabs" role="tablist" aria-label="Transfer options">
+          <button type="button" role="tab" id="domesticTab" aria-controls="domesticPanel" aria-selected="true"><svg class="gift-tab-icon gift-tab-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#fff" d="M0 0h24v16H0z"/><path fill="#e13738" d="M0 0h24v8H0z"/></svg><span data-i18n="gift.domesticTab">Domestic</span></button>
+          <button type="button" role="tab" id="internationalTab" aria-controls="internationalPanel" aria-selected="false" tabindex="-1"><svg class="gift-tab-icon gift-tab-globe" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18M5 6.5h14M5 17.5h14"/></svg><span data-i18n="gift.internationalTab">International</span></button>
+        </div>
+        <div class="gift-grid" data-reveal-group>
+          <div class="gift-card gift-card--domestic" id="domesticPanel" role="tabpanel" aria-labelledby="domesticTab"></div>
+          <div class="gift-card gift-card--international" id="internationalPanel" role="tabpanel" aria-labelledby="internationalTab" hidden></div>
+        </div>
+      </section>
+
+      <section class="paper-section wishes-section" id="wishes">
+        <span class="painting-backdrop painting-wishes" aria-hidden="true"></span>
+        <div class="wishes-layout">
+          <div class="wishes-copy" data-reveal-group>
+            <div class="section-intro" data-i18n="wishes.intro">FROM THE HEART</div>
+            <h2 data-i18n="wishes.title">Words of Love</h2>
+            <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
+            <p class="wishes-intro" data-i18n="wishes.body">Leave a wish for the two of us. Your message will be public in the Words of Love feed.</p>
+
+            <p class="field-hint wishes-edit-hint" data-i18n="wishes.editHint">One wish per invitation. You can come back and edit yours anytime.</p>
+            <form id="wishForm" class="wish-form">
+              <label class="form-label" for="wishName" data-i18n="wishes.name">Your name</label>
+              <p class="guest-name-display" id="wishNameDisplay">—</p>
+              <input type="hidden" id="wishName" name="wishName" />
+              <div id="savedWish" class="saved-wish" hidden><p id="savedWishMessage" class="wish-text"></p><button class="secondary" type="button" id="editWish" data-i18n="wishes.edit">Edit your wish</button></div>
+              <div id="wishFields">
+              <label class="form-label" for="wishMessage" data-i18n="wishes.wish">Your wish</label>
+              <textarea class="field" id="wishMessage" name="wishMessage" rows="3" maxlength="300" placeholder="A few words for Richard &amp; Natasha" required data-i18n-placeholder="wishes.wishPlaceholder"></textarea>
+              <button class="primary form-submit" type="submit" data-i18n="wishes.submit">Send your wish</button>
+              <button class="text-button" id="cancelWish" type="button" data-i18n="rsvp.cancel" hidden>Cancel</button>
+              </div>
+              <div class="form-status" id="wishStatus" role="status" aria-live="polite"></div>
+            </form>
+          </div>
+
+          <div class="wishes-feed" data-reveal>
+            <p class="wishes-empty" id="wishesEmpty" data-i18n="wishes.empty">No wishes yet. Be the first to leave one.</p>
+            <ul class="wish-list" id="wishList" aria-live="polite"></ul>
+          </div>
+        </div>
+      </section>
+
+      <footer class="closing closing-photo">
+        <img class="closing-portrait" src="assets/photos/placeholder-6.jpeg" alt="" loading="lazy" decoding="async" />
+        <span class="closing-blossom" aria-hidden="true"></span>
+        <div class="closing-copy" data-reveal-group>
+        <div class="closing-seal seal-mark" aria-hidden="true"></div>
+        <h2 data-i18n="footer.title">Thank You</h2>
+        <p data-i18n="footer.text">For being part of this beautiful chapter of our lives.</p>
+        <div class="footer-names">Richard &amp; Natasha</div>
+        <p class="footer-date">17 · 01 · 2027 · JAKARTA</p>
+        <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
+        </div>
+      </footer>
+
+<!-- VOWFABLE OUTRO: editorial maker's note, shown AFTER the couple's Thank You -->
+<section class="vf-outro" id="vowfable-outro" aria-labelledby="vowfable-outro-title">
+  <div class="vf-outro__stage">
+    <span class="vf-outro__floral vf-outro__floral--top" aria-hidden="true"></span>
+    <span class="vf-outro__floral vf-outro__floral--bottom" aria-hidden="true"></span>
+    <div class="vf-outro__paper">
+      <div class="vf-outro__photo-col">
+        <figure class="vf-outro__photo">
+          <img src="assets/photos/placeholder-6.jpeg" loading="lazy" decoding="async"
+               alt="Richard and Natasha wearing traditional hanfu" data-vf-alt="vowfable.photoAlt" />
+          <figcaption data-vf-i18n="vowfable.photoCaption">A little piece of our story</figcaption>
+        </figure>
+      </div>
+      <div class="vf-outro__copy">
+        <p class="vf-outro__eyebrow" data-vf-i18n="vowfable.eyebrow">A LITTLE NOTE FROM US</p>
+        <h2 id="vowfable-outro-title" data-vf-i18n="vowfable.heading">Made with love, by us.</h2>
+        <div class="vf-outro__rule" aria-hidden="true"><span>✧</span></div>
+        <p class="vf-outro__message" data-vf-i18n="vowfable.body">We personally designed and built this wedding invitation, piece by piece, as a small part of our story. If you'd love something just as personal for your special day, we'd be delighted to create it with you.</p>
+        <div class="vf-outro__signature">
+          <img src="assets/vowfable/vowfable-seal.svg" alt="" width="56" height="56" loading="lazy" />
+          <div class="vf-outro__brand-text"><strong>Vowfable</strong><span data-vf-i18n="vowfable.studio">Bespoke Digital Wedding Invitations</span></div>
+        </div>
+        <!-- IMPORTANT: Replace YOUR-VOWFABLE-DOMAIN.example with the real Vowfable URL before publishing. -->
+        <a class="vf-outro__button" href="https://YOUR-VOWFABLE-DOMAIN.example/" target="_blank" rel="noopener noreferrer">
+          <span data-vf-i18n="vowfable.cta">Visit Our Studio</span>
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+        </a>
+        <p class="vf-outro__fineprint" data-vf-i18n="vowfable.fineprint">Explore our designs, packages &amp; details</p>
+      </div>
+    </div>
+    <div class="vf-outro__colophon" aria-hidden="true"><span></span><span class="vf-outro__diamond">◇</span><span></span></div>
+  </div>
+</section>
+<!-- END VOWFABLE OUTRO -->
+
+    </main>
+  </div>
+    <div class="lang-switch lang-switch--floating" role="group" aria-label="Language">
+      <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <span aria-hidden="true">/</span>
+      <button type="button" data-lang="id" aria-pressed="false">ID</button>
+    </div>
+  <audio id="bgMusic" src="assets/bgsong/a-heartbeats-turn.mp3" loop preload="none"></audio>
+  <button class="music-toggle" id="musicToggle" type="button" aria-label="Pause background music" aria-pressed="true" hidden>
+    <span aria-hidden="true">♪</span>
+  </button>
+  <dialog id="calendarDialog" class="calendar-dialog" aria-labelledby="calendarTitle" aria-describedby="calendarDescription">
+    <div class="calendar-dialog-head"><h2 id="calendarTitle" data-i18n="details.calendar">Add to calendar</h2><button type="button" id="closeCalendar" class="calendar-close" aria-label="Close" data-i18n-aria="details.calendarClose">×</button></div>
+    <p id="calendarDescription" data-i18n="details.calendarChoose">Choose your calendar app.</p>
+    <h3 class="calendar-provider">Google Calendar</h3>
+    <div class="calendar-options">
+      <a data-google-calendar="ceremony" target="_blank" rel="noopener noreferrer"><span data-i18n="details.holy">Holy Matrimony</span></a>
+      <a data-google-calendar="reception" target="_blank" rel="noopener noreferrer"><span data-i18n="details.reception">Reception</span></a>
+    </div>
+    <h3 class="calendar-provider">Apple / Outlook</h3>
+            <div class="calendar-options">
+              <button type="button" data-calendar="ceremony"><span data-i18n="details.holy">Holy Matrimony</span></button>
+              <button type="button" data-calendar="reception"><span data-i18n="details.reception">Reception</span></button>
+              <button type="button" data-calendar="both"><span data-i18n="details.calendarBoth">Both events</span></button>
+            </div>
+  </dialog>
+</body>
+</html>

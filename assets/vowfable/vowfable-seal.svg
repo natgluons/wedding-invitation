@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" role="img" aria-labelledby="title">
+<title>Vowfable atelier monogram</title>
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#DCC59D"/><stop offset="1" stop-color="#A87E4B"/></linearGradient></defs>
+<circle cx="70" cy="70" r="65" fill="#4A2330" stroke="url(#g)" stroke-width="1.7"/>
+<circle cx="70" cy="70" r="57" fill="none" stroke="#C4A16A" stroke-opacity=".6" stroke-width=".75"/>
+<path d="M34 45 55 100 76 45M42 45l14 39 14-39" fill="none" stroke="#E8CCA0" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M74 44h34M82 44v56M82 71h23" fill="none" stroke="#E8CCA0" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M68 22l3 6 6 2-6 3-3 6-3-6-6-3 6-2z" fill="#DAB67B"/>
+<path d="M68 110l3 3 3-3-3-3z" fill="#DAB67B"/>
+</svg>
