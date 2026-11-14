@@ -10,6 +10,7 @@
 .vf-outro__paper { position:relative; display:grid; grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr); align-items:center; min-height:560px; padding:clamp(30px,4vw,66px); gap:clamp(28px,5vw,80px); background:radial-gradient(ellipse at 49% 15%,#fff8ec 0%,#f4e7d4 65%,#eaddca 100%); box-shadow:0 18px 35px #140a1030; }
 .vf-outro__paper::before { content:""; position:absolute; pointer-events:none; inset:12px; border:1px solid #bc985d6e; }
 .vf-outro__paper::after { content:""; pointer-events:none; position:absolute; bottom:0; right:0; height:25%; width:48%; opacity:.24; background:url('assets/svg/pavilion-landscape.svg') right bottom/contain no-repeat; }
+.vf-outro__paper--solo { grid-template-columns:minmax(0,1fr); }
 .vf-outro__photo-col { position:relative; z-index:1; min-width:0; padding:12px; }
 .vf-outro__photo { position:relative; width:100%; max-width:435px; margin:0 auto; padding:12px 12px 24px; background:#fffaf2; transform:rotate(-3deg); box-shadow:0 16px 35px #42281d34; border:1px solid #d7bf9f; }
 .vf-outro__photo img { display:block; width:100%; height:clamp(240px,29vw,380px); object-fit:cover; object-position:49% 36%; }
