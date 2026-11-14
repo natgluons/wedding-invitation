@@ -241,7 +241,7 @@
       "couple.sonOf": "Putra dari",
       "couple.daughterOf": "Putri dari",
       "interlude.aria": "Janji untuk selamanya",
-      "interlude.quote": "“Dua hati, satu janji. <br />Seumur hidup untuk menjaganya.”",
+      "interlude.quote": "“Dua hati, satu janji —<br />Seumur hidup untuk menjaganya.”",
       "details.intro": "HARI KAMI MENGUCAPKAN JANJI",
       "details.title": "Detail Acara",
       "details.holy": "Pemberkatan Pernikahan",
