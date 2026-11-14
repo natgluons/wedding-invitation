@@ -16,7 +16,7 @@ window.WEDDING_CONFIG = {
   // estimate that keeps calendar apps from rejecting an empty event duration.
   // `end` is optional: when omitted, `calendarDefaultMinutes` is used.
   calendarEvents: [
-    {id: 'ceremony', label: 'details.holy', start: '2027-01-17T11:00:00+07:00', end: '2027-01-17T13:00:00+07:00'},
+    {id: 'ceremony', label: 'details.holy', start: '2027-01-17T13:00:00+07:00', end: '2027-01-17T15:00:00+07:00'},
     {id: 'reception', label: 'details.reception', start: '2027-01-17T18:00:00+07:00', end: '2027-01-17T21:00:00+07:00'}
   ],
   calendarDefaultMinutes: 120,

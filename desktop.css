@@ -47,6 +47,28 @@ h2 { font-family:"Cormorant Garamond",Georgia,serif; font-size:84px; font-weight
 .detail-row .detail-venue { border:0; padding-top:2px; font-size:14px; }
 .details-actions { grid-column:2; margin:26px 0 0; text-align:left; }
 
+/* The couple announcement, laid out as a two-name spread. */
+#couple {
+  display:grid; grid-template-columns:.8fr 1.2fr; gap:0 72px;
+  background:url('assets/blossoms/branch-right.webp') right top/230px auto no-repeat,#f7f1e6;
+}
+#couple .section-head { align-self:center; text-align:left; margin:0; }
+#couple h2 { font-size:94px; max-width:8ch; line-height:.9; margin-block:26px; }
+#couple .divider-img { margin-left:0; }
+#couple .couple-intro { margin:0; max-width:340px; font-size:16px; }
+#couple::after {
+  left:88px;
+  right:88px;
+  bottom:26px;
+}
+.couple-grid { flex-direction:row; align-items:stretch; max-width:none; margin:0; gap:28px; }
+.couple-card { padding:34px 30px; text-align:center; display:flex; flex-direction:column; justify-content:center; }
+.couple-role { font-size:11px; }
+.couple-name { font-size:34px; }
+.couple-card .divider-img { width:180px; margin:14px auto 12px; }
+.couple-parents { font-size:16px; }
+.couple-amp { align-self:center; font-size:56px; flex:none; }
+
 .countdown-section {
   display:grid; grid-template-columns:.9fr 1.1fr; column-gap:60px; padding:68px 88px;
   text-align:left; position:relative;

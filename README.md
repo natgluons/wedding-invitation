@@ -12,7 +12,7 @@ For best results, from the repo root run: `python -m http.server 8000` and open 
 
 - **Couple:** Richard Putra, S.Kom. & Kristy Natasha Yohanes, S.Si., M.Sc. (shown as **Richard & Natasha**)
 - **Date:** Sunday, 17 January 2027
-  - **Holy Matrimony:** 11:00 WIB – finish
+  - **Holy Matrimony:** 13:00 WIB – finish
   - **Reception:** 18:00 WIB – finish
 - **Venue:** Grand Mercure Kemayoran, Magnolia Ballroom, Jakarta, Indonesia
 - **RSVP deadline:** 3 January 2027
