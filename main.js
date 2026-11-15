@@ -45,21 +45,21 @@
       "couple.sonOf": "The son of",
       "couple.daughterOf": "The daughter of",
       "interlude.aria": "A promise of forever",
-      "interlude.quote": "“Two hearts, one promise —<br />A lifetime to keep it.”",
+      "interlude.quote": "“Two hearts, one promise. <br />A lifetime to keep it.”",
       "details.intro": "THE DAY WE SAY I DO",
       "details.title": "Wedding Details",
       "details.holy": "Holy Matrimony",
       "details.reception": "Reception",
       "details.date": "Sunday, 17 January 2027",
-      "details.holyTime": "13:00 WIB – finish",
-      "details.receptionTime": "18:00 WIB – finish",
+      "details.holyTime": "13:00 WIB - finish",
+      "details.receptionTime": "18:00 WIB - finish",
       "details.venue": "Grand Mercure Kemayoran<br />Magnolia Ballroom, Jakarta, Indonesia",
       "details.viewLocation": 'View location',
       "details.calendar": "Add to calendar",
       "details.calendarBoth": "Both events",
       "details.calendarClose": "Close",
       "details.calendarChoose": "Choose your calendar app.",
-      "details.calendarTitle": "Richard & Natasha — {event}",
+      "details.calendarTitle": "Richard & Natasha -  {event}",
       "countdown.aria": "Countdown to the wedding",
       "countdown.intro": "COUNTING DOWN TO FOREVER",
       "countdown.title": "We can’t wait",
@@ -247,15 +247,15 @@
       "details.holy": "Pemberkatan Pernikahan",
       "details.reception": "Resepsi",
       "details.date": "Minggu, 17 Januari 2027",
-      "details.holyTime": "13:00 WIB – selesai",
-      "details.receptionTime": "18:00 WIB – selesai",
+      "details.holyTime": "13:00 WIB - selesai",
+      "details.receptionTime": "18:00 WIB - selesai",
       "details.venue": "Grand Mercure Kemayoran<br />Magnolia Ballroom, Jakarta, Indonesia",
       "details.viewLocation": 'Lihat lokasi',
       "details.calendar": "Tambah ke kalender",
       "details.calendarBoth": "Kedua acara",
       "details.calendarClose": "Tutup",
       "details.calendarChoose": "Pilih aplikasi kalender Anda.",
-      "details.calendarTitle": "Richard & Natasha — {event}",
+      "details.calendarTitle": "Richard & Natasha -  {event}",
       "countdown.aria": "Hitung mundur menuju pernikahan",
       "countdown.intro": "MENGHITUNG HARI MENUJU SELAMANYA",
       "countdown.title": "Kami sangat menantikan hari bahagia ini",
@@ -940,8 +940,8 @@
   guestCountSelect.value = '';
 
   function renderGuestCopy() {
-    document.getElementById('guestNameDisplay').textContent = guestNameInput.value || '—';
-    document.getElementById('wishNameDisplay').textContent = guestNameInput.value || '—';
+    document.getElementById('guestNameDisplay').textContent = guestNameInput.value || '- ';
+    document.getElementById('wishNameDisplay').textContent = guestNameInput.value || '- ';
     if (!personalization.invitedName) {
       coverGuest.hidden = true;
       guestSeatNote.hidden = true;

@@ -4,7 +4,7 @@ const vm = require('node:vm');
 const source = fs.readFileSync('main.js', 'utf8');
 const context = vm.createContext({TextEncoder, Date, URL, URLSearchParams,
   config:{calendarLocation:'Magnolia Ballroom, Jakarta', calendarTimeZone:'Asia/Jakarta', calendarDefaultMinutes:120},
-  t:key=>({'details.calendarTitle':'Richard & Natasha — {event}','details.holy':'Holy Matrimony','details.reception':'Reception'}[key]),
+  t:key=>({'details.calendarTitle':'Richard & Natasha -  {event}','details.holy':'Holy Matrimony','details.reception':'Reception'}[key]),
   format:(text,values)=>text.replace('{event}',values.event)});
 vm.runInContext(source.slice(source.indexOf('  function calendarTimestamp('),source.indexOf('  function renderCalendarTimes(')),context);
 context.events = [{id:'ceremony',label:'details.holy',start:'2027-01-17T11:00:00+07:00'},
@@ -44,5 +44,5 @@ assert.equal(google.searchParams.get('etz'), 'Asia/Jakarta');
 // `ctz` is for local (non-Z) times and must not accompany UTC timestamps.
 assert.equal(google.searchParams.has('ctz'), false);
 assert.equal(google.searchParams.get('location'), 'Magnolia Ballroom, Jakarta');
-assert.equal(google.searchParams.get('text'), 'Richard & Natasha — Holy Matrimony');
+assert.equal(google.searchParams.get('text'), 'Richard & Natasha -  Holy Matrimony');
 console.log('Google Calendar links passed: non-empty UTC range, stz/etz zones, no ctz conflict, and encoded title/location.');

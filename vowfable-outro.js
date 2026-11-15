@@ -1,4 +1,4 @@
-/* Vowfable Maker's Note — safe, independent EN/ID translations.
+/* Vowfable Maker's Note -  safe, independent EN/ID translations.
    The existing invitation's main.js language switch updates <html lang="…">.
    Watching only this attribute keeps the new component independent of RSVP and wishes. */
 (() => {
