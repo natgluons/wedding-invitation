@@ -6,7 +6,7 @@
 
 Open `index.html` in a browser (or serve the repo root with any static server). Tap the wax seal / **Open the letter** button. The envelope has a separately animated flap, front pocket, emerging letter, wax seal, and tassel. The invitation then shows a couple hero, event details, story, RSVP, gift details and closing. The background song starts when the letter is opened, and the note button in the bottom-right pauses or resumes it.
 
-For best results, from the repo root run: `python -m http.server 8000` and open `http://localhost:8000/`.
+For best results, from the repo root run: `python -m http.server 8000` and open `http://localhost:8000/?code=HDUQCDH404&lang=en&name=testing`.
 
 ## Current invitation
 
@@ -114,10 +114,9 @@ The **Words of Love** section above the closing screen lets guests leave a wish.
 - `rsvp-backend/Code.gs`: Google Apps Script backend for the RSVP sheet
 - `tools/generate-links.js`: builds personalised links from a guest CSV
 - `guests.example.csv`: guest list template (`name,seats`)
-- `assets/svg/`: source assets in editable, resolution-independent SVG (22 files)
-- `assets/png/`: exported PNG variants for common decorative layers (15 files)
-- `assets/photos/placeholder-1.jpeg`: front/top portrait placeholder (replace with the couple's photo)
-- `assets/photos/placeholder-2..6.jpeg`: Our Story portrait, three gallery placeholders, and the closing portrait (replace with the couple's photos)
+- `assets/svg/`: all vector assets, including the Vowfable icon and outro ornaments
+- `assets/images/`: decorative WebP artwork (blossoms, ink-wash, paintings; provenance in its README)
+- `assets/before-prewed/`: the couple's real prewedding photos used for the hero, interlude, Our Story, gallery and closing portrait
 - `assets/bgsong/a-heartbeats-turn.mp3`: background music, starts when the letter is opened
 - `references/design-reference.png`: earlier generated visual design reference; **not intended as a directly usable interface**
 - `design-tokens.json`: colors, spacing, motion and typography values
@@ -162,7 +161,7 @@ The header links to the existing sections. No additional pages or sections were 
 
 ## Replace with the real photos
 
-Replace `assets/photos/placeholder-1.jpeg` (hero/front portrait), `assets/photos/placeholder-2.jpeg` (Our Story portrait), `assets/photos/placeholder-3..5.jpeg` (three-photo gallery) and `assets/photos/placeholder-6.jpeg` (closing portrait) with your own photos, preserving the paths or editing the HTML. The portrait interlude uses `demo-hanfu-couple.jpg`, and every photo appears only once across the page. Keep names, date, address, and RSVP text as HTML, not rasterized images.
+The page now uses the real photos in `assets/before-prewed/`: the hero uses `cover.jpg`, the interlude `beforeprewed-4.webp`, Our Story `503000574_18483465487067188_5709899345888219375_n.webp` (the wedding rings), the gallery `502737586_18483465451067188_7855030166555426316_n.webp`, `beforeprewed-5.webp` and `beforeprewed-3.webp`, the RSVP accent `1795070522637.jpg`, and the closing portrait `couple-lanterns-square.webp`. Swap those paths in `index.html` and `desktop.css` to change any photo. Keep names, date, address, and RSVP text as HTML, not rasterized images.
 
 ## Core interaction sequence
 
