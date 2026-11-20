@@ -33,7 +33,7 @@
       "cover.hint": "Tap the seal to open your invitation.",
       "cover.skip": "Skip the opening",
       "hero.aria": "The wedding of Richard and Natasha",
-      "hero.alt": "Placeholder couple portrait in traditional hanfu, replace with the couple's prewedding photograph",
+      "hero.alt": "The couple together",
       "hero.eyebrow": "THE WEDDING OF",
       "hero.intro": "With joyful hearts and our families,<br />we invite you to celebrate our wedding.",
       "hero.date": "SUNDAY · 17 JANUARY 2027 · JAKARTA",
@@ -71,7 +71,7 @@
       "countdown.note": "Sunday, 17 January 2027 · 18:00 WIB",
       "story.intro": "A JOURNEY OF TWO",
       "story.title": "Our Story",
-      "story.photoAlt": "Placeholder hanfu couple photo",
+      "story.photoAlt": "The couple's wedding rings",
       "story.lead": "Ours is a love written across cities and time zones, and now, finally, we are counting down to the day we say “I do.”",
       "story.m1date": "APRIL 2021",
       "story.m1title": "How We Met",
@@ -229,7 +229,7 @@
       "cover.hint": "Ketuk segelnya untuk membuka undangan.",
       "cover.skip": "Lewati pembuka",
       "hero.aria": "Pernikahan Richard dan Natasha",
-      "hero.alt": "Foto pasangan dalam pakaian hanfu, ganti dengan foto prewedding pasangan",
+      "hero.alt": "Foto pasangan bersama",
       "hero.eyebrow": "PERNIKAHAN",
       "hero.intro": "Dengan hati yang penuh sukacita dan bersama keluarga kami,<br />kami mengundang Anda untuk merayakan pernikahan kami.",
       "hero.date": "MINGGU · 17 JANUARI 2027 · JAKARTA",
@@ -267,7 +267,7 @@
       "countdown.note": "Minggu, 17 Januari 2027 · 18:00 WIB",
       "story.intro": "PERJALANAN KAMI BERDUA",
       "story.title": "Kisah Kami",
-      "story.photoAlt": "Foto pasangan hanfu",
+      "story.photoAlt": "Cincin pernikahan pasangan",
       "story.lead": "Kisah kami terjalin di antara kota dan zona waktu. Kini, kami menghitung hari menuju janji suci.",
       "story.m1date": "APRIL 2021",
       "story.m1title": "Pertama Bertemu",
@@ -557,7 +557,7 @@
       const top = photo.top - scrollTop;
       const bottom = top + photo.frameHeight;
       if (!photo.height || bottom <= 0 || top >= viewport) continue;
-      const minimum = Math.min(viewport, bottom) - photo.height - top;
+      const minimum = Math.min(0, Math.min(viewport, bottom) - photo.height - top);
       const maximum = Math.max(0, top) - top;
       const desired = photoMotion.matches ? 0 : top < 0 ? -top * .85
         : photo.scene.matches('.hero') ? 0 : -top * .85;
