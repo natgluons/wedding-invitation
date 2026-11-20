@@ -162,6 +162,8 @@
       "gift.methods": "Gift methods",
       "gift.unavailable": "Gift details are being prepared.",
       "gift.networkNote": "Use the selected network when sending.",
+      "gift.wishlistBody": "Prefer to give something for our home? We have put together a small wishlist, so you can see what we still need and mark a gift as taken.",
+      "gift.wishlistLink": "Open the wishlist",
       "wishes.intro": "FROM THE HEART",
       "wishes.title": "Words of Love",
       "wishes.body": "Leave a wish for the two of us. Your message will be public in the Words of Love feed.",
@@ -358,6 +360,8 @@
       "gift.methods": "Pilihan hadiah",
       "gift.unavailable": "Informasi hadiah sedang disiapkan.",
       "gift.networkNote": "Gunakan jaringan yang dipilih saat mengirim.",
+      "gift.wishlistBody": "Ingin memberi sesuatu untuk rumah kami? Kami menyiapkan daftar hadiah kecil agar Anda dapat melihat apa yang masih kami butuhkan dan menandai hadiah yang sudah diambil.",
+      "gift.wishlistLink": "Buka daftar hadiah",
       "wishes.intro": "DARI HATI",
       "wishes.title": "Ucapan untuk Kami",
       "wishes.body": "Tuliskan doa dan harapan untuk kami. Pesan Anda akan ditampilkan di bagian Ucapan untuk Kami agar dapat dibaca tamu lain.",
@@ -476,6 +480,19 @@
     if (music) updateMusicButton(!music.paused);
   }
 
+  // The wishlist is a separate page, so every link to it must carry the guest's
+  // code and language, or the guest arrives without an identity to claim with.
+  function syncWishlistLink() {
+    const link = document.getElementById('wishlistLink');
+    if (!link) return;
+    const url = new URL('wishlist.html', window.location.href);
+    if (inviteCode) url.searchParams.set('code', inviteCode);
+    url.searchParams.set('lang', currentLang);
+    // `from` lets the wishlist return the guest to the gift section.
+    url.searchParams.set('from', '#gift');
+    link.href = url.pathname + url.search;
+  }
+
   function setLanguage(lang) {
     if (!translations[lang]) return;
     try { window.localStorage.setItem(LANG_KEY, lang); } catch {}
@@ -483,6 +500,7 @@
     url.searchParams.set('lang', lang);
     window.history.replaceState(null, '', url);
     applyLanguage(lang);
+    syncWishlistLink();
   }
 
   for (const button of document.querySelectorAll('.lang-switch [data-lang]')) {
@@ -1744,6 +1762,7 @@
   }
 
   applyLanguage(currentLang);
+  syncWishlistLink();
   loadInvitation();
   openingAssetsReady.then(() => {
     clearTimeout(window.assetLoadTimeout);

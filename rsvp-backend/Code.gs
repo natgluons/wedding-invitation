@@ -36,6 +36,8 @@ const EVENT_LABELS = {
   'reception': 'Reception only'
 };
 const WISHES_HEADERS = ['Submitted at', 'Name', 'Message', 'Hide', 'Guest code', 'Request ID'];
+const WISHLIST_SHEET = 'Wishlist';
+const WISHLIST_HEADERS = ['ID', 'Name', 'Description', 'Image', 'Link', 'Price', 'Hide', 'Claimed by', 'Claimed at', 'Claim ID'];
 
 function setup() {
   const existing = SpreadsheetApp.openById(SHEET_ID).getSheetByName(GUESTS_SHEET);
@@ -57,6 +59,7 @@ function setup() {
     settings.appendRow(['Invitation URL', 'https://books-house-our-seconds.trycloudflare.com/']);
   }
   setupGifts_();
+  setupWishlist_();
   const rsvpSheet = getSheet_(RSVP_SHEET, RSVP_HEADERS);
   const wishesSheet = getSheet_(WISHES_SHEET, WISHES_HEADERS);
   ensureHeaders_(rsvpSheet, RSVP_HEADERS.concat(['Request ID']));
@@ -87,7 +90,7 @@ function doGet(e) {
   try {
     if (p.action === 'guest') {
       const guest = findGuest_(p.code);
-      payload = {ok: true, guest: {name: guest.name, maxGuests: guest.maxGuests}, response: recoverLatestRsvp_(p.code), wish: readOwnWish_(p.code), gifts: readGifts_()};
+      payload = {ok: true, guest: {name: guest.name, maxGuests: guest.maxGuests}, response: recoverLatestRsvp_(p.code), wish: readOwnWish_(p.code), gifts: readGifts_(), wishlist: readWishlist_(p.code)};
     } else if (p.action === 'receipt') {
       findGuest_(p.code);
       const key = receiptKey_(p.code, p.requestId);
@@ -97,6 +100,12 @@ function doGet(e) {
         const ownWish = readOwnWish_(p.code);
         if (ownWish && ownWish.requestId === String(p.requestId)) {
           return jsonOrCallback_({ok: true, wish: ownWish, wishes: readWishes_()}, p.callback);
+        }
+        // A claim whose HTTP response was lost is read back from the sheet, so
+        // the guest gets the real outcome instead of an error.
+        const claim = readWishlistClaim_(p.code, String(p.requestId));
+        if (claim) {
+          return jsonOrCallback_({...claim, gift: {id: claim.id, name: claim.name, claimed: claim.claimed}}, p.callback);
         }
         const audit = findHistoryRequest_(getSheet_(RSVP_HISTORY, HISTORY_HEADERS), p.code, String(p.requestId));
         if (audit) recoverLatestRsvp_(p.code);
@@ -113,6 +122,23 @@ function doGet(e) {
       .setMimeType(ContentService.MimeType.JAVASCRIPT);
   }
   return json_(payload);
+}
+
+function setupWishlist_() {
+  const sheet = getSheet_(WISHLIST_SHEET, WISHLIST_HEADERS);
+  // Starter rows use empty https images so the page shows its own ornament
+  // rather than silently rendering a broken picture.
+  const examples = [
+    ['dinner-ware', 'Dinnerware Set', 'A table setting for four to start our home together.', '', '', 'Rp 1.500.000', false],
+    ['linen-set', 'Bed Linen Set', 'Soft cotton sheets in a warm neutral shade.', '', '', 'Rp 900.000', false],
+    ['coffee-brewer', 'Coffee Brewer', 'For slow Sunday mornings at home.', '', '', 'Rp 750.000', false],
+    ['cookware', 'Cookware Set', 'Pots and pans for our first kitchen.', '', '', 'Rp 2.000.000', false]
+  ];
+  const values = sheet.getDataRange().getValues();
+  const headers = values[0].map(value => String(value).trim());
+  if (values.length > 1) return;
+  sheet.getRange(2, 1, examples.length, headers.length)
+    .setValues(examples.map(row => headers.map(header => row[WISHLIST_HEADERS.indexOf(header)] ?? '')));
 }
 
 function setupGifts_() {
@@ -185,6 +211,119 @@ function receiptKey_(code, requestId) {
   return 'rsvp:' + code + ':' + requestId;
 }
 
+// Only http(s) image sources are kept: an unchecked value here would end up in
+// an <img src> on a public page.
+function safeImage_(value) {
+  const url = String(value || '').trim();
+  return /^https:\/\/[^\s]+$/i.test(url) ? url : '';
+}
+
+function wishlistRows_() {
+  const sheet = getSheet_(WISHLIST_SHEET, WISHLIST_HEADERS);
+  const values = sheet.getDataRange().getValues();
+  const headers = values[0].map(value => String(value).trim());
+  return {sheet, headers, rows: values.slice(1)};
+}
+
+function wishlistFromRow_(row, headers) {
+  const get = header => row[headers.indexOf(header)];
+  const id = String(get('ID') || '').trim();
+  let link = '';
+  try {
+    const parsed = new URL(String(get('Link') || '').trim());
+    if (parsed.protocol === 'https:' || parsed.protocol === 'http:') link = parsed.href;
+  } catch (error) { /* A malformed link is simply dropped. */ }
+  return {
+    id,
+    name: String(get('Name') || '').trim(),
+    description: String(get('Description') || '').trim(),
+    image: safeImage_(get('Image')),
+    link,
+    price: String(get('Price') || '').trim(),
+    hidden: isTrue_(get('Hide')),
+    // The claimer is kept in the sheet for the couple, never published.
+    claimed: Boolean(String(get('Claimed by') || '').trim()),
+    claimId: String(get('Claim ID') || '').trim()
+  };
+}
+
+function readWishlist_(code) {
+  const info = wishlistRows_();
+  const seen = new Set();
+  return info.rows.flatMap(row => {
+    const gift = wishlistFromRow_(row, info.headers);
+    if (gift.hidden || !/^[a-zA-Z0-9_-]{1,64}$/.test(gift.id) || seen.has(gift.id)) return [];
+    if (!gift.name) return [];
+    seen.add(gift.id);
+    // `mine` tells this guest which claims are theirs. It is computed from the
+    // caller's own code, so it never reveals another party's claim.
+    const holder = String(row[info.headers.indexOf('Claimed by')] || '').trim();
+    return [{id: gift.id, name: gift.name, description: gift.description,
+      image: gift.image, link: gift.link, price: gift.price, claimed: gift.claimed,
+      mine: Boolean(code) && holder === String(code)}];
+  });
+}
+
+// Looks up the outcome of one claim request after an unreadable HTTP response.
+// Claim ID is rewritten on every successful claim or release, so a matching
+// row is proof that this guest's request landed.
+function readWishlistClaim_(code, claimId) {
+  if (!/^[a-zA-Z0-9-]{16,80}$/.test(claimId)) return null;
+  const info = wishlistRows_();
+  const claimColumn = info.headers.indexOf('Claim ID');
+  const byColumn = info.headers.indexOf('Claimed by');
+  const row = info.rows.find(candidate => String(candidate[claimColumn] || '').trim() === claimId);
+  if (!row) return null;
+  const gift = wishlistFromRow_(row, info.headers);
+  const claimed = String(row[byColumn] || '').trim() === String(code);
+  return {ok: true, claimed, id: gift.id, name: gift.name, claimId};
+}
+
+// Claims are read-modify-write on one row, so they must run under the script
+// lock. Claim and release share this function, and both are replay-safe.
+function saveClaim_(data) {
+  // Authorizes the code and rejects revoked invitations before anything is written.
+  findGuest_(data.code);
+  const claimId = String(data.requestId || '');
+  if (!/^[a-zA-Z0-9-]{16,80}$/.test(claimId)) throw new Error('Invalid claim request');
+  const release = data.release === true;
+  const id = String(data.id || '').trim();
+  if (!/^[a-zA-Z0-9_-]{1,64}$/.test(id)) throw new Error('Invalid gift');
+  // Resolve columns from the live header row so a reordered sheet keeps working.
+  const info = wishlistRows_();
+  const index = info.rows.findIndex(row => String(row[info.headers.indexOf('ID')] || '').trim() === id);
+  if (index < 0) throw new Error('Gift not found');
+  const gift = wishlistFromRow_(info.rows[index], info.headers);
+  const holder = String(info.rows[index][info.headers.indexOf('Claimed by')] || '').trim();
+  const row = index + 2;
+  const column = header => info.headers.indexOf(header) + 1;
+  const publicGift = claimed => ({id, name: gift.name, claimed});
+  if (release) {
+    // Releasing another guest's claim is refused. An already-free row is left
+    // untouched so a stale replay cannot clear a newer claim.
+    if (holder && holder !== data.code) throw new Error('This gift was claimed on another invitation');
+    if (holder === data.code) {
+      info.sheet.getRange(row, column('Claimed by')).setValue('');
+      info.sheet.getRange(row, column('Claimed at')).clearContent();
+      info.sheet.getRange(row, column('Claim ID')).setValue(claimId);
+    }
+    return {ok: true, claimed: false, gift: publicGift(false)};
+  }
+  if (holder && holder !== data.code) {
+    // Already taken by another party. Reporting success lets their page refresh
+    // the item into the taken state instead of showing an error.
+    return {ok: true, claimed: true, byOther: true, gift: publicGift(true)};
+  }
+  // Our own claim is left alone, including the original timestamp, so repeated
+  // taps and replayed requests stay idempotent.
+  if (!holder) {
+    info.sheet.getRange(row, column('Claimed by')).setValue(data.code);
+    info.sheet.getRange(row, column('Claimed at')).setNumberFormat('yyyy-mm-dd hh:mm:ss').setValue(new Date());
+    info.sheet.getRange(row, column('Claim ID')).setValue(claimId);
+  }
+  return {ok: true, claimed: true, gift: publicGift(true)};
+}
+
 function findGuest_(code) {
   if (!/^[a-zA-Z0-9]{8,64}$/.test(String(code))) throw new Error('Invalid invitation code format');
   const sheet = getSheet_(GUESTS_SHEET, GUEST_HEADERS);
@@ -215,7 +354,12 @@ function doPost(e) {
     const previous = cache.get(key);
     if (previous) return json_(JSON.parse(previous));
     let result;
-    try { result = String(data.type || 'rsvp') === 'wish' ? saveWish_(data) : saveRsvp_(data); }
+    try {
+      const type = String(data.type || 'rsvp');
+      if (type === 'wish') result = saveWish_(data);
+      else if (type === 'claim') result = saveClaim_(data);
+      else result = saveRsvp_(data);
+    }
     catch (error) { result = {ok: false, error: String(error.message || error)}; }
     if (result.ok) cache.put(key, JSON.stringify(result), 600);
     return json_(result);
@@ -480,10 +624,14 @@ function getSheet_(name, headers) {
   // Append missing headers so existing columns, custom fields and data remain in place.
   const lastColumn = Math.max(sheet.getLastColumn(), 1);
   const current = sheet.getLastRow() === 0 ? [] : sheet.getRange(1, 1, 1, lastColumn).getValues()[0];
-  if (name === GUESTS_SHEET && current.length) {
+  // The guest whitelist is strict: a renamed or shortened tab must fail loudly
+  // rather than silently revoke or admit everyone. Every other tab appends its
+  // missing headers, so a hand-made Wishlist gains claim columns on first use.
+  const strict = name === GUESTS_SHEET;
+  if (strict && current.length) {
     const names = current.map(value => String(value).trim());
     const missing = headers.filter(header => !names.includes(header));
-    if (missing.length) throw new Error('Missing Guests headers: ' + missing.join(', '));
+    if (missing.length) throw new Error('Missing ' + name + ' headers: ' + missing.join(', '));
     return sheet;
   }
   if (!current.length) {
