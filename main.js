@@ -52,8 +52,9 @@
       "details.reception": "Reception",
       "details.date": "Sunday, 17 January 2027",
       "details.holyTime": "13:00 WIB - finish",
-      "details.receptionTime": "18:00 WIB - finish",
-      "details.venue": "Grand Mercure Kemayoran<br />Magnolia Ballroom, Jakarta, Indonesia",
+      "details.receptionTime": "19.00 WIB - finish",
+      "details.holyVenue": "Grand Mercure Kemayoran<br />Tulip 2 lt 7, Jakarta, Indonesia",
+      "details.receptionVenue": "Grand Mercure Kemayoran<br />Magnolia Grand Ballroom lt 5, Jakarta, Indonesia",
       "details.viewLocation": 'View location',
       "details.calendar": "Add to calendar",
       "details.calendarBoth": "Both events",
@@ -68,7 +69,7 @@
       "countdown.hours": "Hours",
       "countdown.minutes": "Minutes",
       "countdown.seconds": "Seconds",
-      "countdown.note": "Sunday, 17 January 2027 · 18:00 WIB",
+      "countdown.note": "Sunday, 17 January 2027 · 19.00 WIB",
       "story.intro": "A JOURNEY OF TWO",
       "story.title": "Our Story",
       "story.photoAlt": "The couple's wedding rings",
@@ -248,8 +249,9 @@
       "details.reception": "Resepsi",
       "details.date": "Minggu, 17 Januari 2027",
       "details.holyTime": "13:00 WIB - selesai",
-      "details.receptionTime": "18:00 WIB - selesai",
-      "details.venue": "Grand Mercure Kemayoran<br />Magnolia Ballroom, Jakarta, Indonesia",
+      "details.receptionTime": "19.00 WIB - selesai",
+      "details.holyVenue": "Grand Mercure Kemayoran<br />Tulip 2 lt 7, Jakarta, Indonesia",
+      "details.receptionVenue": "Grand Mercure Kemayoran<br />Magnolia Grand Ballroom lt 5, Jakarta, Indonesia",
       "details.viewLocation": 'Lihat lokasi',
       "details.calendar": "Tambah ke kalender",
       "details.calendarBoth": "Kedua acara",
@@ -264,7 +266,7 @@
       "countdown.hours": "Jam",
       "countdown.minutes": "Menit",
       "countdown.seconds": "Detik",
-      "countdown.note": "Minggu, 17 Januari 2027 · 18:00 WIB",
+      "countdown.note": "Minggu, 17 Januari 2027 · 19.00 WIB",
       "story.intro": "PERJALANAN KAMI BERDUA",
       "story.title": "Kisah Kami",
       "story.photoAlt": "Cincin pernikahan pasangan",
@@ -958,8 +960,8 @@
     guestSeatNote.hidden = true;
   }
 
-  // Countdown to the ceremony: Sunday, 17 January 2027, 18:00 WIB (UTC+7).
-  const weddingDate = new Date(config.weddingDate || '2027-01-17T18:00:00+07:00');
+  // Countdown to the reception: Sunday, 17 January 2027, 19:00 WIB (UTC+7).
+  const weddingDate = new Date(config.weddingDate || '2027-01-17T19:00:00+07:00');
   const countdown = {
     days: document.getElementById('countDays'),
     hours: document.getElementById('countHours'),
