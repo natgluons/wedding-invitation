@@ -13,6 +13,25 @@ assert.match(html, /public in the Words of Love feed/);
 assert.doesNotMatch(frontend, /STORAGE_KEY|readSavedResponse/);
 assert.match(frontend, /backendQuery\(\{action: 'guest', code: inviteCode\}\)/);
 
+// The wishlist is a separate page: it must be reachable from the gift section,
+// and that link must carry the guest's code or claiming is impossible.
+assert.match(html, /id="wishlistLink"/);
+assert.match(html, /data-i18n="gift\.wishlistLink"/);
+assert.match(frontend, /syncWishlistLink/);
+assert.match(frontend, /url\.searchParams\.set\('code', inviteCode\)/);
+const wishlistPage = fs.readFileSync('wishlist.html', 'utf8');
+const wishlistScript = fs.readFileSync('wishlist.js', 'utf8');
+assert.match(wishlistPage, /id="wishlistGrid"/);
+assert.match(wishlistPage, /id="claimDialog"/);
+// Claims must never be sent over JSONP, which mobile browsers block.
+assert.doesNotMatch(wishlistScript, /createElement\('script'\)/);
+assert.match(wishlistScript, /type: 'claim'/);
+// Item content is written as text nodes. The only innerHTML assignments are
+// hardcoded SVG icons, so a sheet value can never become markup.
+assert.doesNotMatch(wishlistScript, /\.innerHTML\s*=\s*gift\./, 'sheet content is never injected as HTML');
+assert.doesNotMatch(wishlistScript, /\.insertAdjacentHTML\(/, 'sheet content is never injected as HTML');
+assert.doesNotMatch(wishlistScript, /textContent\s*\+=/, 'item text is assigned, never concatenated');
+
 const code = 'K7ZM3PQ8X2';
 const other = 'b'.repeat(32);
 const guests = [['Name','Max guests','Revoke','Code','Invitation link'], ['Alice',2,'',code,''], ['Alice',1,false,other,'']];
@@ -27,6 +46,18 @@ function sheet(rows) {
     getRange(r, c, h = 1, w = 1) {
       return {
         getValues: () => Array.from({length:h}, (_,i) => Array.from({length:w}, (_,j) => rows[r-1+i]?.[c-1+j] ?? '')),
+        // Cosmetic sheet formatting is a no-op in the harness.
+        setFontWeight() { return this; },
+        setNumberFormat() { return this; },
+        setBackground() { return this; },
+        setColumnWidth() { return this; },
+        setFrozenRows() { return this; },
+        clearContent() {
+          for (let i = 0; i < h; i++) for (let j = 0; j < w; j++) {
+            if (rows[r-1+i]) rows[r-1+i][c-1+j] = '';
+          }
+          return this;
+        },
         setValues: values => {
           if (this.failNextWrite) { this.failNextWrite = false; throw new Error('simulated current projection failure'); }
           values.forEach((row,i) => row.forEach((value,j) => { rows[r-1+i] ||= []; rows[r-1+i][c-1+j] = value; }));
@@ -35,7 +66,10 @@ function sheet(rows) {
         getA1Notation: () => `${String.fromCharCode(64+c)}${r}`
       };
     },
-    appendRow: row => rows.push([...row])
+    appendRow: row => rows.push([...row]),
+    // Sheet-level formatting helpers are cosmetic no-ops in the harness.
+    setColumnWidth() { return this; },
+    setFrozenRows() { return this; }
   };
 }
 
@@ -57,7 +91,11 @@ sheets.Gifts = sheet([
 const cache = new Map();
 const lockStats = {waits:0};
 const context = vm.createContext({
-  SpreadsheetApp: {openById: () => ({getSheetByName: name => sheets[name]})},
+  SpreadsheetApp: {openById: () => ({
+    getSheetByName: name => sheets[name],
+    // Mirrors getSheet_: an absent tab is created on first use.
+    insertSheet: name => (sheets[name] = sheet([]))
+  })},
   Utilities: {formatDate: () => '2026-11-12 12:00:00'},
   LockService: {getScriptLock: () => ({waitLock(){lockStats.waits++;}, releaseLock(){}})},
   CacheService: {getScriptCache: () => ({get:key => cache.get(key) || null, put:(key,value) => cache.set(key,value)})},
@@ -190,6 +228,98 @@ context.e={parameter:{action:'guest',code}};
 assert.equal(json(run('doGet(e)')).gifts.length,3);
 assert.equal(JSON.stringify(json(run('doGet(e)')).gifts).includes('Never expose this'),false);
 console.log('Gift checks passed: visibility, blank filtering, crypto networks, HTTPS links, header reordering, and whitelisted response fields.');
+
+// Wishlist: the public read never leaks claimer identity, and claims are
+// bound to the invitation code that made them.
+sheets.Wishlist = sheet([
+  ['ID','Name','Description','Image','Link','Price','Hide','Claimed by','Claimed at','Claim ID'],
+  ['dinner-ware','Dinnerware Set','A table setting.','https://cdn.example.test/plate.jpg','https://shop.example.test/plate','Rp 1.500.000',false,'','',''],
+  ['hidden-row','Secret Gift','Not published.','','','',true,'','',''],
+  ['no-name','','Missing a name.','','','',false,'','',''],
+  ['odd id!','Bad Id','Invalid id.','','','',false,'','',''],
+  ['unsafe-image','Unsafe Image','','javascript:alert(1)','javascript:alert(1)','',false,'','',''],
+  ['linen-set','Linen Set','Soft sheets.','http://insecure.example.test/x.jpg','','','',false,'','','']
+]);
+let list = run('readWishlist_()');
+assert.equal(list.length,3,'hidden, nameless and malformed rows are dropped');
+assert.equal(list.find(gift=>gift.id==='odd id!'),undefined,'IDs must match the allowed pattern');
+const unsafe = list.find(gift=>gift.id==='unsafe-image');
+assert.equal(unsafe.image,'','non-https images are stripped');
+assert.equal(unsafe.link,'','javascript: links are stripped');
+assert.equal(list.find(gift=>gift.id==='linen-set').image,'','http images are stripped');
+assert.equal(list.every(gift=>!('claimedBy' in gift) && !('claimId' in gift)),true,'public payload carries no claimer identity');
+const guestLookup = json(run('doGet({parameter:{action:"guest",code:"' + code + '"}})'));
+assert.equal(guestLookup.wishlist.length,3,'the guest lookup ships the wishlist alongside gifts');
+assert.equal(JSON.stringify(guestLookup.wishlist).includes('Claimed by'),false);
+
+const claimIds = {first:'claim-1111111111111111', second:'claim-2222222222222222', release:'claim-3333333333333333'};
+let result = json(post({type:'claim', code, requestId:claimIds.first, id:'dinner-ware'}));
+assert.equal(result.ok,true);
+assert.equal(result.claimed,true);
+assert.equal(result.gift.name,'Dinnerware Set');
+const claimRow = sheets.Wishlist.rows.find(row=>row[0]==='dinner-ware');
+assert.equal(claimRow[7],code,'the claim records the invitation code');
+assert.equal(claimRow[9],claimIds.first,'the claim records its request id');
+assert.ok(claimRow[8] && !Number.isNaN(new Date(claimRow[8]).getTime()),'the claim records when it happened');
+
+result = json(post({type:'claim', code:other, requestId:claimIds.second, id:'dinner-ware'}));
+assert.equal(result.byOther,true,'a second household sees the item as taken');
+assert.equal(sheets.Wishlist.rows.find(row=>row[0]==='dinner-ware')[7],code,'another household cannot overwrite the claim');
+assert.equal(JSON.stringify(result).includes('Alice'),false,'the claimer is never revealed to other guests');
+
+const firstStamp = sheets.Wishlist.rows.find(row=>row[0]==='dinner-ware')[8];
+result = json(post({type:'claim', code, requestId:'claim-4444444444444444', id:'dinner-ware'}));
+assert.equal(result.claimed,true);
+assert.equal(sheets.Wishlist.rows.find(row=>row[0]==='dinner-ware')[8],firstStamp,'re-claiming keeps the original timestamp');
+
+assert.equal(json(post({type:'claim', code:other, requestId:'claim-5555555555555555', id:'dinner-ware', release:true})).ok,false,'only the claimer can release');
+assert.equal(sheets.Wishlist.rows.find(row=>row[0]==='dinner-ware')[7],code,'a refused release leaves the claim intact');
+
+result = json(post({type:'claim', code, requestId:claimIds.release, id:'dinner-ware', release:true}));
+assert.equal(result.claimed,false);
+assert.equal(sheets.Wishlist.rows.find(row=>row[0]==='dinner-ware')[7],'','release clears the claimer');
+
+assert.equal(json(post({type:'claim', code:'bad', requestId:'claim-6666666666666666', id:'linen-set'})).ok,false,'an unknown invitation cannot claim');
+assert.equal(json(post({type:'claim', code, requestId:'short', id:'linen-set'})).ok,false,'a weak request id is rejected');
+assert.equal(json(post({type:'claim', code, requestId:'claim-7777777777777777', id:'hidden-row'})).ok,true,'hidden rows remain claimable by direct id, but are never listed');
+assert.equal(run('readWishlist_()').some(gift=>gift.id==='hidden-row'),false);
+assert.equal(json(post({type:'claim', code, requestId:'claim-8888888888888888', id:'missing-sku'})).ok,false);
+// An extra Guests column was inserted above, so Revoke now sits at index 3.
+guests[1][3] = true;
+assert.equal(json(post({type:'claim', code, requestId:'claim-9999999999999999', id:'linen-set'})).ok,false,'revoked invitations cannot claim');
+guests[1][3] = '';
+
+// A lost HTTP response is read back from the sheet instead of failing.
+result = json(post({type:'claim', code, requestId:'claim-aaaaaaaaaaaaaaaa', id:'linen-set'}));
+assert.equal(result.ok,true);
+assert.equal(JSON.stringify(result).includes('Alice'),false,'the claim response never repeats the claimer name');
+let receipt = json(run('doGet({parameter:{action:"receipt",code:"' + code + '",requestId:"claim-aaaaaaaaaaaaaaaa"}})'));
+assert.equal(receipt.claimed,true,'a lost claim response is recovered');
+assert.equal(receipt.gift.id,'linen-set');
+receipt = json(run('doGet({parameter:{action:"receipt",code:"' + code + '",requestId:"claim-bbbbbbbbbbbbbbbb"}})'));
+assert.equal(receipt.pending,true,'an unrelated request id stays pending');
+receipt = json(run('doGet({parameter:{action:"receipt",code:"' + other + '",requestId:"claim-aaaaaaaaaaaaaaaa"}})'));
+assert.equal(receipt.ok,true,'another household cannot read a claim receipt as its own');
+assert.equal(receipt.claimed,false,'the recovered claim never reports as their own');
+
+sheets.Wishlist.rows.forEach((row,i)=>row.splice(3,0,i===0?'Private note':'Internal remark'));
+assert.equal(run('readWishlist_().length'),3,'wishlist fields resolve by header name');
+assert.equal(JSON.stringify(run('readWishlist_()')).includes('Internal remark'),false);
+console.log('Wishlist checks passed: visibility filtering, safe images and links, hidden claimer identity, claim locking, idempotent retries, owner-only release, revocation and header reordering.');
+
+const configuredWishlist = sheets.Wishlist;
+sheets.Wishlist = sheet([['ID','Name','Description','Image','Link','Price','Hide']]);
+run('setupWishlist_()');
+assert.equal(sheets.Wishlist.rows.length,5,'setup seeds starter rows');
+assert.deepEqual(sheets.Wishlist.rows[0].slice(7),['Claimed by','Claimed at','Claim ID'],'claim columns are appended to a hand-made tab');
+assert.equal(run('readWishlist_().length'),4);
+assert.equal(run('readWishlist_()').every(gift=>gift.claimed === false),true);
+sheets.Wishlist.rows[1][1]='My Own Gift';
+run('setupWishlist_()');
+assert.equal(sheets.Wishlist.rows[1][1],'My Own Gift','setup never overwrites edited rows');
+assert.equal(run('readWishlist_()').length,4,'setup does not duplicate rows');
+sheets.Wishlist=configuredWishlist;
+console.log('Wishlist setup checks passed: starter rows, empty claims and idempotent reruns.');
 
 const configuredGifts = sheets.Gifts;
 sheets.Gifts = sheet([['ID','Group','Method','Label','Network','Account','Account name','Details','Link','Memo','Hide']]);

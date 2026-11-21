@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#F7F1E6" />
+  <meta name="description" content="The wedding wishlist of Richard Putra and Kristy Natasha Yohanes." />
+  <title>Wishlist · Richard &amp; Natasha</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/svg+xml" href="assets/svg/favicon.svg?v=emblem-5" />
+  <link rel="preload" as="font" type="font/ttf" href="assets/fonts/cormorant-garamond-regular.ttf" crossorigin />
+  <link rel="stylesheet" href="styles.css?v=20261120-before-prewed-1" />
+  <link rel="stylesheet" href="wishlist.css?v=wishlist-2" />
+  <link rel="stylesheet" href="desktop.css?v=20261120-before-prewed-1" media="(min-width: 960px)" />
+  <script defer src="config.js?v=20261114-matrimony-time-44"></script>
+  <script defer src="wishlist.js?v=wishlist-2"></script>
+</head>
+<body>
+  <div class="site-shell wishlist-shell">
+    <header class="wishlist-head">
+      <a class="wishlist-back" href="index.html" id="backLink">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18 9 12l6-6"/></svg>
+        <span data-i18n="wishlist.back">Back to invitation</span>
+      </a>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <span aria-hidden="true">/</span>
+        <button type="button" data-lang="id" aria-pressed="false">ID</button>
+      </div>
+    </header>
+
+    <main class="wishlist-main">
+      <section class="paper-section wishlist-section" aria-labelledby="wishlistTitle">
+        <span class="painting-backdrop painting-peonies" aria-hidden="true"></span>
+        <div class="section-head">
+          <div class="section-intro" data-i18n="wishlist.intro">WITH GRATITUDE</div>
+          <h1 id="wishlistTitle" class="wishlist-title" data-i18n="wishlist.title">Wedding Wishlist</h1>
+          <img class="divider-img" src="assets/svg/cloud-divider.svg" alt="" />
+          <p class="wishlist-intro" data-i18n="wishlist.body">Should you wish to bless us with a gift, here are a few things that would help us begin our home together. Claiming an item simply lets other guests know it is already taken care of.</p>
+        </div>
+
+        <p class="wishlist-progress" id="wishlistProgress" hidden></p>
+        <div class="wishlist-status" id="wishlistStatus" role="status" aria-live="polite"></div>
+
+        <ul class="wishlist-grid" id="wishlistGrid" aria-live="polite"></ul>
+
+        <div class="wishlist-empty" id="wishlistEmpty" hidden>
+          <p data-i18n="wishlist.empty">The wishlist is being prepared.</p>
+        </div>
+
+        <div class="wishlist-note" id="wishlistNote" hidden>
+          <p data-i18n="wishlist.note">Changed your mind? You can release an item you claimed so another guest may choose it.</p>
+        </div>
+
+        <a class="wishlist-cta" href="index.html#gift" id="giftBack">
+          <span data-i18n="wishlist.toGift">Other ways to give</span>
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+        </a>
+      </section>
+    </main>
+
+    <footer class="wishlist-footer">
+      <p class="wishlist-footer-names">Richard &amp; Natasha</p>
+      <p class="wishlist-footer-date">17 · 01 · 2027 · JAKARTA</p>
+    </footer>
+  </div>
+
+  <dialog id="claimDialog" class="claim-dialog" aria-labelledby="claimTitle">
+    <div class="claim-dialog-body">
+      <h2 id="claimTitle" class="claim-title"></h2>
+      <p class="claim-text" id="claimText"></p>
+      <div class="claim-actions">
+        <button type="button" class="primary" id="claimConfirm"></button>
+        <button type="button" class="text-button" id="claimCancel" data-i18n="wishlist.cancel">Cancel</button>
+      </div>
+    </div>
+  </dialog>
+</body>
+</html>

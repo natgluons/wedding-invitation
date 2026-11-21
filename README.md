@@ -251,6 +251,36 @@ The former static BCA/SWIFT details are now the international `bank` method. Set
 
 Invitation lookup uses one JSONP request for Apps Script. It fetches the verified guest, saved RSVP, own wish, and gift configuration together. Ordinary RSVP reads skip the write lock; history recovery rechecks data under a lock only when needed. The spreadsheet handle is reused within each backend execution. Copy controls are icon-only, with accessible labels and a checkmark after successful copying.
 
+## Wishlist and claims
+
+The gift section links to a separate page, `wishlist.html`, that lists the items you have added to the `Wishlist` tab. It opens from the gift section with the guest's invitation code attached; a link without a code can be viewed but not claimed from.
+
+After pasting the updated `rsvp-backend/Code.gs`, run `setup()` once and redeploy the **existing** web app to a new version. Setup creates the `Wishlist` tab with four example rows and appends its claim columns if the tab was made by hand. Copy/paste-ready examples are in `rsvp-backend/wishlist.example.tsv`.
+
+The Wishlist headers are:
+
+**ID | Name | Description | Image | Link | Price | Hide | Claimed by | Claimed at | Claim ID**
+
+| Column | Enter |
+| --- | --- |
+| ID | Unique stable ID. Letters, digits, `_`, and `-` only. A row's ID must never change once a guest has claimed it. |
+| Name | Display title. Required; rows with a blank Name are not listed. |
+| Description | Optional short line of context. |
+| Image | Optional full `https://` URL to a photo. Plain `http` links and any other scheme are dropped, and a broken link falls back to an ornament, so the page never shows a broken frame. |
+| Link | Optional `https://` or `http://` URL to the item in a store, shown as "View item". |
+| Price | Optional free text, e.g. `Rp 1.500.000`. Not used for calculations. |
+| Hide | `TRUE` hides this row; blank or `FALSE` lists it. |
+| Claimed by | **Do not edit.** Written automatically with the claiming guest's invitation code. |
+| Claimed at | **Do not edit.** Written automatically when a gift is claimed. |
+| Claim ID | **Do not edit.** Written automatically; it makes a retried request a no-op instead of a duplicate. |
+
+Claiming is locked to the guest who claimed: other guests see only "Taken", never who took it. Only the claimer sees the **Release** control, and the backend refuses a release from any other invitation. Clear a claim yourself by emptying **Claimed by** in the sheet; that is the manual override, and it takes effect on the next page load.
+
+Rows resolving to a blank or duplicated ID, or a blank Name, are skipped, so the frontend never receives unrelated custom columns. Claiming writes straight to Apps Script, exactly like RSVP and wishes; the Cloudflare Worker only proxies reads. A claim whose HTTP response is lost is re-read from the sheet through the receipt lookup, so a claim that landed is never reported as failed.
+
+Run `node tests/guest-whitelist.cjs` to cover wishlist visibility, claim locking, owner-only release, revocation, and setup.
+
+
 ## Fast Cloudflare invitation validation
 
 The opening now uses a deployed Cloudflare Worker and D1 mirror, preserving the existing short links. Apps Script remains responsible for saved responses and writes. Follow `validation-worker/README.md` for the one-time Google-side sync activation. The private configuration file is `rsvp-backend/worker-sync.private.gs` (git-ignored); it is for the Apps Script project, never the website. Before initial sync the site falls back to its existing Apps Script check. Guest edits then sync automatically, with a five-minute backup trigger.
