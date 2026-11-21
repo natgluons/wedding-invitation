@@ -644,7 +644,21 @@
   const music = document.getElementById('bgMusic');
   const musicToggle = document.getElementById('musicToggle');
   const MUSIC_VOLUME = 0.5;
-  let musicOn = true;
+  // Music preference outlives a visit: a guest who mutes the song should not
+  // hear it again on the next invitation they open. localStorage needs no
+  // permission prompt and is already used for the language choice.
+  const MUSIC_KEY = 'richard-natasha-music';
+  function readMusicPreference() {
+    try {
+      // Anything other than an explicit "off" starts the music, which keeps the
+      // first-visit behaviour unchanged.
+      return window.localStorage.getItem(MUSIC_KEY) !== 'off';
+    } catch { return true; }
+  }
+  function saveMusicPreference(on) {
+    try { window.localStorage.setItem(MUSIC_KEY, on ? 'on' : 'off'); } catch {}
+  }
+  let musicOn = readMusicPreference();
   let musicAvailable = Boolean(music);
   let musicFade = 0;
   let musicStarting = false;
@@ -684,6 +698,9 @@
     if (hasOpened || (!invitationReady && !invitationChecking)) return;
     hasOpened = true;
     for (const button of openButtons) button.disabled = true;
+    // A muted guest must see the muted button from the start, since startMusic
+    // will not play anything for them.
+    if (musicAvailable && !musicOn) updateMusicButton(false);
     if (options.instant || prefersReducedMotion()) {
       openingAnimationDone = true;
       finishOpening();
@@ -761,9 +778,11 @@
     musicToggle.addEventListener('click', () => {
       if (music.paused) {
         musicOn = true;
+        saveMusicPreference(true);
         startMusic();
       } else {
         musicOn = false;
+        saveMusicPreference(false);
         resumeMusicOnFocus = false;
         window.clearInterval(musicFade);
         music.pause();
