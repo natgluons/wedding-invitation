@@ -366,7 +366,7 @@ function doPost(e) {
     // does not fire for cells written by a script. Re-sync now so the guest
     // sees their own claim instead of waiting for the next timer run.
     if (result.ok && String(data.type || 'rsvp') === 'claim') {
-      try { syncInvitationWorker(); } catch (error) { /* The timer will retry. */ }
+      try { syncInvitationWorker({force:true}); } catch (error) { /* The timer will retry. */ }
     }
     return json_(result);
   } catch (error) {
@@ -714,11 +714,19 @@ function wishlistSnapshot_() {
   });
 }
 
-function syncInvitationWorker() {
+function syncInvitationWorker(options) {
+  const force = Boolean(options && options.force);
   const properties = PropertiesService.getScriptProperties();
   const url = String(properties.getProperty('INVITE_WORKER_URL') || '').replace(/\/$/, '');
   const secret = properties.getProperty('INVITE_WORKER_SYNC_SECRET');
   if (!url || !secret) throw new Error('Configure the invitation Worker before syncing.');
+  // Editing a sheet fires this once per change, and typing in a cell can fire
+  // it repeatedly. Coalesce a burst into one sync: the timer catches whatever
+  // the debounce skips, so nothing is lost by skipping a redundant push.
+  const now = Date.now();
+  const last = Number(properties.getProperty('INVITE_WORKER_SYNC_AT') || 0);
+  if (!force && now - last < 3000) return 'Skipped: a sync ran less than 3 seconds ago.';
+  properties.setProperty('INVITE_WORKER_SYNC_AT', String(now));
   const version = Date.now();
   const guests = validationSnapshot_();
   // Gifts and the wishlist ride along so a verified guest can render the whole
@@ -731,13 +739,23 @@ function syncInvitationWorker() {
   });
   const status = response.getResponseCode();
   if (status === 409) return 'A newer guest-list sync is already active.';
-  if (status !== 200) throw new Error('Worker sync failed (HTTP ' + status + ').');
+  if (status !== 200) {
+    // Let the next attempt run rather than being blocked by a failed one.
+    properties.deleteProperty('INVITE_WORKER_SYNC_AT');
+    throw new Error('Worker sync failed (HTTP ' + status + ').');
+  }
   properties.setProperty('INVITE_WORKER_LAST_SYNC', new Date().toISOString());
   return 'Synced ' + guests.length + ' invitation records.';
 }
 
 function syncInvitationWorkerOnEdit(e) {
-  if (e && e.range && e.range.getSheet().getName() === GUESTS_SHEET) syncInvitationWorker();
+  // Gifts and the wishlist are mirrored too, so an edit on any of the three
+  // sheets has to reach the edge. The timer catches whatever an edit cannot:
+  // formula recalculation, imports, and script writes, which never fire
+  // onEdit at all.
+  if (!e || !e.range) return;
+  const sheet = e.range.getSheet().getName();
+  if ([GUESTS_SHEET, GIFTS_SHEET, WISHLIST_SHEET].includes(sheet)) syncInvitationWorker();
 }
 
 function installInvitationWorkerSync() {
@@ -746,10 +764,12 @@ function installInvitationWorkerSync() {
     throw new Error('Run configureInvitationWorker() first.');
   }
   // Idempotent: one immediate edit trigger and one formula/import backup timer.
-  ScriptApp.getProjectTriggers().forEach(trigger => {
-    if (['syncInvitationWorkerOnEdit','syncInvitationWorker'].includes(trigger.getHandlerFunction())) ScriptApp.deleteTrigger(trigger);
-  });
+  // Iterate a copy, because deleting from the live list while walking it would
+  // skip the next trigger and leave a duplicate behind.
+  const stale = ScriptApp.getProjectTriggers()
+    .filter(trigger => ['syncInvitationWorkerOnEdit','syncInvitationWorker'].includes(trigger.getHandlerFunction()));
+  stale.forEach(trigger => ScriptApp.deleteTrigger(trigger));
   ScriptApp.newTrigger('syncInvitationWorkerOnEdit').forSpreadsheet(SHEET_ID).onEdit().create();
   ScriptApp.newTrigger('syncInvitationWorker').timeBased().everyMinutes(5).create();
-  return syncInvitationWorker();
+  return syncInvitationWorker({force:true});
 }

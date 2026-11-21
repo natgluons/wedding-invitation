@@ -22,9 +22,11 @@ No setup() run is needed specifically for the Worker. Guest codes and link formu
 
 ## Ongoing sync
 
-Edits on Guests trigger a sync automatically. A five-minute trigger catches formula recalculation and imports that do not fire edits. `syncInvitationWorker()` can also be run manually. Duplicate codes and malformed guest records are blocked in the mirror rather than granting access.
+Edits on Guests, Gifts and the Wishlist all trigger a sync automatically. A five-minute trigger catches what an edit cannot: formula recalculation, imports, and writes made by a script, which never fire `onEdit` at all. `syncInvitationWorker()` can also be run manually. Duplicate codes and malformed guest records are blocked in the mirror rather than granting access.
 
-Editing gifts or the wishlist does not fire the edit trigger, which only watches Guests. Run `syncInvitationWorker()` after changing either sheet, or wait up to five minutes. Claims are the exception: `doPost` re-syncs itself after a successful claim, because a claim the guest just made must not wait for the timer. Google's `onEdit` trigger does not fire for cells written by a script, so this explicit call is what keeps a fresh claim visible at the edge.
+Typing in a cell can fire the edit trigger repeatedly, so a sync that ran less than three seconds ago is skipped; the timer catches whatever the debounce drops. Claims always push regardless, because a guest who just claimed must not wait. The installer seeds the mirror itself, so a reinstall also refreshes the edge copy. If a push fails, its debounce mark is cleared so the retry is not blocked by the failure.
+
+Claims are the exception to the debounce: `doPost` re-syncs itself after a successful claim, because Google's `onEdit` trigger does not fire for cells written by a script and a guest must not see their own claim go missing.
 
 Revocations become effective for the opening gate after the next successful sync. Apps Script still checks the current private sheet when reading saved responses or saving RSVP/wishes, independently of the mirror. A mirror older than 15 minutes returns unavailable, causing a fallback to the original sheet check. This is distinct from an invalid code: Worker errors do not incorrectly reject invitations.
 
