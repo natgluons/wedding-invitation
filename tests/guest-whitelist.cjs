@@ -34,6 +34,15 @@ assert.match(frontend, /options\.instant \|\| options\.section \|\| prefersReduc
 assert.match(frontend, /const section = options\.section \|\| pendingDeepLink;/, 'a deep link must reach the scroll step');
 assert.match(frontend, /if \(section\) scrollToSection\(section\);/, 'a deep link must scroll to its section instead of the top');
 assert.match(frontend, /behavior: 'instant'/, 'the deep-link scroll must not animate');
+// The settle loop used to re-place the section for ~1.4s no matter what. A
+// guest scrolling during that window was dragged back, which reads as a frozen
+// page, so the correction has to yield as soon as the scroll is not where it
+// was put.
+assert.match(frontend, /function scrollToSection/, 'the deep-link placement must exist');
+const settleBlock = frontend.slice(frontend.indexOf('function scrollToSection'), frontend.indexOf('function scrollToSection') + 2200);
+assert.match(settleBlock, /Math\.abs\(current - expected\) > 2\) return;/, 'the settle loop must stop once the guest scrolls');
+assert.match(settleBlock, /let placed = place\(\);/, 'the placed position must be recorded to detect a takeover');
+assert.match(settleBlock, /if \(placed === null\) return;/, 'a section without layout must not start the loop');
 assert.match(frontend, /function abandonDeepLink/, 'a failed guest check must restore the cover controls');
 // Item content is written as text nodes. The only innerHTML assignments are
 // hardcoded SVG icons, so a sheet value can never become markup.

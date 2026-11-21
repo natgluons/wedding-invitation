@@ -692,10 +692,10 @@
   function scrollToSection(section) {
     const place = () => {
       const target = document.getElementById(section.id);
-      if (!target) return;
+      if (!target) return null;
       const top = target.offsetTop;
       // Nothing to land on until the sections have real layout.
-      if (!top) return;
+      if (!top) return null;
       const scroller = document.scrollingElement || document.documentElement;
       scroller.scrollTop = top;
       // If the browser ignored the instant assignment, fall back to the API that
@@ -705,13 +705,24 @@
           try { window.scrollTo({top, behavior: 'instant'}); } catch { window.scrollTo(0, top); }
         }
       }
+      return top;
     };
-    place();
+    let placed = place();
+    if (placed === null) return;
     // Photos and fonts above the section can still load late and push it down,
-    // so keep correcting for a short while, then stop.
+    // so keep correcting for a short while. The correction stops the instant the
+    // guest scrolls: re-placing a section someone is dragging away from reads as
+    // a frozen page, which is worse than landing a few pixels off.
     let passes = 0;
     const settle = () => {
-      place();
+      const current = Math.round(window.scrollY);
+      const target = document.getElementById(section.id);
+      // Someone else moved the page, so release it.
+      if (current !== Math.round(placed) && target) {
+        const expected = target.offsetTop;
+        if (Math.abs(current - expected) > 2) return;
+      }
+      placed = place();
       passes += 1;
       if (passes < 12) window.setTimeout(settle, 120);
     };
