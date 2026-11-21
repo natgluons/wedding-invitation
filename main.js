@@ -147,6 +147,9 @@
       "gift.international": "INTERNATIONAL TRANSFER",
       "gift.bank": "Bank",
       "gift.bankTransfer": "Bank transfer",
+      "gift.sepa": "SEPA",
+      "gift.iban": "IBAN",
+      "gift.bic": "BIC",
       "gift.swift": "SWIFT / BIC",
       "gift.accountNumber": "Account number",
       "gift.accountName": "Account name",
@@ -349,6 +352,9 @@
       "gift.international": "TRANSFER LUAR NEGERI",
       "gift.bank": "Bank",
       "gift.bankTransfer": "Transfer bank",
+      "gift.sepa": "SEPA",
+      "gift.iban": "IBAN",
+      "gift.bic": "BIC",
       "gift.swift": "SWIFT / BIC",
       "gift.accountNumber": "Nomor rekening",
       "gift.accountName": "Nama rekening",
@@ -1121,7 +1127,12 @@
   const giftMethod = {domestic:'bca', international:'bank'};
   const giftAccount = {};
   const giftTabs = Array.from(document.querySelectorAll('.gift-tabs [role="tab"]'));
-  const methodNames = {bca:'BCA', jago:'Jago', bank:'Bank transfer', paypal:'PayPal', crypto:'Crypto'};
+  const methodNames = {bca:'BCA', jago:'Jago', bank:'Bank transfer', sepa:'SEPA', paypal:'PayPal', crypto:'Crypto'};
+  // Sending by SEPA and sending by SWIFT reach the same kind of account through
+  // different networks, so each shows only the details that network needs. SEPA
+  // keyed its IBAN in as the account number.
+  const methodLabels = {bank:'gift.bankTransfer', sepa:'gift.sepa'};
+  const accountLabels = {sepa:'gift.iban'};
 
   function giftText(tag, value, className) {
     const node = document.createElement(tag); node.textContent = value;
@@ -1182,14 +1193,14 @@
       panel.hidden = !active; panel.replaceChildren();
       if (!giftData) { panel.append(giftText('p', t('gift.unavailable'), 'gift-note')); continue; }
       if (!rows.length) continue;
-      const order = ['bca','jago','bank','paypal','crypto'];
+      const order = ['bca','jago','bank','sepa','paypal','crypto'];
       const methods = [...new Set(rows.map(row => row.method))].sort((a,b) => order.indexOf(a) - order.indexOf(b));
       if (!methods.includes(giftMethod[group])) giftMethod[group] = methods[0];
       const tabs = document.createElement('div'); tabs.className = 'gift-method-tabs';
       tabs.setAttribute('role','tablist'); tabs.setAttribute('aria-label', t('gift.methods'));
       const methodPanelId = group + '-gift-method-panel';
       for (const method of methods) {
-        const button = giftText('button', method === 'bank' ? t('gift.bankTransfer') : methodNames[method] || method);
+        const button = giftText('button', methodLabels[method] ? t(methodLabels[method]) : methodNames[method] || method);
         button.id = group + '-gift-' + method; button.type = 'button'; button.setAttribute('role','tab');
         button.setAttribute('aria-controls', methodPanelId);
         button.setAttribute('aria-selected', String(method === giftMethod[group]));
@@ -1219,9 +1230,13 @@
       const list = document.createElement('dl'); list.className = 'gift-details';
       const id = 'gift-value-' + account.id + '-';
       if (account.method === 'crypto') giftField(list, 'gift.network', account.network, id + 'network');
-      giftField(list, account.method === 'crypto' ? 'gift.wallet' : account.method === 'paypal' ? 'gift.paypalAccount' : 'gift.accountNumber', account.account, id + 'account');
+      const accountKey = accountLabels[account.method]
+        || (account.method === 'crypto' ? 'gift.wallet' : account.method === 'paypal' ? 'gift.paypalAccount' : 'gift.accountNumber');
+      giftField(list, accountKey, account.account, id + 'account');
       giftField(list, 'gift.accountName', account.accountName, id + 'name');
-      giftField(list, 'gift.swift', account.swift, id + 'swift');
+      // A SEPA row carries its BIC in the SWIFT column, so the label follows the
+      // network the guest chose instead of always saying SWIFT.
+      giftField(list, account.method === 'sepa' ? 'gift.bic' : 'gift.swift', account.swift, id + 'swift');
       giftField(list, 'gift.bankAddress', account.bankAddress, id + 'bank-address');
       giftField(list, 'gift.memo', account.memo, id + 'memo');
       giftField(list, 'gift.details', account.details, id + 'details');

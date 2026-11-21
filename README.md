@@ -221,7 +221,7 @@ Guest lookup uses header names, so you may insert custom columns or reorder Gues
 
 ## Sheet-controlled gift options
 
-After pasting the updated `rsvp-backend/Code.gs`, run `setup()` once and redeploy the **existing** web app to a new version. Setup creates the `Gifts` tab with clearly labelled BCA, Jago, international bank transfer, PayPal, Ethereum, Base, Solana, Tron, and Bitcoin example rows. Copy/paste-ready examples are in `rsvp-backend/gifts.example.tsv`. These use `YOUR_...` placeholders for preview. Copy buttons work for placeholder values too; replace Account with real receiving details before sharing. It preserves existing Gifts rows and all guest codes and invitation-link formulas. No real receiving details are prefilled. Rerunning setup fills only blank Account cells on recognized starter rows, preserving existing details and Hide flags. Previously hidden crypto rows stay hidden until you set Hide to FALSE.
+After pasting the updated `rsvp-backend/Code.gs`, run `setup()` once and redeploy the **existing** web app to a new version. Setup creates the `Gifts` tab with clearly labelled BCA, Jago, international bank transfer, SEPA, PayPal, Ethereum, Base, Solana, Tron, and Bitcoin example rows. Copy/paste-ready examples are in `rsvp-backend/gifts.example.tsv`. These use `YOUR_...` placeholders for preview. Copy buttons work for placeholder values too; replace Account with real receiving details before sharing. It preserves existing Gifts rows and all guest codes and invitation-link formulas. No real receiving details are prefilled. Rerunning setup fills only blank Account cells on recognized starter rows, preserving existing details and Hide flags. Previously hidden crypto rows stay hidden until you set Hide to FALSE.
 
 The Gifts headers are:
 
@@ -231,7 +231,7 @@ The Gifts headers are:
 | --- | --- |
 | ID | Unique stable ID, e.g. `bca`, `paypal`, `crypto-base`. Letters, digits, `_`, and `-` only. |
 | Group | `domestic` for BCA/Jago; `international` for Bank transfer/PayPal/Crypto. |
-| Method | `bca`, `jago`, `bank` (international bank transfer), `paypal`, or `crypto`. |
+| Method | `bca`, `jago`, `bank` (international bank transfer by SWIFT), `sepa` (international transfer by IBAN), `paypal`, or `crypto`. |
 | Label | Display title, e.g. Bank Jago. For multiple bank accounts, use distinct labels. |
 | Network | Crypto network, e.g. Base or Solana. Leave blank for banks/PayPal. |
 | Account | Bank account number, PayPal email, or receiving wallet address. Format this column as **Plain text** to preserve leading zeros and long numbers. |
@@ -245,7 +245,7 @@ The Gifts headers are:
 
 Fill the account details, then set Hide to FALSE for the rows you want to offer. Bank methods require an account number. PayPal requires an email/account or HTTPS link. Crypto requires a network and receiving address; no token restriction is displayed. Enter each network's receiving address independently. A method with no visible, complete rows disappears; if a group has no methods its tab disappears, and if all options are hidden the section displays a details-coming-soon message.
 
-Methods are ordered BCA/Jago and Bank transfer/PayPal/Crypto, with Domestic selected by default when available. Accounts within each method follow sheet order. Multiple Crypto rows become a network selector. Every displayed transfer value has a copy button. Gifts arrive with the authenticated invitation lookup, without a separate fetch. The frontend never receives hidden/incomplete rows or unrelated custom columns. Changes take effect on reload without another deployment. Schema/code changes still require redeployment.
+Methods are ordered BCA/Jago and Bank transfer/SEPA/PayPal/Crypto, with Domestic selected by default when available. Accounts within each method follow sheet order. Multiple Crypto rows become a network selector. Every displayed transfer value has a copy button. Gifts arrive with the authenticated invitation lookup, without a separate fetch. The frontend never receives hidden/incomplete rows or unrelated custom columns. Changes take effect on reload without another deployment. Schema/code changes still require redeployment.
 
 The former static BCA/SWIFT details are now the international `bank` method. Setup appends missing default example rows, including international-bank. Keep payment details in Gifts rather than editing HTML. The sheet remains private, but enabled gift details are shown to verified invitees, so only enter information intended for those guests.
 

@@ -98,13 +98,17 @@ const sheets = {
   Wishes: sheet(wishes)
 };
 sheets.Gifts = sheet([
-  ['ID','Group','Method','Label','Network','Account','Account name','Details','Link','Memo','Hide'],
+  ['ID','Group','Method','Label','Network','Account','Account name','Details','Link','Memo','Hide','SWIFT / BIC','Bank address'],
   ['bca','domestic','bca','BCA','','123456','Alice','','','',false],
   ['jago','domestic','jago','Jago','','654321','Alice','','','',true],
   ['paypal','international','paypal','PayPal','','alice@example.test','Alice','','https://paypal.me/example','',false],
   ['base','international','crypto','Base','Base','0xTest','','','','',false],
   ['empty','international','crypto','Solana','Solana','','','','','',false],
-  ['unsafe','international','paypal','Unsafe','','','','','javascript:alert(1)','',false]
+  ['unsafe','international','paypal','Unsafe','','','','','javascript:alert(1)','',false],
+  // A SEPA row with no IBAN is unusable, and a domestic SEPA row is invalid.
+  ['sepa','international','sepa','SEPA transfer','','DE89370400440532013000','Alice','','','',false,'COBADEFFXXX'],
+  ['sepa-empty','international','sepa','SEPA empty','','','Alice','','','',false,''],
+  ['sepa-wrong-group','domestic','sepa','SEPA domestic','','DE89370400440532013001','Alice','','','',false]
 ]);
 const cache = new Map();
 const lockStats = {waits:0};
@@ -236,14 +240,22 @@ assert.match(run('doGet({parameter:{action:"receipt",code:"' + code + '",request
 console.log('Editable wish checks passed: code authentication, authoritative name, one wish per code, edits, separate households, moderation, private fields, and restore.');
 
 const gifts = run('readGifts_()');
-assert.equal(gifts.length,3);
+assert.equal(gifts.length,4);
 assert.equal(gifts.some(gift=>gift.id==='jago'||gift.id==='empty'||gift.id==='unsafe'),false);
 assert.equal(gifts.find(gift=>gift.id==='base').network,'Base');
 assert.equal(gifts.find(gift=>gift.id==='paypal').link,'https://paypal.me/example');
+// SEPA survives the read with its IBAN and BIC; a blank IBAN and a domestic
+// SEPA row are both dropped rather than reaching the page.
+const sepaGift = gifts.find(gift=>gift.id==='sepa');
+assert.equal(sepaGift.group,'international');
+assert.equal(sepaGift.account,'DE89370400440532013000');
+assert.equal(sepaGift.swift,'COBADEFFXXX');
+assert.equal(gifts.some(gift=>gift.id==='sepa-empty'),false,'a SEPA row without an IBAN is dropped');
+assert.equal(gifts.some(gift=>gift.id==='sepa-wrong-group'),false,'SEPA is international only');
 sheets.Gifts.rows.forEach((row,i)=>row.splice(2,0,i===0?'Private admin notes':'Never expose this'));
-assert.equal(run('readGifts_().length'),3,'gift fields use header names');
+assert.equal(run('readGifts_().length'),4,'gift fields use header names');
 context.e={parameter:{action:'guest',code}};
-assert.equal(json(run('doGet(e)')).gifts.length,3);
+assert.equal(json(run('doGet(e)')).gifts.length,4);
 assert.equal(JSON.stringify(json(run('doGet(e)')).gifts).includes('Never expose this'),false);
 console.log('Gift checks passed: visibility, blank filtering, crypto networks, HTTPS links, header reordering, and whitelisted response fields.');
 
@@ -342,12 +354,20 @@ console.log('Wishlist setup checks passed: starter rows, empty claims and idempo
 const configuredGifts = sheets.Gifts;
 sheets.Gifts = sheet([['ID','Group','Method','Label','Network','Account','Account name','Details','Link','Memo','Hide']]);
 run('setupGifts_()');
-assert.equal(sheets.Gifts.rows.length,10);
+assert.equal(sheets.Gifts.rows.length,11);
 assert.equal(sheets.Gifts.rows[1][5],'YOUR_BCA_ACCOUNT_NUMBER');
 assert.equal(run('readGifts_().every(gift => gift.example)'),true);
 assert.equal(run('readGifts_().find(gift => gift.method === "bank").swift'), 'YOUR_SWIFT_BIC');
 assert.equal(run('readGifts_().find(gift => gift.method === "bank").bankAddress'), 'YOUR_BANK_ADDRESS');
 assert.equal(run('readGifts_().filter(gift => gift.method === "crypto").length'), 5);
+// SEPA is a second way to reach an international account, so it needs its own
+// row with an IBAN in Account and a BIC, and must not appear domestically.
+const sepa = run('readGifts_().find(gift => gift.method === "sepa")');
+assert.equal(sepa.account, 'YOUR_IBAN', 'the SEPA row carries its IBAN');
+assert.equal(sepa.swift, 'YOUR_BIC', 'the SEPA row carries its BIC');
+assert.equal(sepa.group, 'international');
+assert.equal(run('readGifts_().find(gift => gift.id === "international-sepa").group'), 'international');
+assert.equal(run('GIFT_HEADERS.indexOf("SWIFT / BIC") > 0'), true);
 sheets.Gifts.rows[1][5]='001234567890';
 sheets.Gifts.rows[2][10]=true;
 run('setupGifts_()');

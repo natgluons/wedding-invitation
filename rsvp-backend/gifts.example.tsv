@@ -2,6 +2,7 @@ ID	Group	Method	Label	Network	Account	Account name	Details	Link	Memo	Hide	SWIFT 
 bca	domestic	bca	Bank Central Asia (BCA)		YOUR_BCA_ACCOUNT_NUMBER	YOUR_ACCOUNT_NAME				FALSE		
 jago	domestic	jago	Bank Jago		YOUR_JAGO_ACCOUNT_NUMBER	YOUR_ACCOUNT_NAME				FALSE		
 international-bank	international	bank	Bank Central Asia (BCA)		YOUR_INTERNATIONAL_ACCOUNT_NUMBER	YOUR_ACCOUNT_NAME				FALSE	YOUR_SWIFT_BIC	YOUR_BANK_ADDRESS
+international-sepa	international	sepa	SEPA transfer		YOUR_IBAN	YOUR_ACCOUNT_NAME				FALSE	YOUR_BIC	
 paypal	international	paypal	PayPal		YOUR_PAYPAL_EMAIL	YOUR_ACCOUNT_NAME				FALSE		
 crypto-ethereum	international	crypto	Ethereum	Ethereum	YOUR_ETHEREUM_ADDRESS					FALSE		
 crypto-base	international	crypto	Base	Base	YOUR_BASE_ADDRESS					FALSE		

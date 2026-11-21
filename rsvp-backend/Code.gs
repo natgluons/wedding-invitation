@@ -147,6 +147,7 @@ function setupGifts_() {
     ['bca', 'domestic', 'bca', 'Bank Central Asia (BCA)', '', 'YOUR_BCA_ACCOUNT_NUMBER', 'YOUR_ACCOUNT_NAME', '', '', '', false],
     ['jago', 'domestic', 'jago', 'Bank Jago', '', 'YOUR_JAGO_ACCOUNT_NUMBER', 'YOUR_ACCOUNT_NAME', '', '', '', false],
     ['international-bank', 'international', 'bank', 'Bank Central Asia (BCA)', '', 'YOUR_INTERNATIONAL_ACCOUNT_NUMBER', 'YOUR_ACCOUNT_NAME', '', '', '', false, 'YOUR_SWIFT_BIC', 'YOUR_BANK_ADDRESS'],
+    ['international-sepa', 'international', 'sepa', 'SEPA transfer', '', 'YOUR_IBAN', 'YOUR_ACCOUNT_NAME', '', '', '', false, 'YOUR_BIC'],
     ['paypal', 'international', 'paypal', 'PayPal', '', 'YOUR_PAYPAL_EMAIL', 'YOUR_ACCOUNT_NAME', '', '', '', false],
     ...['Ethereum', 'Base', 'Solana', 'Tron', 'Bitcoin'].map(network =>
       ['crypto-' + network.toLowerCase(), 'international', 'crypto', network, network, 'YOUR_' + network.toUpperCase() + '_ADDRESS', '', '', '', '', false])
@@ -188,14 +189,15 @@ function readGifts_() {
     const group = String(get('Group') || '').trim().toLowerCase();
     const method = String(get('Method') || '').trim().toLowerCase();
     if (isTrue_(get('Hide')) || !/^[a-zA-Z0-9_-]{1,64}$/.test(id) || seen.has(id)) return [];
-    if (!['domestic', 'international'].includes(group) || !['bca','jago','bank','paypal','crypto'].includes(method)) return [];
-    if ((['bca','jago'].includes(method) && group !== 'domestic') || (['bank','paypal','crypto'].includes(method) && group !== 'international')) return [];
+    if (!['domestic', 'international'].includes(group) || !['bca','jago','bank','sepa','paypal','crypto'].includes(method)) return [];
+    if ((['bca','jago'].includes(method) && group !== 'domestic') || (['bank','sepa','paypal','crypto'].includes(method) && group !== 'international')) return [];
     const link = String(get('Link') || '').trim();
     const safeLink = /^https:\/\/[^\s]+$/i.test(link) ? link : '';
     const account = String(get('Account') || '').trim();
     const network = String(get('Network') || '').trim();
     if ((!account && !safeLink) || (method === 'crypto' && (!account || !network))) return [];
-    if (['bca','jago','bank'].includes(method) && !account) return [];
+    // A SEPA row carries its IBAN in Account, so it cannot be a link-only row.
+    if (['bca','jago','bank','sepa'].includes(method) && !account) return [];
     seen.add(id);
     return [{id, group, method, example: /^YOUR_/i.test(account), label:String(get('Label') || method).trim(), network,
       account, accountName:String(get('Account name') || '').trim(), details:String(get('Details') || '').trim(),
