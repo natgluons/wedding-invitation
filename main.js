@@ -686,19 +686,42 @@
     return {id: hash};
   }
 
-  // Waits for layout to settle before scrolling: fonts and lazy images above
-  // the target can still shift it after the first frame.
+  // Waits for layout to settle before scrolling. The stylesheet sets
+  // `scroll-behavior: smooth`, which turns a plain `scrollTop` assignment into
+  // an animation that re-measures restart, so every move is explicitly instant.
   function scrollToSection(section) {
-    const target = document.getElementById(section.id);
-    if (!target) return;
-    const scroller = document.scrollingElement || document.documentElement;
-    const place = () => { scroller.scrollTop = target.offsetTop; };
+    const place = () => {
+      const target = document.getElementById(section.id);
+      if (!target) return;
+      const top = target.offsetTop;
+      // Nothing to land on until the sections have real layout.
+      if (!top) return;
+      const scroller = document.scrollingElement || document.documentElement;
+      scroller.scrollTop = top;
+      // If the browser ignored the instant assignment, fall back to the API that
+      // cannot animate, and finally to the plain window scroll.
+      if (Math.abs(window.scrollY - top) > 2) {
+        if (typeof window.scrollTo === 'function') {
+          try { window.scrollTo({top, behavior: 'instant'}); } catch { window.scrollTo(0, top); }
+        }
+      }
+    };
     place();
-    // Images above the section may still load and push it down, so measure once
-    // more after the next frame and after the window settles.
-    window.requestAnimationFrame(place);
-    window.setTimeout(place, 350);
+    // Photos and fonts above the section can still load late and push it down,
+    // so keep correcting for a short while, then stop.
+    let passes = 0;
+    const settle = () => {
+      place();
+      passes += 1;
+      if (passes < 12) window.setTimeout(settle, 120);
+    };
+    window.requestAnimationFrame(settle);
   }
+
+  // A deep link that arrives through the fast guest check has to be remembered
+  // until finishOpening runs, which happens inside loadInvitation rather than
+  // through openInvitation.
+  let pendingDeepLink = null;
 
   // The cover fades away while the invitation fades in beneath it, so the
   // guest never sees an empty screen between the letter and the content.
@@ -709,7 +732,8 @@
     cover.classList.remove('is-departing');
     invitation.hidden = false;
     if (musicAvailable) musicToggle.hidden = false;
-    if (options.section) scrollToSection(options.section);
+    const section = options.section || pendingDeepLink;
+    if (section) scrollToSection(section);
     else window.scrollTo({top: 0, behavior: 'instant'});
     if (typeof invitation.focus === 'function') invitation.focus({preventScroll: true});
   }
@@ -722,7 +746,7 @@
     startMusic();
     // A deep link lands immediately, with no fade, so the guest sees the
     // section they asked for rather than an animation ending elsewhere.
-    if (options.section || prefersReducedMotion()) { completeOpen(options); return; }
+    if (options.section || pendingDeepLink || prefersReducedMotion()) { completeOpen(options); return; }
     invitation.hidden = false;
     cover.classList.add('is-departing');
     openTimers.push(window.setTimeout(() => completeOpen(options), 800));
@@ -747,12 +771,18 @@
     }, 1600));
   }
 
-  // Opens at a section instead of the cover. The guest check gates it, so an
-  // invalid or revoked code still sees the refusal and retry on the cover.
-  async function finishOpeningDeepLink(section) {
-    if (!invitationReady) await loadInvitation();
-    if (!invitationReady || hasOpened) return;
-    openInvitation({section});
+  // A deep link pre-marks the invitation as opened so finishOpening can run
+  // without the letter. If the guest check fails, put the cover back under the
+  // guest's control: the refusal is shown, and the letter can still be opened.
+  function abandonDeepLink() {
+    if (!pendingDeepLink) return;
+    pendingDeepLink = null;
+    hasOpened = false;
+    openingAnimationDone = false;
+    openingDepartureStarted = false;
+    // Re-render the gate after clearing the flags above, because it derives the
+    // button state from them.
+    renderInvitationGate();
   }
 
   function skipOpening() {
@@ -1345,6 +1375,7 @@
       guestNameInput.value = '';
       renderGuestCopy();
       invitationChecking = false;
+      abandonDeepLink();
       setStatus(formStatus, t('dynamic.inviteInvalid'), 'error');
       setInvitationGate('dynamic.inviteInvalid');
       return;
@@ -1364,6 +1395,7 @@
           if (response.status === 400 || response.status === 403) {
             personalization = {invitedName:'', seats:null}; guestNameInput.value=''; renderGuestCopy();
             invitationChecking=false;
+            abandonDeepLink();
             setInvitationGate('dynamic.inviteInvalid');
             setStatus(formStatus,t('dynamic.inviteInvalid'),'error');
             return;
@@ -1903,14 +1935,18 @@
   syncWishlistLink();
   // A guest returning from the wishlist skips the letter and lands on the
   // section they came from; everyone else watches the normal opening.
+  // The deep link is recorded before the invitation loads, because the fast
+  // guest check inside loadInvitation calls finishOpening on its own.
   const deepLink = deepLinkTarget();
   if (deepLink) {
-    // finishOpeningDeepLink runs the guest check itself, so it replaces the
-    // ordinary load rather than racing it.
-    finishOpeningDeepLink(deepLink);
-  } else {
-    loadInvitation();
+    // The letter never opens on this path, so mark it as already opened or
+    // finishOpening would refuse to run.
+    pendingDeepLink = deepLink;
+    hasOpened = true;
+    openingAnimationDone = true;
+    for (const button of openButtons) button.disabled = true;
   }
+  loadInvitation();
   openingAssetsReady.then(() => {
     clearTimeout(window.assetLoadTimeout);
     document.documentElement.classList.remove('assets-loading');

@@ -31,7 +31,10 @@ assert.match(wishlistScript, /type: 'claim'/);
 assert.match(wishlistScript, /if \(url\.hash\) url\.searchParams\.set\('from', url\.hash\)/);
 assert.match(frontend, /function deepLinkTarget/);
 assert.match(frontend, /options\.instant \|\| options\.section \|\| prefersReducedMotion\(\)/, 'a deep link must bypass the envelope animation');
-assert.match(frontend, /if \(options\.section\) scrollToSection\(options\.section\)/, 'a deep link must scroll to its section instead of the top');
+assert.match(frontend, /const section = options\.section \|\| pendingDeepLink;/, 'a deep link must reach the scroll step');
+assert.match(frontend, /if \(section\) scrollToSection\(section\);/, 'a deep link must scroll to its section instead of the top');
+assert.match(frontend, /behavior: 'instant'/, 'the deep-link scroll must not animate');
+assert.match(frontend, /function abandonDeepLink/, 'a failed guest check must restore the cover controls');
 // Item content is written as text nodes. The only innerHTML assignments are
 // hardcoded SVG icons, so a sheet value can never become markup.
 assert.doesNotMatch(wishlistScript, /\.innerHTML\s*=\s*gift\./, 'sheet content is never injected as HTML');
