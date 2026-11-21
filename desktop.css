@@ -112,19 +112,6 @@ h2 { font-family:"Cormorant Garamond",Georgia,serif; font-size:84px; font-weight
 .milestones li { padding-bottom:30px; }
 .story-divider { margin-top:72px; }
 
-.gallery-section { padding:100px 72px 110px; background:linear-gradient(90deg,#eee6db 82%,#d5b994 82%); overflow:hidden; }
-.gallery-section .section-head { text-align:left; margin-left:16px; }
-.gallery-section h2 { font-size:112px; max-width:12ch; line-height:.88; margin-block:24px; }
-.gallery-section .divider-img { margin-left:0; }
-.photo-gallery { max-width:none; grid-template-columns:1.15fr 1fr; gap:32px; margin-top:42px; }
-.photo-gallery figure { padding:0; border:0; box-shadow:0 16px 40px #35252425; }
-.photo-gallery .gallery-wide { grid-column:1; grid-row:1/3; transform:rotate(-2deg); align-self:center; }
-.photo-gallery .gallery-wide img { aspect-ratio:3/4; }
-.photo-gallery .gallery-second { grid-column:2; grid-row:1; margin-top:0; transform:rotate(2deg); }
-.photo-gallery .gallery-second img { aspect-ratio:3/2; }
-.photo-gallery .gallery-offset { grid-column:2; grid-row:2; margin:0 20px 0 -12px; transform:rotate(-2deg); }
-.photo-gallery .gallery-offset img { aspect-ratio:3/2; }
-
 /* An illustrated invitation facing a sheet of writing paper. */
 .rsvp-section { background:url('assets/images/branch-left.webp') left top/230px auto no-repeat,#dcd0c0; }
 .rsvp-layout { grid-template-columns:1fr 1fr; gap:64px; max-width:none; align-items:start; }
@@ -167,7 +154,7 @@ h2 { font-family:"Cormorant Garamond",Georgia,serif; font-size:84px; font-weight
 
 @media (min-width:1500px) { .music-toggle { right:calc((100vw - 1440px)/2 + 18px); } }
 @media (max-width:1100px) {
-  .paper-section, .story-section, .gallery-section { padding:84px 48px; }
+  .paper-section, .story-section { padding:84px 48px; }
   .hero-copy { padding-inline:28px; }
   .hero h2.hero-names { font-size:74px; }
   #details { column-gap:40px; }
@@ -196,7 +183,7 @@ h2 { font-family:"Cormorant Garamond",Georgia,serif; font-size:84px; font-weight
 
 .closing-photo h2 { font-family:"Cormorant Garamond",Georgia,serif; font-style:italic; font-size:90px; line-height:.92; letter-spacing:-.035em; text-transform:none; }
 .closing-photo .footer-names { font-family:"Cormorant Garamond",Georgia,serif; font-size:38px; }
-@media(max-width:1100px) { .gallery-section h2 { font-size:88px; } .story-section h2 { font-size:88px; } .wishes-copy h2 { font-size:58px; } .portrait-caption h2 { font-size:62px; } }
+@media(max-width:1100px) { .story-section h2 { font-size:88px; } .wishes-copy h2 { font-size:58px; } .portrait-caption h2 { font-size:62px; } }
 
 @media(min-width:960px) {
   .closing-copy::after { background-image:url('assets/images/corner-top-right.webp'); right:-36px; top:-44px; }
@@ -241,19 +228,6 @@ body::after { content:""; position:fixed; inset:18px; z-index:0; border:1px soli
 #details .detail-row:last-child { border-bottom:1px solid #b9956670; }
 #details .details-actions { padding-left:56px; margin-right:88px; }
 
-.gallery-section {
-  display:grid; grid-template-columns:.85fr 1.65fr; gap:48px;
-  align-items:center; padding:80px 64px;
-  background:linear-gradient(90deg,#45232c 34%,#dcc3a1 34%);
-}
-.gallery-section .section-head { margin:0; text-align:left; padding-right:12px; }
-.gallery-section .section-intro { color:#d9b47b; line-height:1.9; }
-.gallery-section h2 { color:#fff4e4; font-size:88px; max-width:8ch; line-height:.95; margin-block:26px; }
-.gallery-section .photo-gallery { margin:0; gap:24px; }
-.gallery-section .gallery-wide { transform:rotate(-2deg); }
-.gallery-section .gallery-second { transform:rotate(2deg); }
-.gallery-section .gallery-offset { margin-left:0; margin-right:0; }
-
 .rsvp-section {
   padding-block:80px;
   background:url('assets/images/side-left.webp') left -20px top 18px/180px auto no-repeat,
@@ -280,23 +254,14 @@ body::after { content:""; position:fixed; inset:18px; z-index:0; border:1px soli
 @media(max-width:1100px) {
   #details .detail-list, #details .details-actions { padding-left:32px; margin-right:40px; }
   #details .section-head { padding-inline:32px; }
-  .gallery-section { padding:64px 40px; gap:32px; grid-template-columns:.8fr 1.6fr; }
-  .gallery-section h2 { font-size:66px; }
-  .gallery-section .photo-gallery { gap:18px; }
+
   .rsvp-section { padding-block:64px; }
   .rsvp-copy h2 { font-size:68px; }
   .gift-section { padding:64px 48px; gap:24px 40px; }
   .gift-section h2 { font-size:66px; }
 }
 
-/* A moon-window photo spread, writing paper, and a framed gift panel. */
-.gallery-section { position:relative; isolation:isolate; background:#45232c url('assets/svg/cloud-pattern.svg') repeat; padding-block:96px; }
-.gallery-section::before { content:""; position:absolute; z-index:-1; width:590px; height:590px; right:90px; top:50%; transform:translateY(-50%); border-radius:50%; background:#dbc19a url('assets/svg/silk-grain.svg'); border:1px solid #d9b47b; outline:1px solid #d9b47b66; outline-offset:16px; }
-.gallery-section::after { content:""; position:absolute; inset:24px; border:1px solid #d9b47b55; pointer-events:none; z-index:-1; }
-.gallery-section .photo-gallery figure { border:8px solid #fff4e4; box-shadow:0 16px 32px #160e1c60; }
-.gallery-section .gallery-wide { transform:rotate(-5deg); }
-.gallery-section .gallery-second { transform:rotate(4deg); }
-.gallery-section .gallery-offset { transform:rotate(-3deg); }
+/* Writing paper and a framed gift panel. */
 
 .rsvp-section { position:relative; isolation:isolate; background:url('assets/images/side-left.webp') left -20px top 18px/180px auto no-repeat,url('assets/svg/silk-grain.svg') repeat,#e8ddcc; }
 .rsvp-section::before { display:block; content:""; position:absolute; inset:24px; border:1px solid #aa805b66; z-index:-1; pointer-events:none; }
@@ -322,7 +287,7 @@ body::after { content:""; position:fixed; inset:18px; z-index:0; border:1px soli
 .gift-section .gift-owner { font-size:15px; }
 .gift-section .gift-copy { margin-top:20px; background:#edd6b1; color:#612b33; border-color:#d9b47b; padding:13px 22px; }
 @media(max-width:1100px) {
-  .gallery-section::before { width:450px; height:450px; right:44px; }
+
   .rsvp-layout form { padding:28px; }
   .gift-section .section-head { padding:56px 40px; }
   .gift-section .gift-tabs { margin:48px 32px 0; }
@@ -347,7 +312,6 @@ body::after { content:""; position:fixed; inset:18px; z-index:0; border:1px soli
 .gift-section { border-bottom:1px solid #b99566; }
 
 /* Deliberate section boundaries keep independently tiled patterns apart. */
-.gallery-section { border-top:1px solid #b99566; background:#45232c url('assets/svg/silk-grain.svg') repeat; }
 
 .gift-section::after { border-block:3px double #b9956680; }
 

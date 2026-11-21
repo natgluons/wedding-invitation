@@ -93,8 +93,11 @@
       "portrait.aria": "A moment together",
       "portrait.intro": "THROUGH EVERY SEASON",
       "portrait.title": "You, me,<br />and all that’s to come.",
-      "gallery.intro": "LITTLE MOMENTS, A LIFETIME OF LOVE",
-      "gallery.title": "Together, Always",
+      "gallery.intro": "Little moments, a lifetime of love",
+      "gallery.title": "Together,<br />Always",
+      "gallery.previous": "Previous photo",
+      "gallery.next": "Next photo",
+      "gallery.close": "Close photo",
       "rsvp.intro": "WE SAVED YOU A SEAT",
       "rsvp.title": "Will You Join Us?",
       "rsvp.body": 'Your presence would mean the world to us.<br /><span class="rsvp-deadline">Kindly respond by 3 January 2027.</span>',
@@ -290,8 +293,11 @@
       "portrait.aria": "Momen bersama",
       "portrait.intro": "DI SETIAP MUSIM KEHIDUPAN",
       "portrait.title": "Aku, kamu,<br />dan segala yang akan datang.",
-      "gallery.intro": "MOMEN KECIL, CINTA SEPANJANG MASA",
-      "gallery.title": "Selalu Bersama",
+      "gallery.intro": "Momen kecil, cinta sepanjang masa",
+      "gallery.title": "Selalu<br />Bersama",
+      "gallery.previous": "Foto sebelumnya",
+      "gallery.next": "Foto berikutnya",
+      "gallery.close": "Tutup foto",
       "rsvp.intro": "KAMI MENYIAPKAN TEMPAT UNTUK ANDA",
       "rsvp.title": "Maukah Anda Bergabung?",
       "rsvp.body": 'Kehadiran Anda sangat berarti bagi kami.<br /><span class="rsvp-deadline">Mohon konfirmasi kehadiran sebelum 3 Januari 2027.</span>',
@@ -1744,6 +1750,75 @@
       calendarDialog.close();
     });
   }
+
+  const carousel = document.querySelector('.archive-carousel');
+  const slides = [...carousel.children];
+  const archiveControls = document.querySelector('.archive-controls');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let selectedPhoto = 1;
+
+  function highlightPhoto() {
+    const center = carousel.scrollLeft + carousel.clientWidth / 2;
+    const left = carousel.getBoundingClientRect().left;
+    let nearest = 0;
+    let distance = Infinity;
+    slides.forEach((slide, index) => {
+      const bounds = slide.getBoundingClientRect();
+      const slideCenter = bounds.left - left + carousel.scrollLeft + bounds.width / 2;
+      const offset = Math.abs(slideCenter - center);
+      if (offset < distance) {
+        nearest = index;
+        distance = offset;
+      }
+    });
+    selectedPhoto = nearest;
+    slides.forEach((slide, index) => slide.classList.toggle('is-current', index === nearest));
+  }
+
+  function scrollToPhoto(index, behavior) {
+    const slide = slides[index].getBoundingClientRect();
+    const track = carousel.getBoundingClientRect();
+    carousel.scrollBy({
+      left: slide.left + slide.width / 2 - track.left - track.width / 2,
+      behavior,
+    });
+  }
+
+  carousel.classList.add('is-enhanced');
+  slides[selectedPhoto].classList.add('is-current');
+  // The invitation is hidden until opened, so wait for the carousel to have a layout.
+  const archiveLayout = new ResizeObserver(() => {
+    if (!carousel.clientWidth) return;
+    scrollToPhoto(1, 'instant');
+    highlightPhoto();
+    archiveLayout.disconnect();
+  });
+  archiveLayout.observe(carousel);
+
+  carousel.addEventListener('scroll', highlightPhoto, {passive: true});
+
+  archiveControls.hidden = false;
+  archiveControls.querySelectorAll('button').forEach(button => {
+    button.addEventListener('click', () => {
+      const index = (selectedPhoto + Number(button.dataset.archiveStep) + slides.length) % slides.length;
+      scrollToPhoto(index, reducedMotion.matches ? 'instant' : 'smooth');
+    });
+  });
+
+  const archiveViewer = document.querySelector('.archive-viewer');
+  const fullPhoto = archiveViewer.querySelector('img');
+  document.querySelectorAll('.archive-grid a').forEach(link => {
+    link.addEventListener('click', event => {
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || !archiveViewer.showModal) return;
+      event.preventDefault();
+      fullPhoto.src = link.href;
+      fullPhoto.alt = link.querySelector('img').alt;
+      archiveViewer.showModal();
+    });
+  });
+  archiveViewer.addEventListener('click', event => {
+    if (event.target === archiveViewer) archiveViewer.close();
+  });
 
   applyLanguage(currentLang);
   loadInvitation();
