@@ -16,7 +16,7 @@
       'wishlist.empty': 'The wishlist is being prepared.',
       'wishlist.note': 'Changed your mind? You can release an item you claimed so another guest may choose it.',
       'wishlist.cancel': 'Cancel',
-      'wishlist.loading': 'Opening the wishlist…',
+      'wishlist.loading': 'Loading wishlist...',
       'wishlist.error': 'The wishlist could not be loaded just now.',
       'wishlist.retry': 'Try again',
       'wishlist.needsInvite': 'Open your personal invitation link to see and claim gifts.',
@@ -50,7 +50,7 @@
       'wishlist.empty': 'Daftar hadiah sedang disiapkan.',
       'wishlist.note': 'Berubah pikiran? Anda dapat melepas hadiah yang sudah Anda tandai agar tamu lain bisa memilihnya.',
       'wishlist.cancel': 'Batal',
-      'wishlist.loading': 'Membuka daftar hadiah…',
+      'wishlist.loading': 'Memuat daftar hadiah...',
       'wishlist.error': 'Daftar hadiah belum dapat dimuat saat ini.',
       'wishlist.retry': 'Coba lagi',
       'wishlist.needsInvite': 'Buka tautan undangan pribadi Anda untuk melihat dan menandai hadiah.',
@@ -178,9 +178,21 @@
   }
 
   function setStatus(message, tone) {
-    statusBox.textContent = message || '';
+    statusBox.replaceChildren();
     statusBox.classList.toggle('is-error', tone === 'error');
     statusBox.classList.toggle('is-success', tone === 'success');
+    statusBox.classList.toggle('is-loading', tone === 'loading');
+    if (tone === 'loading') {
+      const spinner = document.createElement('span');
+      spinner.className = 'wishlist-spinner';
+      spinner.setAttribute('aria-hidden', 'true');
+      const label = document.createElement('span');
+      label.className = 'wishlist-loading-label';
+      label.textContent = message || t('wishlist.loading');
+      statusBox.append(spinner, label);
+      return;
+    }
+    statusBox.textContent = message || '';
     // Keep a retry affordance reachable when the body failed to load.
     if (loadState === 'error' && message) {
       const retry = document.createElement('button');
@@ -315,6 +327,23 @@
   let canClaim = false;
   let busyClaim = '';
 
+  function skeletonCard() {
+    const item = document.createElement('li');
+    item.className = 'wishlist-skeleton';
+    item.setAttribute('aria-hidden', 'true');
+    const figure = document.createElement('span');
+    figure.className = 'wishlist-skeleton-figure';
+    const body = document.createElement('span');
+    body.className = 'wishlist-skeleton-body';
+    const title = document.createElement('span');
+    title.className = 'wishlist-skeleton-line';
+    const detail = document.createElement('span');
+    detail.className = 'wishlist-skeleton-line wishlist-skeleton-line--short';
+    body.append(title, detail);
+    item.append(figure, body);
+    return item;
+  }
+
   function render() {
     grid.textContent = '';
     const list = wishlist || [];
@@ -323,7 +352,11 @@
     const claimed = list.filter(gift => gift.claimed).length;
     progressBox.hidden = !list.length;
     if (list.length) progressBox.textContent = fill(t('wishlist.progress'), {taken: claimed, total: list.length});
-    for (const gift of list) grid.append(card(gift, busyClaim === gift.id));
+    if (loadState === 'loading') {
+      for (let i = 0; i < 4; i += 1) grid.append(skeletonCard());
+    } else {
+      for (const gift of list) grid.append(card(gift, busyClaim === gift.id));
+    }
     for (const el of document.querySelectorAll('[data-i18n]')) el.textContent = t(el.dataset.i18n);
     document.title = t('meta.title');
     document.getElementById('backLink').href = withCode(getBackTarget());
@@ -354,7 +387,7 @@
     }
     loadState = 'loading';
     canClaim = false;
-    setStatus(t('wishlist.loading'), '');
+    setStatus(t('wishlist.loading'), 'loading');
     render();
     try {
       const mirror = await mirrorQuery(inviteCode);

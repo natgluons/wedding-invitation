@@ -844,7 +844,7 @@ body { text-wrap:pretty; }
 .gift-section .gift-details dd .gift-copy-inline { display:inline-flex; align-items:center; gap:5px; background:#ffe8ba; border-color:#d5af6b; color:#59222d; opacity:1; }
 
 /* Bridge from the transfer cards to the separate wishlist page. */
-.gift-wishlist { max-width:340px; margin:30px auto 0; padding-top:26px; border-top:1px solid #d8c5ac; }
+.gift-wishlist { max-width:340px; margin:30px auto 40px; padding-top:26px; border-top:1px solid #d8c5ac; }
 .gift-wishlist-text { margin:0 auto 16px; font-size:12.5px; line-height:1.8; color:#5a443e; }
 .gift-wishlist-link { display:inline-flex; align-items:center; gap:7px; padding:11px 22px; border:1px solid #b99472; border-radius:999px; color:var(--burgundy); font-size:10px; letter-spacing:.14em; text-transform:uppercase; text-decoration:none; }
 .gift-wishlist-link:hover { background:#fff9f0; border-color:var(--burgundy); }
