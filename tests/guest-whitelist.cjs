@@ -26,6 +26,12 @@ assert.match(wishlistPage, /id="claimDialog"/);
 // Claims must never be sent over JSONP, which mobile browsers block.
 assert.doesNotMatch(wishlistScript, /createElement\('script'\)/);
 assert.match(wishlistScript, /type: 'claim'/);
+// Returning links must carry `from`, or the invitation shows the cover instead
+// of honouring the #gift hash and the guest has to open the letter again.
+assert.match(wishlistScript, /if \(url\.hash\) url\.searchParams\.set\('from', url\.hash\)/);
+assert.match(frontend, /function deepLinkTarget/);
+assert.match(frontend, /options\.instant \|\| options\.section \|\| prefersReducedMotion\(\)/, 'a deep link must bypass the envelope animation');
+assert.match(frontend, /if \(options\.section\) scrollToSection\(options\.section\)/, 'a deep link must scroll to its section instead of the top');
 // Item content is written as text nodes. The only innerHTML assignments are
 // hardcoded SVG icons, so a sheet value can never become markup.
 assert.doesNotMatch(wishlistScript, /\.innerHTML\s*=\s*gift\./, 'sheet content is never injected as HTML');

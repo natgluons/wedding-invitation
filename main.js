@@ -669,29 +669,63 @@
     openTimers = [];
   }
 
+  // ---------------------------------------------------------------------
+  // Deep links
+  // ---------------------------------------------------------------------
+  // The wishlist returns guests with `?code=…#gift`. Arriving with a hash means
+  // "take me straight to that section", so the letter, its animation and the
+  // fade to the top are all skipped.
+  function deepLinkTarget() {
+    const hash = String(window.location.hash || '').replace(/^#/, '');
+    if (!hash) return null;
+    // Resume-from-wishlist links carry `from`, so a stray hash still opens the
+    // invitation normally instead of jumping into the middle of it.
+    if (!params.get('from')) return null;
+    // Only the id is kept: the section sits inside a hidden #invitation at boot,
+    // where offsetTop reads 0, so it must be measured once it is visible.
+    return {id: hash};
+  }
+
+  // Waits for layout to settle before scrolling: fonts and lazy images above
+  // the target can still shift it after the first frame.
+  function scrollToSection(section) {
+    const target = document.getElementById(section.id);
+    if (!target) return;
+    const scroller = document.scrollingElement || document.documentElement;
+    const place = () => { scroller.scrollTop = target.offsetTop; };
+    place();
+    // Images above the section may still load and push it down, so measure once
+    // more after the next frame and after the window settles.
+    window.requestAnimationFrame(place);
+    window.setTimeout(place, 350);
+  }
+
   // The cover fades away while the invitation fades in beneath it, so the
   // guest never sees an empty screen between the letter and the content.
-  function completeOpen() {
+  function completeOpen(options = {}) {
     if (!invitationReady) return;
     clearOpenTimers();
     cover.hidden = true;
     cover.classList.remove('is-departing');
     invitation.hidden = false;
     if (musicAvailable) musicToggle.hidden = false;
-    window.scrollTo({top: 0, behavior: 'instant'});
+    if (options.section) scrollToSection(options.section);
+    else window.scrollTo({top: 0, behavior: 'instant'});
     if (typeof invitation.focus === 'function') invitation.focus({preventScroll: true});
   }
 
-  function finishOpening() {
+  function finishOpening(options = {}) {
     if (!hasOpened || !openingAnimationDone || openingDepartureStarted) return;
     renderInvitationGate();
     if (!invitationReady || invitationChecking) return;
     openingDepartureStarted = true;
     startMusic();
-    if (prefersReducedMotion()) { completeOpen(); return; }
+    // A deep link lands immediately, with no fade, so the guest sees the
+    // section they asked for rather than an animation ending elsewhere.
+    if (options.section || prefersReducedMotion()) { completeOpen(options); return; }
     invitation.hidden = false;
     cover.classList.add('is-departing');
-    openTimers.push(window.setTimeout(completeOpen, 800));
+    openTimers.push(window.setTimeout(() => completeOpen(options), 800));
   }
 
   function openInvitation(options = {}) {
@@ -701,16 +735,24 @@
     // A muted guest must see the muted button from the start, since startMusic
     // will not play anything for them.
     if (musicAvailable && !musicOn) updateMusicButton(false);
-    if (options.instant || prefersReducedMotion()) {
+    if (options.instant || options.section || prefersReducedMotion()) {
       openingAnimationDone = true;
-      finishOpening();
+      finishOpening(options);
       return;
     }
     envelope.classList.add('is-opening');
     openTimers.push(window.setTimeout(() => {
       openingAnimationDone = true;
-      finishOpening();
+      finishOpening(options);
     }, 1600));
+  }
+
+  // Opens at a section instead of the cover. The guest check gates it, so an
+  // invalid or revoked code still sees the refusal and retry on the cover.
+  async function finishOpeningDeepLink(section) {
+    if (!invitationReady) await loadInvitation();
+    if (!invitationReady || hasOpened) return;
+    openInvitation({section});
   }
 
   function skipOpening() {
@@ -1859,7 +1901,16 @@
 
   applyLanguage(currentLang);
   syncWishlistLink();
-  loadInvitation();
+  // A guest returning from the wishlist skips the letter and lands on the
+  // section they came from; everyone else watches the normal opening.
+  const deepLink = deepLinkTarget();
+  if (deepLink) {
+    // finishOpeningDeepLink runs the guest check itself, so it replaces the
+    // ordinary load rather than racing it.
+    finishOpeningDeepLink(deepLink);
+  } else {
+    loadInvitation();
+  }
   openingAssetsReady.then(() => {
     clearTimeout(window.assetLoadTimeout);
     document.documentElement.classList.remove('assets-loading');

@@ -108,6 +108,9 @@
     const url = new URL(href, window.location.href);
     if (inviteCode) url.searchParams.set('code', inviteCode);
     url.searchParams.set('lang', currentLang);
+    // The invitation only honours a deep link when `from` is present, so it
+    // must be sent with every hash link or the guest lands on the cover again.
+    if (url.hash) url.searchParams.set('from', url.hash);
     return url.pathname + url.search + url.hash;
   }
 
