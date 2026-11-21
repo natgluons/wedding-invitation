@@ -362,6 +362,12 @@ function doPost(e) {
     }
     catch (error) { result = {ok: false, error: String(error.message || error)}; }
     if (result.ok) cache.put(key, JSON.stringify(result), 600);
+    // A claim changes what the edge mirror shows, and Google's onEdit trigger
+    // does not fire for cells written by a script. Re-sync now so the guest
+    // sees their own claim instead of waiting for the next timer run.
+    if (result.ok && String(data.type || 'rsvp') === 'claim') {
+      try { syncInvitationWorker(); } catch (error) { /* The timer will retry. */ }
+    }
     return json_(result);
   } catch (error) {
     return json_({ok: false, error: String(error)});
@@ -666,6 +672,11 @@ function json_(payload) {
 
 // Fast opening validation: push only code hashes, names, limits and revocation.
 // Saved responses, wishes and payment details remain in the private spreadsheet.
+function hashCode_(code) {
+  const bytes = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, String(code), Utilities.Charset.UTF_8);
+  return bytes.map(byte => ((byte + 256) % 256).toString(16).padStart(2, '0')).join('');
+}
+
 function validationSnapshot_() {
   const sheet = getSheet_(GUESTS_SHEET, GUEST_HEADERS);
   const values = sheet.getDataRange().getValues();
@@ -679,12 +690,28 @@ function validationSnapshot_() {
     const name = String(row[column.Name] || '').trim();
     const maxGuests = Number(row[column['Max guests']]);
     const invalid = !name || name.length > 100 || !Number.isInteger(maxGuests) || maxGuests < 1 || maxGuests > 100;
-    const bytes = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, code, Utilities.Charset.UTF_8);
-    const codeHash = bytes.map(byte => ((byte + 256) % 256).toString(16).padStart(2, '0')).join('');
-    byCode.set(code, {codeHash, name: name.slice(0, 100) || 'Invalid invitation', maxGuests:invalid ? 1 : maxGuests,
+    byCode.set(code, {codeHash: hashCode_(code), name: name.slice(0, 100) || 'Invalid invitation', maxGuests:invalid ? 1 : maxGuests,
       revoked: invalid || isTrue_(row[column.Revoke])});
   }
   return [...byCode.values()];
+}
+
+// The wishlist as the edge mirror needs it: the same rows the page shows, plus
+// who claimed each one. The claimer travels as a code hash so the raw
+// invitation code never leaves the spreadsheet.
+function wishlistSnapshot_() {
+  const info = wishlistRows_();
+  const seen = new Set();
+  return info.rows.flatMap(row => {
+    const gift = wishlistFromRow_(row, info.headers);
+    if (gift.hidden || !/^[a-zA-Z0-9_-]{1,64}$/.test(gift.id) || seen.has(gift.id)) return [];
+    if (!gift.name) return [];
+    seen.add(gift.id);
+    const holder = String(row[info.headers.indexOf('Claimed by')] || '').trim();
+    return [{id: gift.id, name: gift.name, description: gift.description,
+      image: gift.image, link: gift.link, price: gift.price, claimed: gift.claimed,
+      claimedByHash: gift.claimed ? hashCode_(holder) : ''}];
+  });
 }
 
 function syncInvitationWorker() {
@@ -694,9 +721,13 @@ function syncInvitationWorker() {
   if (!url || !secret) throw new Error('Configure the invitation Worker before syncing.');
   const version = Date.now();
   const guests = validationSnapshot_();
+  // Gifts and the wishlist ride along so a verified guest can render the whole
+  // page from the edge. Saved RSVP answers and wishes stay in the sheet.
+  const gifts = readGifts_();
+  const wishlist = wishlistSnapshot_();
   const response = UrlFetchApp.fetch(url + '/sync', {
     method:'post', contentType:'application/json', headers:{Authorization:'Bearer ' + secret},
-    payload:JSON.stringify({version,guests}), muteHttpExceptions:true
+    payload:JSON.stringify({version,guests,gifts,wishlist}), muteHttpExceptions:true
   });
   const status = response.getResponseCode();
   if (status === 409) return 'A newer guest-list sync is already active.';

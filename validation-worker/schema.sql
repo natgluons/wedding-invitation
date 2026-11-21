@@ -9,3 +9,11 @@ CREATE TABLE IF NOT EXISTS sync_state (
   synced_at INTEGER NOT NULL,
   source_version INTEGER NOT NULL
 );
+-- Gift methods and the wishlist, mirrored so the invitation renders without a
+-- round trip to Apps Script. Both are public to a verified guest; the sheet
+-- stays the source of truth.
+CREATE TABLE IF NOT EXISTS content (
+  id INTEGER PRIMARY KEY CHECK(id = 1),
+  gifts TEXT NOT NULL,
+  wishlist TEXT NOT NULL
+);

@@ -11,12 +11,21 @@ export async function sha256(value) {
 }
 export function validateSnapshot(body) {
   if (!body || !Array.isArray(body.guests) || body.guests.length>10000 || !Number.isSafeInteger(body.version)) throw Error('Invalid snapshot');
+  if (!Array.isArray(body.gifts) || !Array.isArray(body.wishlist)) throw Error('Invalid content');
+  if (body.gifts.length>200 || body.wishlist.length>1000) throw Error('Invalid content');
   const seen=new Set();
-  return body.guests.map(row=>{
-    if (!row || !/^[a-f0-9]{64}$/.test(row.codeHash) || seen.has(row.codeHash) || typeof row.name!=='string' || !row.name.trim() || row.name.length>100 || !Number.isInteger(row.maxGuests) || row.maxGuests<1 || row.maxGuests>100 || typeof row.revoked!=='boolean') throw Error('Invalid guest row');
-    seen.add(row.codeHash);
-    return {codeHash:row.codeHash,name:row.name.trim(),maxGuests:row.maxGuests,revoked:row.revoked?1:0};
-  });
+  return {
+    guests: body.guests.map(row=>{
+      if (!row || !/^[a-f0-9]{64}$/.test(row.codeHash) || seen.has(row.codeHash) || typeof row.name!=='string' || !row.name.trim() || row.name.length>100 || !Number.isInteger(row.maxGuests) || row.maxGuests<1 || row.maxGuests>100 || typeof row.revoked!=='boolean') throw Error('Invalid guest row');
+      seen.add(row.codeHash);
+      return {codeHash:row.codeHash,name:row.name.trim(),maxGuests:row.maxGuests,revoked:row.revoked?1:0};
+    }),
+    // Gifts and the wishlist are built and sanitised by Apps Script, which
+    // already drops hidden rows and unsafe links. Only their size is bounded
+    // here, so a broken sheet cannot bloat the edge copy.
+    gifts: JSON.stringify(body.gifts),
+    wishlist: JSON.stringify(body.wishlist)
+  };
 }
 async function authorized(request,secret) {
   if (!secret) return false;
@@ -35,15 +44,17 @@ export default {
         if(!await authorized(request,env.SYNC_SECRET)) return reply({ok:false,error:'Unauthorized'},401);
         const text=await request.text();
         if(text.length>2000000) return reply({ok:false,error:'Snapshot too large'},413);
-        let body,rows;
-        try {body=JSON.parse(text);rows=validateSnapshot(body);}catch{return reply({ok:false,error:'Invalid snapshot'},400);}
+        let body,data;
+        try {body=JSON.parse(text);data=validateSnapshot(body);}catch{return reply({ok:false,error:'Invalid snapshot'},400);}
+        const rows=data.guests;
         const previous=await env.DB.prepare('SELECT source_version FROM sync_state WHERE id=1').first();
         if(previous && body.version<previous.source_version) return reply({ok:false,error:'Stale snapshot'},409);
-        // Three statements in a transaction; stale concurrent snapshots cannot replace newer data.
+        // Four statements in a transaction; stale concurrent snapshots cannot replace newer data.
         const condition='NOT EXISTS (SELECT 1 FROM sync_state WHERE id=1 AND source_version>?)';
         await env.DB.batch([
           env.DB.prepare('DELETE FROM guests WHERE '+condition).bind(body.version),
           env.DB.prepare(`INSERT INTO guests(code_hash,name,max_guests,revoked) SELECT json_extract(value,'$.codeHash'),json_extract(value,'$.name'),json_extract(value,'$.maxGuests'),json_extract(value,'$.revoked') FROM json_each(?) WHERE ${condition}`).bind(JSON.stringify(rows),body.version),
+          env.DB.prepare(`INSERT INTO content(id,gifts,wishlist) VALUES(1,?,?) ON CONFLICT(id) DO UPDATE SET gifts=excluded.gifts,wishlist=excluded.wishlist WHERE ${condition}`).bind(data.gifts,data.wishlist,body.version),
           env.DB.prepare('INSERT INTO sync_state(id,synced_at,source_version) VALUES(1,?,?) ON CONFLICT(id) DO UPDATE SET synced_at=excluded.synced_at,source_version=excluded.source_version WHERE excluded.source_version>=sync_state.source_version').bind(Date.now(),body.version)
         ]);
         return reply({ok:true,count:rows.length});
@@ -60,6 +71,37 @@ export default {
         if(!row || Date.now()-row.synced_at>Number(env.MAX_SYNC_AGE_SECONDS||900)*1000) return reply({ok:false,unavailable:true},503);
         if(!row.name || row.revoked) return reply({ok:false,error:'Invalid invitation'},403);
         return reply({ok:true,guest:{name:row.name,maxGuests:row.max_guests}});
+      }
+      // One edge call for everything a verified guest needs to see: their name,
+      // the gift methods and the wishlist. Saved RSVP answers and wishes stay
+      // in the spreadsheet and still load from Apps Script. Answers 503 if the
+      // mirror is stale, so the page falls back to the sheet instead of
+      // showing half a page.
+      if(path==='/invite' && request.method==='GET') {
+        const code=new URL(request.url).searchParams.get('code');
+        if(typeof code!=='string'||!/^[a-zA-Z0-9]{8,64}$/.test(code)) return reply({ok:false,error:'Invalid invitation'},400);
+        const hash=await sha256(code);
+        let row;
+        try {
+          row=await env.DB.prepare('SELECT s.synced_at,g.name,g.max_guests,g.revoked,c.gifts,c.wishlist FROM sync_state s LEFT JOIN guests g ON g.code_hash=? LEFT JOIN content c ON c.id=1 WHERE s.id=1').bind(hash).first();
+        } catch {
+          // The content table is missing, so this database predates the
+          // mirror. Answer as unavailable and let the page read the sheet.
+          return reply({ok:false,unavailable:true},503);
+        }
+        if(!row || !row.gifts || Date.now()-row.synced_at>Number(env.MAX_SYNC_AGE_SECONDS||900)*1000) return reply({ok:false,unavailable:true},503);
+        if(!row.name || row.revoked) return reply({ok:false,error:'Invalid invitation'},403);
+        // The mirror records who claimed a wish by code hash, so ownership is
+        // decided here without the raw code ever reaching the database.
+        let wishlist;
+        try {wishlist=JSON.parse(row.wishlist);}catch{return reply({ok:false,unavailable:true},503);}
+        if(!Array.isArray(wishlist)) return reply({ok:false,unavailable:true},503);
+        wishlist=wishlist.map(item=>({
+          id:item.id,name:item.name,description:item.description,image:item.image,
+          link:item.link,price:item.price,claimed:Boolean(item.claimed),
+          mine:Boolean(item.claimedByHash)&&item.claimedByHash===hash
+        }));
+        return reply({ok:true,guest:{name:row.name,maxGuests:row.max_guests},gifts:JSON.parse(row.gifts),wishlist});
       }
       // Proxies read-only Apps Script queries (guest lookup, wishes feed,
       // receipt poll) server-side. The invitation page cannot call that

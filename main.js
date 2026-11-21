@@ -1296,6 +1296,27 @@
     } finally { clearTimeout(timer); }
   }
 
+  // The mirror holds the invitation, the gift methods and the wishlist, which
+  // is everything the page renders for a verified guest. Saved RSVP answers
+  // and wishes stay in the spreadsheet, so a guest lookup still finishes on
+  // the sheet; the slow part just no longer blocks the page.
+  async function mirrorQuery(code) {
+    const base = String(config.validationEndpoint || '').trim();
+    if (!base) return null;
+    const url = new URL('/invite', base);
+    url.searchParams.set('code', code);
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 4000);
+    try {
+      const response = await fetch(url.href, {signal: controller.signal, cache: 'no-store'});
+      if (!response.ok) return null;
+      const mirror = await response.json();
+      if (!mirror || mirror.ok !== true || !mirror.guest) return null;
+      return mirror;
+    } catch { return null; }
+    finally { clearTimeout(timer); }
+  }
+
   async function backendQuery(parameters) {
     const url = new URL(backendEndpoint());
     Object.entries(parameters).forEach(([key, value]) => url.searchParams.set(key, value));
@@ -1413,6 +1434,26 @@
           }
         } catch { /* A temporary Worker failure falls back to private-sheet validation. */ }
         finally { clearTimeout(timer); }
+      }
+      // Gifts render from the edge mirror while the sheet is still being read
+      // for the saved RSVP answer and this guest's own wish.
+      const mirror = await mirrorQuery(inviteCode);
+      if (mirror) {
+        verifiedGuest = mirror.guest;
+        invitationDetailsReady = true;
+        wishFields.inert = false;
+        setStatus(wishStatus, '', '');
+        invitationReady = true;
+        invitationChecking = false;
+        setInvitationGate('');
+        personalization = {invitedName: verifiedGuest.name, seats: verifiedGuest.maxGuests};
+        guestNameInput.value = verifiedGuest.name;
+        guestNameInput.readOnly = true;
+        wishNameInput.value = verifiedGuest.name;
+        giftData = Array.isArray(mirror.gifts) ? mirror.gifts : null;
+        renderGifts();
+        renderGuestCopy();
+        finishOpening();
       }
       const result = await backendQuery({action: 'guest', code: inviteCode});
       if (!result.ok || !result.guest || !String(result.guest.name || '').trim() || !Number.isInteger(result.guest.maxGuests) || result.guest.maxGuests < 1 || result.guest.maxGuests > 100) {

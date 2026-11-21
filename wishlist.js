@@ -157,6 +157,26 @@
     }
   }
 
+  // The edge mirror answers a guest lookup in one call, with `mine` already
+  // worked out from the guest's own code. Anything unexpected returns null so
+  // the caller keeps using the sheet.
+  async function mirrorQuery(code) {
+    const base = workerBase();
+    if (!base) return null;
+    const url = new URL('/invite', base);
+    url.searchParams.set('code', code);
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 4000);
+    try {
+      const response = await fetch(url.href, {signal: controller.signal, cache: 'no-store'});
+      if (!response.ok) return null;
+      const mirror = await response.json();
+      if (!mirror || mirror.ok !== true || !mirror.guest || !Array.isArray(mirror.wishlist)) return null;
+      return mirror;
+    } catch { return null; }
+    finally { clearTimeout(timer); }
+  }
+
   function setStatus(message, tone) {
     statusBox.textContent = message || '';
     statusBox.classList.toggle('is-error', tone === 'error');
@@ -337,7 +357,8 @@
     setStatus(t('wishlist.loading'), '');
     render();
     try {
-      const result = await backendQuery({action: 'guest', code: inviteCode});
+      const mirror = await mirrorQuery(inviteCode);
+      const result = mirror || await backendQuery({action: 'guest', code: inviteCode});
       if (!result || result.ok !== true || !result.guest) {
         loadState = 'invalid';
         wishlist = [];
